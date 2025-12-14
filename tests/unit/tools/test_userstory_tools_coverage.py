@@ -339,9 +339,7 @@ class TestCreateUserstoryExceptionHandlers:
     @pytest.mark.asyncio
     async def test_create_userstory_unexpected_error(self, userstory_tools_instance):
         """Verifica manejo de Exception en create."""
-        userstory_tools_instance._mock_client.post = AsyncMock(
-            side_effect=Exception("Unexpected")
-        )
+        userstory_tools_instance._mock_client.post = AsyncMock(side_effect=Exception("Unexpected"))
 
         tools = await userstory_tools_instance.mcp.get_tools()
         tool = tools["taiga_create_userstory"]
@@ -403,9 +401,7 @@ class TestGetUserstoryExceptionHandlers:
     @pytest.mark.asyncio
     async def test_get_userstory_unexpected_error(self, userstory_tools_instance):
         """Verifica manejo de Exception en get."""
-        userstory_tools_instance._mock_client.get = AsyncMock(
-            side_effect=Exception("Unexpected")
-        )
+        userstory_tools_instance._mock_client.get = AsyncMock(side_effect=Exception("Unexpected"))
 
         tools = await userstory_tools_instance.mcp.get_tools()
         tool = tools["taiga_get_userstory"]
@@ -467,9 +463,7 @@ class TestUpdateUserstoryExceptionHandlers:
     @pytest.mark.asyncio
     async def test_update_userstory_unexpected_error(self, userstory_tools_instance):
         """Verifica manejo de Exception en update."""
-        userstory_tools_instance._mock_client.patch = AsyncMock(
-            side_effect=Exception("Unexpected")
-        )
+        userstory_tools_instance._mock_client.patch = AsyncMock(side_effect=Exception("Unexpected"))
 
         tools = await userstory_tools_instance.mcp.get_tools()
         tool = tools["taiga_update_userstory"]
@@ -630,9 +624,7 @@ class TestBulkCreateUserstoriesExceptionHandlers:
     @pytest.mark.asyncio
     async def test_bulk_create_userstories_unexpected_error(self, userstory_tools_instance):
         """Verifica manejo de Exception en bulk create."""
-        userstory_tools_instance._mock_client.post = AsyncMock(
-            side_effect=Exception("Unexpected")
-        )
+        userstory_tools_instance._mock_client.post = AsyncMock(side_effect=Exception("Unexpected"))
 
         tools = await userstory_tools_instance.mcp.get_tools()
         tool = tools["taiga_bulk_create_userstories"]
@@ -743,9 +735,7 @@ class TestBulkUpdateUserstoriesExceptionHandlers:
     @pytest.mark.asyncio
     async def test_bulk_update_userstories_unexpected_error(self, userstory_tools_instance):
         """Verifica manejo de Exception en bulk update."""
-        userstory_tools_instance._mock_client.post = AsyncMock(
-            side_effect=Exception("Unexpected")
-        )
+        userstory_tools_instance._mock_client.post = AsyncMock(side_effect=Exception("Unexpected"))
 
         tools = await userstory_tools_instance.mcp.get_tools()
         tool = tools["taiga_bulk_update_userstories"]
@@ -855,9 +845,7 @@ class TestBulkDeleteUserstoriesExceptionHandlers:
     @pytest.mark.asyncio
     async def test_bulk_delete_userstories_unexpected_error(self, userstory_tools_instance):
         """Verifica manejo de Exception en bulk delete."""
-        userstory_tools_instance._mock_client.post = AsyncMock(
-            side_effect=Exception("Unexpected")
-        )
+        userstory_tools_instance._mock_client.post = AsyncMock(side_effect=Exception("Unexpected"))
 
         tools = await userstory_tools_instance.mcp.get_tools()
         tool = tools["taiga_bulk_delete_userstories"]
@@ -972,9 +960,7 @@ class TestMoveToMilestoneExceptionHandlers:
     @pytest.mark.asyncio
     async def test_move_to_milestone_unexpected_error(self, userstory_tools_instance):
         """Verifica manejo de Exception en move_to_milestone."""
-        userstory_tools_instance._mock_client.patch = AsyncMock(
-            side_effect=Exception("Unexpected")
-        )
+        userstory_tools_instance._mock_client.patch = AsyncMock(side_effect=Exception("Unexpected"))
 
         tools = await userstory_tools_instance.mcp.get_tools()
         tool = tools["taiga_move_to_milestone"]
@@ -1040,9 +1026,7 @@ class TestGetUserstoryHistoryExceptionHandlers:
     @pytest.mark.asyncio
     async def test_get_userstory_history_unexpected_error(self, userstory_tools_instance):
         """Verifica manejo de Exception en get_userstory_history."""
-        userstory_tools_instance._mock_client.get = AsyncMock(
-            side_effect=Exception("Unexpected")
-        )
+        userstory_tools_instance._mock_client.get = AsyncMock(side_effect=Exception("Unexpected"))
 
         tools = await userstory_tools_instance.mcp.get_tools()
         tool = tools["taiga_get_userstory_history"]
@@ -1104,9 +1088,7 @@ class TestWatchUserstoryExceptionHandlers:
     @pytest.mark.asyncio
     async def test_watch_userstory_unexpected_error(self, userstory_tools_instance):
         """Verifica manejo de Exception en watch_userstory."""
-        userstory_tools_instance._mock_client.post = AsyncMock(
-            side_effect=Exception("Unexpected")
-        )
+        userstory_tools_instance._mock_client.post = AsyncMock(side_effect=Exception("Unexpected"))
 
         tools = await userstory_tools_instance.mcp.get_tools()
         tool = tools["taiga_watch_userstory"]
@@ -1168,9 +1150,7 @@ class TestUnwatchUserstoryExceptionHandlers:
     @pytest.mark.asyncio
     async def test_unwatch_userstory_unexpected_error(self, userstory_tools_instance):
         """Verifica manejo de Exception en unwatch_userstory."""
-        userstory_tools_instance._mock_client.post = AsyncMock(
-            side_effect=Exception("Unexpected")
-        )
+        userstory_tools_instance._mock_client.post = AsyncMock(side_effect=Exception("Unexpected"))
 
         tools = await userstory_tools_instance.mcp.get_tools()
         tool = tools["taiga_unwatch_userstory"]
@@ -1232,9 +1212,7 @@ class TestUpvoteUserstoryExceptionHandlers:
     @pytest.mark.asyncio
     async def test_upvote_userstory_unexpected_error(self, userstory_tools_instance):
         """Verifica manejo de Exception en upvote_userstory."""
-        userstory_tools_instance._mock_client.post = AsyncMock(
-            side_effect=Exception("Unexpected")
-        )
+        userstory_tools_instance._mock_client.post = AsyncMock(side_effect=Exception("Unexpected"))
 
         tools = await userstory_tools_instance.mcp.get_tools()
         tool = tools["taiga_upvote_userstory"]
@@ -1296,9 +1274,7 @@ class TestDownvoteUserstoryExceptionHandlers:
     @pytest.mark.asyncio
     async def test_downvote_userstory_unexpected_error(self, userstory_tools_instance):
         """Verifica manejo de Exception en downvote_userstory."""
-        userstory_tools_instance._mock_client.post = AsyncMock(
-            side_effect=Exception("Unexpected")
-        )
+        userstory_tools_instance._mock_client.post = AsyncMock(side_effect=Exception("Unexpected"))
 
         tools = await userstory_tools_instance.mcp.get_tools()
         tool = tools["taiga_downvote_userstory"]
@@ -1360,9 +1336,7 @@ class TestGetUserstoryVotersExceptionHandlers:
     @pytest.mark.asyncio
     async def test_get_userstory_voters_unexpected_error(self, userstory_tools_instance):
         """Verifica manejo de Exception en get_userstory_voters."""
-        userstory_tools_instance._mock_client.get = AsyncMock(
-            side_effect=Exception("Unexpected")
-        )
+        userstory_tools_instance._mock_client.get = AsyncMock(side_effect=Exception("Unexpected"))
 
         tools = await userstory_tools_instance.mcp.get_tools()
         tool = tools["taiga_get_userstory_voters"]
@@ -1376,8 +1350,18 @@ class TestGetUserstoryVotersExceptionHandlers:
     async def test_get_userstory_voters_success_with_list(self, userstory_tools_instance):
         """Verifica get_userstory_voters devuelve lista correctamente."""
         mock_voters = [
-            {"id": 1, "username": "user1", "full_name_display": "User One", "photo": "http://photo1.jpg"},
-            {"id": 2, "username": "user2", "full_name_display": "User Two", "photo": "http://photo2.jpg"},
+            {
+                "id": 1,
+                "username": "user1",
+                "full_name_display": "User One",
+                "photo": "http://photo1.jpg",
+            },
+            {
+                "id": 2,
+                "username": "user2",
+                "full_name_display": "User Two",
+                "photo": "http://photo2.jpg",
+            },
         ]
         userstory_tools_instance._mock_client.get = AsyncMock(return_value=mock_voters)
 
@@ -1735,7 +1719,9 @@ class TestCommentMethods:
         mock_client.edit_userstory_comment = MagicMock(return_value={"success": True})
         tools.client = mock_client
 
-        result = await tools.edit_userstory_comment(userstory_id=123, comment_id="abc", comment="new")
+        result = await tools.edit_userstory_comment(
+            userstory_id=123, comment_id="abc", comment="new"
+        )
         assert result == {"success": True}
 
     @pytest.mark.unit
@@ -1749,7 +1735,9 @@ class TestCommentMethods:
         mock_client.edit_userstory_comment = AsyncMock(return_value={"success": True})
         tools.client = mock_client
 
-        result = await tools.edit_userstory_comment(userstory_id=123, comment_id="abc", comment="new")
+        result = await tools.edit_userstory_comment(
+            userstory_id=123, comment_id="abc", comment="new"
+        )
         assert result == {"success": True}
 
     @pytest.mark.unit
@@ -2036,7 +2024,9 @@ class TestOtherMethods:
         mock_client.bulk_update_sprint_order = AsyncMock(return_value={"success": True})
         tools.client = mock_client
 
-        result = await tools.bulk_update_sprint_order(project_id=1, milestone_id=2, bulk_stories=[1])
+        result = await tools.bulk_update_sprint_order(
+            project_id=1, milestone_id=2, bulk_stories=[1]
+        )
         assert result == {"success": True}
 
     @pytest.mark.unit
@@ -2307,7 +2297,9 @@ class TestCustomAttributeMethods:
             mock_cls.return_value = mock_client
 
             tools = UserStoryTools(mcp)
-            result = await tools.update_userstory_custom_attribute(1, auth_token="token", name="new")
+            result = await tools.update_userstory_custom_attribute(
+                1, auth_token="token", name="new"
+            )
             assert result == {"id": 1}
 
     @pytest.mark.unit
@@ -2338,7 +2330,9 @@ class TestCustomAttributeMethods:
             mock_cls.return_value = mock_client
 
             tools = UserStoryTools(mcp)
-            result = await tools.delete_userstory_custom_attribute(auth_token="token", attribute_id=1)
+            result = await tools.delete_userstory_custom_attribute(
+                auth_token="token", attribute_id=1
+            )
             assert result == {"success": True}
 
     @pytest.mark.unit
@@ -2369,7 +2363,9 @@ class TestCustomAttributeMethods:
             mock_cls.return_value = mock_client
 
             tools = UserStoryTools(mcp)
-            result = await tools.update_userstory_custom_attribute_full(1, auth_token="token", name="new")
+            result = await tools.update_userstory_custom_attribute_full(
+                1, auth_token="token", name="new"
+            )
             assert result == {"id": 1}
 
     @pytest.mark.unit

@@ -310,9 +310,7 @@ class TestDeleteTaskRegisteredTool:
     @pytest.mark.asyncio
     async def test_delete_task_registered_success(self, task_tools_instance):
         """Verifica delete_task registrada con éxito."""
-        task_tools_instance._mock_client.delete_task = AsyncMock(
-            return_value={"success": True}
-        )
+        task_tools_instance._mock_client.delete_task = AsyncMock(return_value={"success": True})
 
         tools = await task_tools_instance.mcp.get_tools()
         tool = tools["taiga_delete_task"]
@@ -528,9 +526,7 @@ class TestTaskAttachmentsRegisteredTools:
     @pytest.mark.asyncio
     async def test_delete_task_attachment_registered(self, task_tools_instance):
         """Verifica delete_task_attachment registrada."""
-        task_tools_instance._mock_client.delete_task_attachment = AsyncMock(
-            return_value=None
-        )
+        task_tools_instance._mock_client.delete_task_attachment = AsyncMock(return_value=None)
 
         tools = await task_tools_instance.mcp.get_tools()
         tool = tools["taiga_delete_task_attachment"]
@@ -593,9 +589,7 @@ class TestTaskHistoryRegisteredTools:
     @pytest.mark.asyncio
     async def test_delete_task_comment_registered(self, task_tools_instance):
         """Verifica delete_task_comment registrada."""
-        task_tools_instance._mock_client.delete_task_comment = AsyncMock(
-            return_value=None
-        )
+        task_tools_instance._mock_client.delete_task_comment = AsyncMock(return_value=None)
 
         tools = await task_tools_instance.mcp.get_tools()
         tool = tools["taiga_delete_task_comment"]
@@ -678,9 +672,7 @@ class TestTaskCustomAttributesRegisteredTools:
     @pytest.mark.asyncio
     async def test_delete_task_custom_attribute_registered(self, task_tools_instance):
         """Verifica delete_task_custom_attribute registrada."""
-        task_tools_instance._mock_client.delete_task_custom_attribute = AsyncMock(
-            return_value=None
-        )
+        task_tools_instance._mock_client.delete_task_custom_attribute = AsyncMock(return_value=None)
 
         tools = await task_tools_instance.mcp.get_tools()
         tool = tools["taiga_delete_task_custom_attribute"]
@@ -696,12 +688,8 @@ class TestDirectMethodsExceptionHandlers:
     @pytest.mark.asyncio
     async def test_list_tasks_direct_exception(self, task_tools_instance):
         """Verifica manejo de excepciones en list_tasks."""
-        with patch(
-            "src.application.tools.task_tools.AutoPaginator"
-        ) as paginator_mock:
-            paginator_mock.return_value.paginate = AsyncMock(
-                side_effect=Exception("API Error")
-            )
+        with patch("src.application.tools.task_tools.AutoPaginator") as paginator_mock:
+            paginator_mock.return_value.paginate = AsyncMock(side_effect=Exception("API Error"))
 
             with pytest.raises(Exception, match="API Error"):
                 await task_tools_instance.list_tasks(auth_token="token", project=123)
@@ -724,9 +712,7 @@ class TestDirectMethodsExceptionHandlers:
     @pytest.mark.asyncio
     async def test_get_task_direct_exception(self, task_tools_instance):
         """Verifica manejo de excepciones en get_task."""
-        task_tools_instance._mock_client.get_task = AsyncMock(
-            side_effect=Exception("Not found")
-        )
+        task_tools_instance._mock_client.get_task = AsyncMock(side_effect=Exception("Not found"))
 
         with pytest.raises(Exception, match="Not found"):
             await task_tools_instance.get_task(auth_token="token", task_id=1)
@@ -739,9 +725,7 @@ class TestDirectMethodsExceptionHandlers:
         )
 
         with pytest.raises(Exception, match="Ref not found"):
-            await task_tools_instance.get_task_by_ref(
-                auth_token="token", project=123, ref=10
-            )
+            await task_tools_instance.get_task_by_ref(auth_token="token", project=123, ref=10)
 
     @pytest.mark.asyncio
     async def test_update_task_full_direct_exception(self, task_tools_instance):
@@ -886,9 +870,7 @@ class TestAttachmentMethodsExceptionHandlers:
         )
 
         with pytest.raises(Exception, match="List attachments failed"):
-            await task_tools_instance.list_task_attachments(
-                auth_token="token", task_id=1
-            )
+            await task_tools_instance.list_task_attachments(auth_token="token", task_id=1)
 
     @pytest.mark.asyncio
     async def test_create_task_attachment_direct_exception(self, task_tools_instance):
@@ -912,9 +894,7 @@ class TestAttachmentMethodsExceptionHandlers:
         )
 
         with pytest.raises(Exception, match="Get attachment failed"):
-            await task_tools_instance.get_task_attachment(
-                auth_token="token", attachment_id=1
-            )
+            await task_tools_instance.get_task_attachment(auth_token="token", attachment_id=1)
 
     @pytest.mark.asyncio
     async def test_update_task_attachment_direct_exception(self, task_tools_instance):
@@ -938,9 +918,7 @@ class TestAttachmentMethodsExceptionHandlers:
         )
 
         with pytest.raises(Exception, match="Delete attachment failed"):
-            await task_tools_instance.delete_task_attachment(
-                auth_token="token", attachment_id=1
-            )
+            await task_tools_instance.delete_task_attachment(auth_token="token", attachment_id=1)
 
 
 class TestHistoryMethodsExceptionHandlers:
@@ -957,9 +935,7 @@ class TestHistoryMethodsExceptionHandlers:
             await task_tools_instance.get_task_history(auth_token="token", task_id=1)
 
     @pytest.mark.asyncio
-    async def test_get_task_comment_versions_direct_exception(
-        self, task_tools_instance
-    ):
+    async def test_get_task_comment_versions_direct_exception(self, task_tools_instance):
         """Verifica manejo de excepciones en get_task_comment_versions."""
         task_tools_instance._mock_client.get_task_comment_versions = AsyncMock(
             side_effect=Exception("Versions failed")
@@ -1014,23 +990,17 @@ class TestCustomAttributesMethodsExceptionHandlers:
     """Tests para manejadores de excepciones en métodos de atributos personalizados."""
 
     @pytest.mark.asyncio
-    async def test_list_task_custom_attributes_direct_exception(
-        self, task_tools_instance
-    ):
+    async def test_list_task_custom_attributes_direct_exception(self, task_tools_instance):
         """Verifica manejo de excepciones en list_task_custom_attributes."""
         task_tools_instance._mock_client.list_task_custom_attributes = AsyncMock(
             side_effect=Exception("List attrs failed")
         )
 
         with pytest.raises(Exception, match="List attrs failed"):
-            await task_tools_instance.list_task_custom_attributes(
-                auth_token="token", project=123
-            )
+            await task_tools_instance.list_task_custom_attributes(auth_token="token", project=123)
 
     @pytest.mark.asyncio
-    async def test_create_task_custom_attribute_direct_exception(
-        self, task_tools_instance
-    ):
+    async def test_create_task_custom_attribute_direct_exception(self, task_tools_instance):
         """Verifica manejo de excepciones en create_task_custom_attribute."""
         task_tools_instance._mock_client.create_task_custom_attribute = AsyncMock(
             side_effect=Exception("Create attr failed")
@@ -1044,9 +1014,7 @@ class TestCustomAttributesMethodsExceptionHandlers:
             )
 
     @pytest.mark.asyncio
-    async def test_update_task_custom_attribute_direct_exception(
-        self, task_tools_instance
-    ):
+    async def test_update_task_custom_attribute_direct_exception(self, task_tools_instance):
         """Verifica manejo de excepciones en update_task_custom_attribute."""
         task_tools_instance._mock_client.update_task_custom_attribute = AsyncMock(
             side_effect=Exception("Update attr failed")
@@ -1060,9 +1028,7 @@ class TestCustomAttributesMethodsExceptionHandlers:
             )
 
     @pytest.mark.asyncio
-    async def test_delete_task_custom_attribute_direct_exception(
-        self, task_tools_instance
-    ):
+    async def test_delete_task_custom_attribute_direct_exception(self, task_tools_instance):
         """Verifica manejo de excepciones en delete_task_custom_attribute."""
         task_tools_instance._mock_client.delete_task_custom_attribute = AsyncMock(
             side_effect=Exception("Delete attr failed")

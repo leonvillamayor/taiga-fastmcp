@@ -50,9 +50,7 @@ class TestListIssuesRegisteredTool:
             ]
         )
 
-        with patch(
-            "src.application.tools.issue_tools.AutoPaginator", return_value=paginator_mock
-        ):
+        with patch("src.application.tools.issue_tools.AutoPaginator", return_value=paginator_mock):
             # Acceder a la herramienta registrada
             tools = await issue_tools_instance.mcp.get_tools()
             list_issues_tool = tools["taiga_list_issues"]
@@ -70,9 +68,7 @@ class TestListIssuesRegisteredTool:
             return_value=[{"id": 1, "ref": 1, "subject": "Test Issue"}]
         )
 
-        with patch(
-            "src.application.tools.issue_tools.AutoPaginator", return_value=paginator_mock
-        ):
+        with patch("src.application.tools.issue_tools.AutoPaginator", return_value=paginator_mock):
             tools = await issue_tools_instance.mcp.get_tools()
             list_issues_tool = tools["taiga_list_issues"]
 
@@ -89,9 +85,7 @@ class TestListIssuesRegisteredTool:
         paginator_mock = MagicMock()
         paginator_mock.paginate = AsyncMock(return_value=[])
 
-        with patch(
-            "src.application.tools.issue_tools.AutoPaginator", return_value=paginator_mock
-        ):
+        with patch("src.application.tools.issue_tools.AutoPaginator", return_value=paginator_mock):
             tools = await issue_tools_instance.mcp.get_tools()
             list_issues_tool = tools["taiga_list_issues"]
 
@@ -718,9 +712,7 @@ class TestDirectMethodsExceptionHandlers:
         )
 
         with pytest.raises(RuntimeError, match="Create failed"):
-            await issue_tools_instance.create_issue(
-                auth_token="token", project=123, subject="Test"
-            )
+            await issue_tools_instance.create_issue(auth_token="token", project=123, subject="Test")
 
     @pytest.mark.asyncio
     async def test_get_issue_direct_exception(self, issue_tools_instance):
@@ -735,10 +727,13 @@ class TestDirectMethodsExceptionHandlers:
     @pytest.mark.asyncio
     async def test_update_issue_direct_validation_error(self, issue_tools_instance):
         """Verifica ValidationError en update_issue directo."""
-        with patch(
-            "src.application.tools.issue_tools.validate_input",
-            side_effect=ValidationError("Validation failed"),
-        ), pytest.raises(ValidationError, match="Validation failed"):
+        with (
+            patch(
+                "src.application.tools.issue_tools.validate_input",
+                side_effect=ValidationError("Validation failed"),
+            ),
+            pytest.raises(ValidationError, match="Validation failed"),
+        ):
             await issue_tools_instance.update_issue(issue_id=456, subject="")
 
     @pytest.mark.asyncio
@@ -756,10 +751,13 @@ class TestDirectMethodsExceptionHandlers:
     @pytest.mark.asyncio
     async def test_update_issue_full_direct_validation_error(self, issue_tools_instance):
         """Verifica ValidationError en update_issue_full directo."""
-        with patch(
-            "src.application.tools.issue_tools.validate_input",
-            side_effect=ValidationError("Full validation failed"),
-        ), pytest.raises(ValidationError, match="Full validation failed"):
+        with (
+            patch(
+                "src.application.tools.issue_tools.validate_input",
+                side_effect=ValidationError("Full validation failed"),
+            ),
+            pytest.raises(ValidationError, match="Full validation failed"),
+        ):
             await issue_tools_instance.update_issue_full(issue_id=456, subject="")
 
     @pytest.mark.asyncio
@@ -900,9 +898,7 @@ class TestAttachmentMethodsExceptionHandlers:
             return_value=[{"id": 1, "name": "file.pdf"}]
         )
 
-        result = await issue_tools_instance.list_issue_attachments(
-            auth_token="token", issue_id=456
-        )
+        result = await issue_tools_instance.list_issue_attachments(auth_token="token", issue_id=456)
 
         assert len(result) == 1
 
@@ -1060,9 +1056,7 @@ class TestCustomAttributesMethodsExceptionHandlers:
         )
 
         with pytest.raises(RuntimeError, match="List custom attrs failed"):
-            await issue_tools_instance.list_issue_custom_attributes(
-                auth_token="token", project=123
-            )
+            await issue_tools_instance.list_issue_custom_attributes(auth_token="token", project=123)
 
     @pytest.mark.asyncio
     async def test_list_issue_custom_attributes_fallback(self, issue_tools_instance):

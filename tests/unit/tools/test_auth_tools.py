@@ -655,9 +655,11 @@ class TestAuthToolsAdditionalCoverage:
         auth_tools.register_tools()
 
         # Mock config to return None for credentials
-        with patch.object(auth_tools.config, "taiga_username", None), patch.object(
-            auth_tools.config, "taiga_password", None
-        ), pytest.raises(ToolError, match="Username and password are required"):
+        with (
+            patch.object(auth_tools.config, "taiga_username", None),
+            patch.object(auth_tools.config, "taiga_password", None),
+            pytest.raises(ToolError, match="Username and password are required"),
+        ):
             await auth_tools.authenticate()
 
     @pytest.mark.unit
@@ -741,13 +743,12 @@ class TestAuthToolsAdditionalCoverage:
         mock_client = AsyncMock()
         mock_client.__aenter__ = AsyncMock(return_value=mock_client)
         mock_client.__aexit__ = AsyncMock(return_value=None)
-        mock_client.refresh_auth_token = AsyncMock(
-            side_effect=RuntimeError("Unexpected error")
-        )
+        mock_client.refresh_auth_token = AsyncMock(side_effect=RuntimeError("Unexpected error"))
 
-        with patch(
-            "src.application.tools.auth_tools.TaigaAPIClient", return_value=mock_client
-        ), pytest.raises(ToolError, match="Unexpected error"):
+        with (
+            patch("src.application.tools.auth_tools.TaigaAPIClient", return_value=mock_client),
+            pytest.raises(ToolError, match="Unexpected error"),
+        ):
             await auth_tools.refresh_token()
 
     @pytest.mark.unit
@@ -827,9 +828,7 @@ class TestAuthToolsAdditionalCoverage:
             }
         )
 
-        with patch(
-            "src.application.tools.auth_tools.TaigaAPIClient", return_value=mock_client
-        ):
+        with patch("src.application.tools.auth_tools.TaigaAPIClient", return_value=mock_client):
             result = await auth_tools.authenticate("user", "pass")
 
         assert result["auth_token"] == "production_token"
@@ -850,9 +849,11 @@ class TestAuthToolsAdditionalCoverage:
         auth_tools = AuthTools(mcp)
 
         # Mock config to return None for credentials
-        with patch.object(auth_tools.config, "taiga_username", None), patch.object(
-            auth_tools.config, "taiga_password", None
-        ), pytest.raises(MCPError, match="Username and password are required"):
+        with (
+            patch.object(auth_tools.config, "taiga_username", None),
+            patch.object(auth_tools.config, "taiga_password", None),
+            pytest.raises(MCPError, match="Username and password are required"),
+        ):
             await auth_tools.authenticate()
 
     @pytest.mark.unit
@@ -871,9 +872,10 @@ class TestAuthToolsAdditionalCoverage:
         mock_client.__aexit__ = AsyncMock(return_value=None)
         mock_client.authenticate = AsyncMock(side_effect=ValueError("Connection failed"))
 
-        with patch(
-            "src.application.tools.auth_tools.TaigaAPIClient", return_value=mock_client
-        ), pytest.raises(ValueError, match="Connection failed"):
+        with (
+            patch("src.application.tools.auth_tools.TaigaAPIClient", return_value=mock_client),
+            pytest.raises(ValueError, match="Connection failed"),
+        ):
             await auth_tools.authenticate("user", "pass")
 
     @pytest.mark.unit
@@ -919,8 +921,9 @@ class TestAuthToolsAdditionalCoverage:
             def pop(self, key, default=None):
                 raise RuntimeError("Context error")
 
-        with patch.object(mcp, "context", BadContext()), pytest.raises(
-            ToolError, match="Logout failed"
+        with (
+            patch.object(mcp, "context", BadContext()),
+            pytest.raises(ToolError, match="Logout failed"),
         ):
             await auth_tools.logout()
 
@@ -976,6 +979,7 @@ class TestAuthToolsAdditionalCoverage:
 
         # Verify they are async functions
         import inspect
+
         assert inspect.iscoroutinefunction(auth_tools.authenticate)
         assert inspect.iscoroutinefunction(auth_tools.refresh_token)
         assert inspect.iscoroutinefunction(auth_tools.get_current_user)

@@ -71,12 +71,11 @@ class TestListWebhooksExceptionHandlers:
         paginator_mock = MagicMock()
         paginator_mock.paginate = AsyncMock(side_effect=AuthenticationError("Token expired"))
 
-        with patch(
-            "src.application.tools.webhook_tools.AutoPaginator", return_value=paginator_mock
-        ), pytest.raises(ToolError, match="Authentication failed"):
-            await webhook_tools_instance.list_webhooks(
-                auth_token="invalid_token", project_id=123
-            )
+        with (
+            patch("src.application.tools.webhook_tools.AutoPaginator", return_value=paginator_mock),
+            pytest.raises(ToolError, match="Authentication failed"),
+        ):
+            await webhook_tools_instance.list_webhooks(auth_token="invalid_token", project_id=123)
 
     @pytest.mark.unit
     @pytest.mark.webhooks
@@ -86,9 +85,10 @@ class TestListWebhooksExceptionHandlers:
         paginator_mock = MagicMock()
         paginator_mock.paginate = AsyncMock(side_effect=TaigaAPIError("Server error"))
 
-        with patch(
-            "src.application.tools.webhook_tools.AutoPaginator", return_value=paginator_mock
-        ), pytest.raises(ToolError, match="Failed to list webhooks"):
+        with (
+            patch("src.application.tools.webhook_tools.AutoPaginator", return_value=paginator_mock),
+            pytest.raises(ToolError, match="Failed to list webhooks"),
+        ):
             await webhook_tools_instance.list_webhooks(auth_token="token", project_id=123)
 
     @pytest.mark.unit
@@ -99,9 +99,10 @@ class TestListWebhooksExceptionHandlers:
         paginator_mock = MagicMock()
         paginator_mock.paginate = AsyncMock(side_effect=RuntimeError("Unexpected"))
 
-        with patch(
-            "src.application.tools.webhook_tools.AutoPaginator", return_value=paginator_mock
-        ), pytest.raises(ToolError, match="Unexpected error"):
+        with (
+            patch("src.application.tools.webhook_tools.AutoPaginator", return_value=paginator_mock),
+            pytest.raises(ToolError, match="Unexpected error"),
+        ):
             await webhook_tools_instance.list_webhooks(auth_token="token", project_id=123)
 
     @pytest.mark.unit
@@ -163,10 +164,13 @@ class TestCreateWebhookExceptionHandlers:
     @pytest.mark.asyncio
     async def test_create_webhook_validation_error(self, webhook_tools_instance):
         """Verifica manejo de ValidationError en create_webhook."""
-        with patch(
-            "src.application.tools.webhook_tools.validate_input",
-            side_effect=ValidationError("Invalid webhook data"),
-        ), pytest.raises(ToolError, match="Invalid webhook data"):
+        with (
+            patch(
+                "src.application.tools.webhook_tools.validate_input",
+                side_effect=ValidationError("Invalid webhook data"),
+            ),
+            pytest.raises(ToolError, match="Invalid webhook data"),
+        ):
             await webhook_tools_instance.create_webhook(
                 auth_token="token",
                 project_id=123,
@@ -354,9 +358,7 @@ class TestGetWebhookExceptionHandlers:
     @pytest.mark.asyncio
     async def test_get_webhook_unexpected_exception(self, webhook_tools_instance):
         """Verifica manejo de Exception genérica en get_webhook."""
-        webhook_tools_instance._mock_client.get = AsyncMock(
-            side_effect=RuntimeError("Unexpected")
-        )
+        webhook_tools_instance._mock_client.get = AsyncMock(side_effect=RuntimeError("Unexpected"))
 
         with pytest.raises(ToolError, match="Unexpected error"):
             await webhook_tools_instance.get_webhook(auth_token="token", webhook_id=1)
@@ -402,10 +404,13 @@ class TestUpdateWebhookExceptionHandlers:
     @pytest.mark.asyncio
     async def test_update_webhook_validation_error(self, webhook_tools_instance):
         """Verifica manejo de ValidationError en update_webhook."""
-        with patch(
-            "src.application.tools.webhook_tools.validate_input",
-            side_effect=ValidationError("Invalid URL format"),
-        ), pytest.raises(ToolError, match="Invalid URL format"):
+        with (
+            patch(
+                "src.application.tools.webhook_tools.validate_input",
+                side_effect=ValidationError("Invalid URL format"),
+            ),
+            pytest.raises(ToolError, match="Invalid URL format"),
+        ):
             await webhook_tools_instance.update_webhook(
                 auth_token="token", webhook_id=1, url="not-valid"
             )
@@ -724,9 +729,7 @@ class TestTestWebhookExceptionHandlers:
     @pytest.mark.asyncio
     async def test_test_webhook_unexpected_exception(self, webhook_tools_instance):
         """Verifica manejo de Exception genérica en test_webhook."""
-        webhook_tools_instance._mock_client.post = AsyncMock(
-            side_effect=RuntimeError("Unexpected")
-        )
+        webhook_tools_instance._mock_client.post = AsyncMock(side_effect=RuntimeError("Unexpected"))
 
         with pytest.raises(ToolError, match="Unexpected error"):
             await webhook_tools_instance.test_webhook(auth_token="token", webhook_id=1)
