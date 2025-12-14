@@ -501,7 +501,7 @@ class IssueTools:
                     validation_data = {
                         "project_id": project_id,
                         "subject": issue_data.get("subject"),
-                        "issue_type": issue_data.get("type"),
+                        "type": issue_data.get("type"),
                         "priority": issue_data.get("priority"),
                         "severity": issue_data.get("severity"),
                         "description": issue_data.get("description"),

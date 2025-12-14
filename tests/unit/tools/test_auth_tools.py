@@ -526,3 +526,462 @@ class TestAuthToolsBestPractices:
                     await auth_tools.authenticate("user", "pass")
 
                 assert expected_message in str(exc_info.value)
+
+
+class TestAuthToolsAdditionalCoverage:
+    """Tests for additional coverage of AuthTools."""
+
+    @pytest.fixture
+    def mock_taiga_api(self, respx_mock):
+        """Fixture para mock de la API de Taiga."""
+        return respx_mock
+
+    @pytest.mark.unit
+    @pytest.mark.auth
+    def test_set_client(self) -> None:
+        """Test set_client method."""
+        mcp = FastMCP("Test")
+        auth_tools = AuthTools(mcp)
+        mock_client = object()
+        auth_tools.set_client(mock_client)
+        assert auth_tools.client is mock_client
+
+    @pytest.mark.unit
+    @pytest.mark.auth
+    def test_get_auth_token(self) -> None:
+        """Test get_auth_token method."""
+        mcp = FastMCP("Test")
+        auth_tools = AuthTools(mcp)
+
+        # Initially should be None
+        assert auth_tools.get_auth_token() is None
+
+        # After setting
+        auth_tools._auth_token = "test_token"
+        assert auth_tools.get_auth_token() == "test_token"
+
+    @pytest.mark.unit
+    @pytest.mark.auth
+    def test_is_authenticated(self) -> None:
+        """Test is_authenticated method."""
+        mcp = FastMCP("Test")
+        auth_tools = AuthTools(mcp)
+
+        # Initially should be False
+        assert auth_tools.is_authenticated() is False
+
+        # After setting token
+        auth_tools._auth_token = "test_token"
+        assert auth_tools.is_authenticated() is True
+
+    @pytest.mark.unit
+    @pytest.mark.auth
+    @pytest.mark.asyncio
+    async def test_logout_tool(self, mock_taiga_api) -> None:
+        """Test logout tool."""
+        mcp = FastMCP("Test")
+        auth_tools = AuthTools(mcp)
+        auth_tools.register_tools()
+
+        # Set some tokens first
+        auth_tools._auth_token = "token123"
+        auth_tools._refresh_token = "refresh456"
+        auth_tools._user_data = {"username": "testuser"}
+
+        # Call logout
+        result = await auth_tools.logout()
+
+        # Assert
+        assert result["authenticated"] is False
+        assert "logged out" in result["message"].lower()
+        assert auth_tools._auth_token is None
+        assert auth_tools._refresh_token is None
+        assert auth_tools._user_data is None
+
+    @pytest.mark.unit
+    @pytest.mark.auth
+    @pytest.mark.asyncio
+    async def test_check_auth_tool_authenticated(self, mock_taiga_api) -> None:
+        """Test check_auth tool when authenticated."""
+        mcp = FastMCP("Test")
+        auth_tools = AuthTools(mcp)
+        auth_tools.register_tools()
+
+        # Set authentication state
+        auth_tools._auth_token = "token123"
+        auth_tools._refresh_token = "refresh456"
+        auth_tools._user_data = {"username": "testuser", "id": 42}
+
+        # Call check_auth
+        result = await auth_tools.check_auth()
+
+        # Assert
+        assert result["authenticated"] is True
+        assert result["has_token"] is True
+        assert result["has_refresh_token"] is True
+        assert result["username"] == "testuser"
+        assert result["user_id"] == 42
+
+    @pytest.mark.unit
+    @pytest.mark.auth
+    @pytest.mark.asyncio
+    async def test_check_auth_tool_not_authenticated(self, mock_taiga_api) -> None:
+        """Test check_auth tool when not authenticated."""
+        mcp = FastMCP("Test")
+        auth_tools = AuthTools(mcp)
+        auth_tools.register_tools()
+
+        # Don't set any authentication state
+
+        # Call check_auth
+        result = await auth_tools.check_auth()
+
+        # Assert
+        assert result["authenticated"] is False
+        assert result["has_token"] is False
+        assert result["has_refresh_token"] is False
+        assert result["username"] is None
+        assert result["user_id"] is None
+
+    @pytest.mark.unit
+    @pytest.mark.auth
+    @pytest.mark.asyncio
+    async def test_authenticate_missing_credentials(self, mock_taiga_api) -> None:
+        """Test authenticate with missing credentials from config."""
+        from unittest.mock import patch
+
+        mcp = FastMCP("Test")
+        auth_tools = AuthTools(mcp)
+        auth_tools.register_tools()
+
+        # Mock config to return None for credentials
+        with patch.object(auth_tools.config, "taiga_username", None), patch.object(
+            auth_tools.config, "taiga_password", None
+        ):
+            with pytest.raises(ToolError, match="Username and password are required"):
+                await auth_tools.authenticate()
+
+    @pytest.mark.unit
+    @pytest.mark.auth
+    @pytest.mark.asyncio
+    async def test_refresh_token_no_token_available(self, mock_taiga_api) -> None:
+        """Test refresh_token when no token is available."""
+        mcp = FastMCP("Test")
+        auth_tools = AuthTools(mcp)
+        auth_tools.register_tools()
+
+        # Don't set any refresh token
+
+        with pytest.raises(ToolError, match="No refresh token available"):
+            await auth_tools.refresh_token()
+
+    @pytest.mark.unit
+    @pytest.mark.auth
+    @pytest.mark.asyncio
+    async def test_get_current_user_api_error(self, mock_taiga_api) -> None:
+        """Test get_current_user with API error."""
+        from src.domain.exceptions import TaigaAPIError
+
+        mcp = FastMCP("Test")
+        auth_tools = AuthTools(mcp)
+        auth_tools.register_tools()
+
+        mock_taiga_api.get("https://api.taiga.io/api/v1/users/me").mock(
+            return_value=httpx.Response(500, json={"detail": "Server error"})
+        )
+
+        with pytest.raises(ToolError, match="API error"):
+            await auth_tools.get_current_user(auth_token="valid_token")
+
+    @pytest.mark.unit
+    @pytest.mark.auth
+    @pytest.mark.asyncio
+    async def test_context_initialization(self, mock_taiga_api) -> None:
+        """Test context initialization when mcp doesn't have context."""
+        mcp = FastMCP("Test")
+        # Remove context if it exists
+        if hasattr(mcp, "context"):
+            delattr(mcp, "context")
+
+        auth_tools = AuthTools(mcp)
+        # Context should be initialized
+        assert hasattr(mcp, "context")
+
+    @pytest.mark.unit
+    @pytest.mark.auth
+    @pytest.mark.asyncio
+    async def test_get_context_initializes_context(self, mock_taiga_api) -> None:
+        """Test get_context initializes mcp.context if missing."""
+        mcp = FastMCP("Test")
+        auth_tools = AuthTools(mcp)
+        auth_tools.register_tools()
+
+        # Remove context
+        if hasattr(mcp, "context"):
+            delattr(mcp, "context")
+
+        # Call get_context - should initialize context
+        ctx = auth_tools.get_context()
+        assert hasattr(mcp, "context")
+        assert ctx is not None
+
+    @pytest.mark.unit
+    @pytest.mark.auth
+    @pytest.mark.asyncio
+    async def test_refresh_token_unexpected_error(self, mock_taiga_api) -> None:
+        """Test refresh_token with unexpected error."""
+        from unittest.mock import AsyncMock, patch
+
+        mcp = FastMCP("Test")
+        auth_tools = AuthTools(mcp)
+        auth_tools.register_tools()
+
+        # Set refresh token
+        auth_tools._refresh_token = "refresh_token"
+
+        # Mock to raise unexpected error
+        mock_client = AsyncMock()
+        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+        mock_client.__aexit__ = AsyncMock(return_value=None)
+        mock_client.refresh_auth_token = AsyncMock(
+            side_effect=RuntimeError("Unexpected error")
+        )
+
+        with patch(
+            "src.application.tools.auth_tools.TaigaAPIClient", return_value=mock_client
+        ):
+            with pytest.raises(ToolError, match="Unexpected error"):
+                await auth_tools.refresh_token()
+
+    @pytest.mark.unit
+    @pytest.mark.auth
+    @pytest.mark.asyncio
+    async def test_logout_tool_via_mcp(self, mock_taiga_api) -> None:
+        """Test logout tool via MCP."""
+        mcp = FastMCP("Test")
+        auth_tools = AuthTools(mcp)
+        auth_tools.register_tools()
+
+        tools = await mcp.get_tools()
+        logout_tool = tools.get("taiga_logout")
+        assert logout_tool is not None
+
+        result = await logout_tool.fn()
+        assert result["authenticated"] is False
+
+    @pytest.mark.unit
+    @pytest.mark.auth
+    @pytest.mark.asyncio
+    async def test_check_auth_tool_via_mcp(self, mock_taiga_api) -> None:
+        """Test check_auth tool via MCP."""
+        mcp = FastMCP("Test")
+        auth_tools = AuthTools(mcp)
+        auth_tools.register_tools()
+
+        tools = await mcp.get_tools()
+        check_auth_tool = tools.get("taiga_check_auth")
+        assert check_auth_tool is not None
+
+        result = await check_auth_tool.fn()
+        assert "authenticated" in result
+
+    @pytest.mark.unit
+    @pytest.mark.auth
+    @pytest.mark.asyncio
+    async def test_direct_authenticate_with_client(self, mock_taiga_api) -> None:
+        """Test direct authenticate method with mock client."""
+        from unittest.mock import AsyncMock
+
+        mcp = FastMCP("Test")
+        auth_tools = AuthTools(mcp)
+
+        # Create mock client
+        mock_client = AsyncMock()
+        mock_client.authenticate = AsyncMock(
+            return_value={"auth_token": "token", "refresh_token": "refresh"}
+        )
+        auth_tools.set_client(mock_client)
+
+        result = await auth_tools.authenticate("user", "pass")
+
+        assert result["auth_token"] == "token"
+        mock_client.authenticate.assert_called_once_with("user", "pass")
+
+    @pytest.mark.unit
+    @pytest.mark.auth
+    @pytest.mark.asyncio
+    async def test_direct_authenticate_production_path(self, mock_taiga_api) -> None:
+        """Test direct authenticate method using TaigaAPIClient (production path)."""
+        from unittest.mock import AsyncMock, patch
+
+        mcp = FastMCP("Test")
+        auth_tools = AuthTools(mcp)
+        # Don't set client, so it uses production path
+
+        # Mock TaigaAPIClient
+        mock_client = AsyncMock()
+        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+        mock_client.__aexit__ = AsyncMock(return_value=None)
+        mock_client.authenticate = AsyncMock(
+            return_value={
+                "auth_token": "production_token",
+                "refresh_token": "production_refresh",
+                "username": "testuser",
+            }
+        )
+
+        with patch(
+            "src.application.tools.auth_tools.TaigaAPIClient", return_value=mock_client
+        ):
+            result = await auth_tools.authenticate("user", "pass")
+
+        assert result["auth_token"] == "production_token"
+        assert auth_tools._auth_token == "production_token"
+        assert auth_tools._refresh_token == "production_refresh"
+        assert mcp.context.get("auth_token") == "production_token"
+
+    @pytest.mark.unit
+    @pytest.mark.auth
+    @pytest.mark.asyncio
+    async def test_direct_authenticate_missing_credentials_direct(self) -> None:
+        """Test direct authenticate method with missing credentials (direct call)."""
+        from fastmcp.exceptions import ToolError as MCPError
+        from unittest.mock import patch
+
+        mcp = FastMCP("Test")
+        auth_tools = AuthTools(mcp)
+
+        # Mock config to return None for credentials
+        with patch.object(auth_tools.config, "taiga_username", None), patch.object(
+            auth_tools.config, "taiga_password", None
+        ):
+            with pytest.raises(MCPError, match="Username and password are required"):
+                await auth_tools.authenticate()
+
+    @pytest.mark.unit
+    @pytest.mark.auth
+    @pytest.mark.asyncio
+    async def test_direct_authenticate_production_error(self, mock_taiga_api) -> None:
+        """Test direct authenticate method with error in production path."""
+        from unittest.mock import AsyncMock, patch
+
+        mcp = FastMCP("Test")
+        auth_tools = AuthTools(mcp)
+
+        # Mock TaigaAPIClient that raises an error
+        mock_client = AsyncMock()
+        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+        mock_client.__aexit__ = AsyncMock(return_value=None)
+        mock_client.authenticate = AsyncMock(side_effect=ValueError("Connection failed"))
+
+        with patch(
+            "src.application.tools.auth_tools.TaigaAPIClient", return_value=mock_client
+        ):
+            with pytest.raises(ValueError, match="Connection failed"):
+                await auth_tools.authenticate("user", "pass")
+
+    @pytest.mark.unit
+    @pytest.mark.auth
+    @pytest.mark.asyncio
+    async def test_logout_clears_context(self, mock_taiga_api) -> None:
+        """Test logout tool clears context with auth tokens."""
+        mcp = FastMCP("Test")
+        auth_tools = AuthTools(mcp)
+        auth_tools.register_tools()
+
+        # Set tokens in context
+        mcp.context["auth_token"] = "token_to_clear"
+        mcp.context["refresh_token"] = "refresh_to_clear"
+        mcp.context["user_data"] = {"username": "testuser"}
+
+        # Set instance tokens
+        auth_tools._auth_token = "token123"
+        auth_tools._refresh_token = "refresh456"
+        auth_tools._user_data = {"username": "testuser"}
+
+        # Call logout
+        result = await auth_tools.logout()
+
+        # Assert context is cleared
+        assert mcp.context.get("auth_token") is None
+        assert mcp.context.get("refresh_token") is None
+        assert mcp.context.get("user_data") is None
+
+    @pytest.mark.unit
+    @pytest.mark.auth
+    @pytest.mark.asyncio
+    async def test_logout_exception(self, mock_taiga_api) -> None:
+        """Test logout tool with exception during execution."""
+        from unittest.mock import PropertyMock, patch
+
+        mcp = FastMCP("Test")
+        auth_tools = AuthTools(mcp)
+        auth_tools.register_tools()
+
+        # Mock mcp.context to raise an error when pop is called
+        class BadContext(dict):
+            def pop(self, key, default=None):
+                raise RuntimeError("Context error")
+
+        with patch.object(mcp, "context", BadContext()):
+            with pytest.raises(ToolError, match="Logout failed"):
+                await auth_tools.logout()
+
+    @pytest.mark.unit
+    @pytest.mark.auth
+    @pytest.mark.asyncio
+    async def test_check_auth_exception(self, mock_taiga_api) -> None:
+        """Test check_auth tool with exception during execution."""
+        from unittest.mock import patch, PropertyMock
+
+        mcp = FastMCP("Test")
+        auth_tools = AuthTools(mcp)
+        auth_tools.register_tools()
+
+        # Create a patched check_auth that raises an exception
+        original_check_auth = auth_tools.check_auth
+
+        async def raising_check_auth():
+            raise RuntimeError("Token error")
+
+        auth_tools.check_auth = raising_check_auth
+
+        # The check_auth method itself raises, but we need to trigger the exception handling
+        # inside the actual check_auth tool. Let's reset and patch _user_data.get instead
+        auth_tools.check_auth = original_check_auth
+        auth_tools._auth_token = "token"
+        auth_tools._user_data = None  # This will cause an error when .get is called if we force it
+
+        # To trigger line 489-491, we need the try block to raise an exception
+        # Let's mock _user_data to raise on access
+        class RaisingDict:
+            def get(self, key):
+                raise RuntimeError("Token error")
+
+        auth_tools._user_data = RaisingDict()
+
+        with pytest.raises(ToolError, match="Authentication check failed"):
+            await auth_tools.check_auth()
+
+    @pytest.mark.unit
+    @pytest.mark.auth
+    def test_function_reference_fallbacks(self) -> None:
+        """Test that tool functions are stored correctly with fallbacks."""
+        mcp = FastMCP("Test")
+        auth_tools = AuthTools(mcp)
+        auth_tools.register_tools()
+
+        # Verify all tool methods are accessible
+        assert callable(auth_tools.authenticate)
+        assert callable(auth_tools.refresh_token)
+        assert callable(auth_tools.get_current_user)
+        assert callable(auth_tools.logout)
+        assert callable(auth_tools.check_auth)
+
+        # Verify they are async functions
+        import inspect
+        assert inspect.iscoroutinefunction(auth_tools.authenticate)
+        assert inspect.iscoroutinefunction(auth_tools.refresh_token)
+        assert inspect.iscoroutinefunction(auth_tools.get_current_user)
+        assert inspect.iscoroutinefunction(auth_tools.logout)
+        assert inspect.iscoroutinefunction(auth_tools.check_auth)

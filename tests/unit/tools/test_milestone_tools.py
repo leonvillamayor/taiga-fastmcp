@@ -3,7 +3,12 @@ Tests for Milestone/Sprint management tools.
 MILE-001 to MILE-010: Complete Milestone functionality testing.
 """
 
+import httpx
 import pytest
+from fastmcp import FastMCP
+from fastmcp.exceptions import ToolError
+
+from src.application.tools.milestone_tools import MilestoneTools
 
 
 class TestMilestoneCRUD:
@@ -469,3 +474,331 @@ class TestMilestoneWatchers:
         # Verificar progreso de tareas
         assert result["completed_tasks"] == 20
         assert result["total_tasks"] == 25
+
+
+class TestMilestoneToolsCoverage:
+    """Tests for additional coverage of MilestoneTools."""
+
+    @pytest.fixture
+    def mock_taiga_api(self, respx_mock):
+        """Fixture para mock de la API de Taiga."""
+        # Auth
+        respx_mock.post("https://api.taiga.io/api/v1/auth").mock(
+            return_value=httpx.Response(
+                200,
+                json={
+                    "auth_token": "test_token",
+                    "id": 1,
+                    "username": "testuser",
+                },
+            )
+        )
+        return respx_mock
+
+    @pytest.mark.unit
+    @pytest.mark.asyncio
+    async def test_list_milestones_auto_paginate_false(self, mock_taiga_api) -> None:
+        """Test list_milestones con auto_paginate=False."""
+        mcp = FastMCP("Test")
+        milestone_tools = MilestoneTools(mcp)
+
+        mock_taiga_api.get(
+            "https://api.taiga.io/api/v1/milestones?project=123&page=1&page_size=100"
+        ).mock(
+            return_value=httpx.Response(
+                200,
+                json=[{"id": 1, "name": "Sprint 1", "project": 123}],
+            )
+        )
+
+        result = await milestone_tools.list_milestones(
+            auth_token="token", project=123, auto_paginate=False
+        )
+        assert len(result) == 1
+        assert result[0]["name"] == "Sprint 1"
+
+    @pytest.mark.unit
+    @pytest.mark.asyncio
+    async def test_create_milestone_missing_dates(self, mock_taiga_api) -> None:
+        """Test create_milestone without estimated_start/estimated_finish."""
+        mcp = FastMCP("Test")
+        milestone_tools = MilestoneTools(mcp)
+
+        with pytest.raises(ValueError, match="estimated_start and estimated_finish are required"):
+            await milestone_tools.create_milestone(
+                auth_token="token",
+                project=123,
+                name="Sprint 1",
+            )
+
+    @pytest.mark.unit
+    @pytest.mark.asyncio
+    async def test_update_milestone_full_missing_name(self, mock_taiga_api) -> None:
+        """Test update_milestone_full without required name."""
+        mcp = FastMCP("Test")
+        milestone_tools = MilestoneTools(mcp)
+
+        with pytest.raises(ValueError, match="name is required for full update"):
+            await milestone_tools.update_milestone_full(
+                auth_token="token",
+                milestone_id=1,
+                estimated_start="2025-01-01",
+                estimated_finish="2025-01-15",
+            )
+
+    @pytest.mark.unit
+    @pytest.mark.asyncio
+    async def test_update_milestone_full_missing_dates(self, mock_taiga_api) -> None:
+        """Test update_milestone_full without required dates."""
+        mcp = FastMCP("Test")
+        milestone_tools = MilestoneTools(mcp)
+
+        with pytest.raises(
+            ValueError, match="estimated_start and estimated_finish are required for full update"
+        ):
+            await milestone_tools.update_milestone_full(
+                auth_token="token",
+                milestone_id=1,
+                name="Sprint 1",
+            )
+
+    @pytest.mark.unit
+    @pytest.mark.asyncio
+    async def test_delete_milestone_non_dict_result(self, mock_taiga_api) -> None:
+        """Test delete_milestone when client returns non-dict (e.g., None)."""
+        from unittest.mock import AsyncMock, patch
+
+        mcp = FastMCP("Test")
+        milestone_tools = MilestoneTools(mcp)
+
+        # Mock to return None (common for DELETE 204)
+        mock_client = AsyncMock()
+        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+        mock_client.__aexit__ = AsyncMock(return_value=None)
+        mock_client.delete_milestone = AsyncMock(return_value=None)
+
+        with patch(
+            "src.application.tools.milestone_tools.TaigaAPIClient", return_value=mock_client
+        ):
+            result = await milestone_tools.delete_milestone(auth_token="token", milestone_id=123)
+
+        assert "success" in result
+        assert "message" in result
+        assert "123" in result["message"]
+
+
+class TestMilestoneToolsViaFastMCP:
+    """Tests that exercise the MCP tool wrapper functions directly."""
+
+    @pytest.fixture
+    def mock_taiga_api(self, respx_mock):
+        """Fixture para mock de la API de Taiga."""
+        respx_mock.post("https://api.taiga.io/api/v1/auth").mock(
+            return_value=httpx.Response(
+                200, json={"auth_token": "test_token", "id": 1, "username": "testuser"}
+            )
+        )
+        return respx_mock
+
+    @pytest.mark.unit
+    @pytest.mark.asyncio
+    async def test_create_milestone_tool_validation_error(self, mock_taiga_api) -> None:
+        """Test create_milestone_tool ValidationError handler."""
+        mcp = FastMCP("Test")
+        milestone_tools = MilestoneTools(mcp)
+
+        # Get the registered tool
+        tools = await mcp.get_tools()
+        create_tool = tools.get("taiga_create_milestone")
+        assert create_tool is not None
+
+        # Call with invalid data - project_id=0 should fail validation
+        with pytest.raises(ToolError):
+            await create_tool.fn(
+                auth_token="token",
+                project_id=0,  # Invalid
+                name="Sprint",
+                estimated_start="2025-01-01",
+                estimated_finish="2025-01-15",
+            )
+
+    @pytest.mark.unit
+    @pytest.mark.asyncio
+    async def test_update_milestone_full_tool_validation_error(self, mock_taiga_api) -> None:
+        """Test update_milestone_full_tool ValidationError handler."""
+        mcp = FastMCP("Test")
+        milestone_tools = MilestoneTools(mcp)
+
+        tools = await mcp.get_tools()
+        update_tool = tools.get("taiga_update_milestone_full")
+        assert update_tool is not None
+
+        # Call with invalid data - milestone_id=0 should fail validation
+        with pytest.raises(ToolError):
+            await update_tool.fn(
+                auth_token="token",
+                milestone_id=0,  # Invalid
+                project_id=123,
+                name="Sprint",
+                estimated_start="2025-01-01",
+                estimated_finish="2025-01-15",
+            )
+
+    @pytest.mark.unit
+    @pytest.mark.asyncio
+    async def test_update_milestone_partial_tool_validation_error(self, mock_taiga_api) -> None:
+        """Test update_milestone_partial_tool ValidationError handler."""
+        mcp = FastMCP("Test")
+        milestone_tools = MilestoneTools(mcp)
+
+        tools = await mcp.get_tools()
+        update_tool = tools.get("taiga_update_milestone")
+        assert update_tool is not None
+
+        # Call with invalid data - milestone_id=0 should fail validation
+        with pytest.raises(ToolError):
+            await update_tool.fn(
+                auth_token="token",
+                milestone_id=0,  # Invalid
+                name="Sprint Updated",
+            )
+
+    @pytest.mark.unit
+    @pytest.mark.asyncio
+    async def test_list_milestones_tool_via_mcp(self, mock_taiga_api) -> None:
+        """Test list_milestones through tool wrapper."""
+        mcp = FastMCP("Test")
+        milestone_tools = MilestoneTools(mcp)
+
+        mock_taiga_api.get(
+            "https://api.taiga.io/api/v1/milestones?project=123&page=1&page_size=100"
+        ).mock(
+            return_value=httpx.Response(200, json=[{"id": 1, "name": "Sprint 1", "project": 123}])
+        )
+
+        tools = await mcp.get_tools()
+        list_tool = tools.get("taiga_list_milestones")
+        result = await list_tool.fn(auth_token="token", project_id=123, auto_paginate=False)
+
+        assert len(result) == 1
+        assert result[0]["name"] == "Sprint 1"
+
+    @pytest.mark.unit
+    @pytest.mark.asyncio
+    async def test_get_milestone_tool_via_mcp(self, mock_taiga_api) -> None:
+        """Test get_milestone through tool wrapper."""
+        mcp = FastMCP("Test")
+        milestone_tools = MilestoneTools(mcp)
+
+        mock_taiga_api.get("https://api.taiga.io/api/v1/milestones/45").mock(
+            return_value=httpx.Response(
+                200, json={"id": 45, "name": "Sprint 5", "project": 123, "closed": False}
+            )
+        )
+
+        tools = await mcp.get_tools()
+        get_tool = tools.get("taiga_get_milestone")
+        result = await get_tool.fn(auth_token="token", milestone_id=45)
+
+        assert result["id"] == 45
+        assert result["name"] == "Sprint 5"
+
+    @pytest.mark.unit
+    @pytest.mark.asyncio
+    async def test_delete_milestone_tool_via_mcp(self, mock_taiga_api) -> None:
+        """Test delete_milestone through tool wrapper."""
+        mcp = FastMCP("Test")
+        milestone_tools = MilestoneTools(mcp)
+
+        mock_taiga_api.delete("https://api.taiga.io/api/v1/milestones/45").mock(
+            return_value=httpx.Response(204)
+        )
+
+        tools = await mcp.get_tools()
+        delete_tool = tools.get("taiga_delete_milestone")
+        result = await delete_tool.fn(auth_token="token", milestone_id=45)
+
+        assert "success" in result
+
+    @pytest.mark.unit
+    @pytest.mark.asyncio
+    async def test_get_milestone_stats_tool_via_mcp(self, mock_taiga_api) -> None:
+        """Test get_milestone_stats through tool wrapper."""
+        mcp = FastMCP("Test")
+        milestone_tools = MilestoneTools(mcp)
+
+        mock_taiga_api.get("https://api.taiga.io/api/v1/milestones/45/stats").mock(
+            return_value=httpx.Response(
+                200,
+                json={
+                    "name": "Sprint 5",
+                    "total_points": 50.0,
+                    "completed_points": 25.0,
+                    "days": [],
+                },
+            )
+        )
+
+        tools = await mcp.get_tools()
+        stats_tool = tools.get("taiga_get_milestone_stats")
+        result = await stats_tool.fn(auth_token="token", milestone_id=45)
+
+        assert result["name"] == "Sprint 5"
+        assert result["total_points"] == 50.0
+
+    @pytest.mark.unit
+    @pytest.mark.asyncio
+    async def test_watch_milestone_tool_via_mcp(self, mock_taiga_api) -> None:
+        """Test watch_milestone through tool wrapper."""
+        mcp = FastMCP("Test")
+        milestone_tools = MilestoneTools(mcp)
+
+        mock_taiga_api.post("https://api.taiga.io/api/v1/milestones/45/watch").mock(
+            return_value=httpx.Response(200, json={"id": 45, "total_watchers": 3})
+        )
+
+        tools = await mcp.get_tools()
+        watch_tool = tools.get("taiga_watch_milestone")
+        result = await watch_tool.fn(auth_token="token", milestone_id=45)
+
+        assert result["id"] == 45
+        assert result["total_watchers"] == 3
+
+    @pytest.mark.unit
+    @pytest.mark.asyncio
+    async def test_unwatch_milestone_tool_via_mcp(self, mock_taiga_api) -> None:
+        """Test unwatch_milestone through tool wrapper."""
+        mcp = FastMCP("Test")
+        milestone_tools = MilestoneTools(mcp)
+
+        mock_taiga_api.post("https://api.taiga.io/api/v1/milestones/45/unwatch").mock(
+            return_value=httpx.Response(200, json={"id": 45, "total_watchers": 2})
+        )
+
+        tools = await mcp.get_tools()
+        unwatch_tool = tools.get("taiga_unwatch_milestone")
+        result = await unwatch_tool.fn(auth_token="token", milestone_id=45)
+
+        assert result["id"] == 45
+        assert result["total_watchers"] == 2
+
+    @pytest.mark.unit
+    @pytest.mark.asyncio
+    async def test_get_milestone_watchers_tool_via_mcp(self, mock_taiga_api) -> None:
+        """Test get_milestone_watchers through tool wrapper."""
+        mcp = FastMCP("Test")
+        milestone_tools = MilestoneTools(mcp)
+
+        mock_taiga_api.get("https://api.taiga.io/api/v1/milestones/45/watchers").mock(
+            return_value=httpx.Response(
+                200,
+                json=[{"id": 1, "username": "user1"}, {"id": 2, "username": "user2"}],
+            )
+        )
+
+        tools = await mcp.get_tools()
+        watchers_tool = tools.get("taiga_get_milestone_watchers")
+        result = await watchers_tool.fn(auth_token="token", milestone_id=45)
+
+        assert len(result) == 2
+        assert result[0]["username"] == "user1"
