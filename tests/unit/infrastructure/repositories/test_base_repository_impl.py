@@ -46,7 +46,9 @@ def repository(mock_client: MagicMock) -> ConcreteBaseRepositoryImpl:
 class TestToEntity:
     """Tests for _to_entity method."""
 
-    def test_to_entity_converts_dict_to_entity(self, repository: ConcreteBaseRepositoryImpl) -> None:
+    def test_to_entity_converts_dict_to_entity(
+        self, repository: ConcreteBaseRepositoryImpl
+    ) -> None:
         """Test that _to_entity correctly converts a dictionary to an entity."""
         data = {"id": 1, "name": "Test", "description": "A test entity", "version": 1}
         entity = repository._to_entity(data)
@@ -87,7 +89,9 @@ class TestToDict:
 
         assert "description" not in data
 
-    def test_to_dict_includes_none_when_specified(self, repository: ConcreteBaseRepositoryImpl) -> None:
+    def test_to_dict_includes_none_when_specified(
+        self, repository: ConcreteBaseRepositoryImpl
+    ) -> None:
         """Test that _to_dict includes None values when exclude_none is False."""
         entity = SampleEntity(id=1, name="Test", description=None, version=1)
         data = repository._to_dict(entity, exclude_none=False)
@@ -280,7 +284,9 @@ class TestUpdate:
         mock_client.patch.assert_called_once()
 
     @pytest.mark.asyncio
-    async def test_update_raises_error_without_id(self, repository: ConcreteBaseRepositoryImpl) -> None:
+    async def test_update_raises_error_without_id(
+        self, repository: ConcreteBaseRepositoryImpl
+    ) -> None:
         """Test that update raises ValueError when entity has no ID."""
         entity = SampleEntity(name="No ID", version=1)
 
