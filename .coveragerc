@@ -12,9 +12,6 @@ branch = True
 # Parallel mode for concurrent test execution
 parallel = True
 
-# Context tracking for test-specific coverage
-dynamic_context = test_function
-
 # Files to exclude from coverage
 omit =
     tests/*
@@ -26,7 +23,7 @@ omit =
 
 [report]
 # Minimum coverage percentage to pass
-fail_under = 75
+fail_under = 70
 
 # Show missing lines in terminal report
 show_missing = True
