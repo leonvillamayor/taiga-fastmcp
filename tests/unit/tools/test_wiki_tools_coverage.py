@@ -63,9 +63,9 @@ class TestListWikiPagesExceptionHandlers:
 
             with patch("src.application.tools.wiki_tools.AutoPaginator") as mock_paginator_cls:
                 mock_paginator = MagicMock()
-                mock_paginator.paginate_first_page = AsyncMock(return_value=[
-                    {"id": 1, "slug": "home", "project": 123, "content": "Content"}
-                ])
+                mock_paginator.paginate_first_page = AsyncMock(
+                    return_value=[{"id": 1, "slug": "home", "project": 123, "content": "Content"}]
+                )
                 mock_paginator_cls.return_value = mock_paginator
 
                 result = await wiki_tools_instance.list_wiki_pages(
@@ -137,9 +137,15 @@ class TestCreateWikiPageExceptionHandlers:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.post = AsyncMock(return_value={
-                "id": 1, "slug": "test", "project": 123, "content": "Content", "version": 1
-            })
+            mock_client.post = AsyncMock(
+                return_value={
+                    "id": 1,
+                    "slug": "test",
+                    "project": 123,
+                    "content": "Content",
+                    "version": 1,
+                }
+            )
             mock_cls.return_value = mock_client
 
             result = await wiki_tools_instance.create_wiki_page(
@@ -147,7 +153,7 @@ class TestCreateWikiPageExceptionHandlers:
                 project_id=123,
                 slug="test",
                 content="Content",
-                watchers=[1, 2, 3]
+                watchers=[1, 2, 3],
             )
 
             assert result["id"] == 1
@@ -341,9 +347,9 @@ class TestUpdateWikiPageBranches:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.patch = AsyncMock(return_value={
-                "id": 1, "slug": "new-slug", "project": 123, "version": 2
-            })
+            mock_client.patch = AsyncMock(
+                return_value={"id": 1, "slug": "new-slug", "project": 123, "version": 2}
+            )
             mock_cls.return_value = mock_client
 
             result = await wiki_tools_instance.update_wiki_page(
@@ -593,9 +599,9 @@ class TestListWikiAttachmentsExceptionHandlers:
 
             with patch("src.application.tools.wiki_tools.AutoPaginator") as mock_paginator_cls:
                 mock_paginator = MagicMock()
-                mock_paginator.paginate_first_page = AsyncMock(return_value=[
-                    {"id": 1, "name": "file.txt", "size": 100}
-                ])
+                mock_paginator.paginate_first_page = AsyncMock(
+                    return_value=[{"id": 1, "name": "file.txt", "size": 100}]
+                )
                 mock_paginator_cls.return_value = mock_paginator
 
                 result = await wiki_tools_instance.list_wiki_attachments(
@@ -830,9 +836,9 @@ class TestCreateWikiLinkTool:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.post = AsyncMock(return_value={
-                "id": 1, "project": 123, "title": "Home", "href": "home", "order": 1
-            })
+            mock_client.post = AsyncMock(
+                return_value={"id": 1, "project": 123, "title": "Home", "href": "home", "order": 1}
+            )
             mock_cls.return_value = mock_client
 
             result = await wiki_tools_instance.create_wiki_link(
@@ -962,9 +968,9 @@ class TestUpdateWikiAttachmentBranches:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.patch = AsyncMock(return_value={
-                "id": 1, "name": "file.txt", "is_deprecated": True
-            })
+            mock_client.patch = AsyncMock(
+                return_value={"id": 1, "name": "file.txt", "is_deprecated": True}
+            )
             mock_cls.return_value = mock_client
 
             result = await wiki_tools_instance.update_wiki_attachment(
@@ -1063,7 +1069,9 @@ class TestDeleteWikiAttachmentExceptionHandlers:
             mock_cls.return_value = mock_client
 
             with pytest.raises(ToolError, match="not found"):
-                await wiki_tools_instance.delete_wiki_attachment(auth_token="token", attachment_id=999)
+                await wiki_tools_instance.delete_wiki_attachment(
+                    auth_token="token", attachment_id=999
+                )
 
     @pytest.mark.asyncio
     async def test_delete_wiki_attachment_permission_denied(self, wiki_tools_instance):
@@ -1076,7 +1084,9 @@ class TestDeleteWikiAttachmentExceptionHandlers:
             mock_cls.return_value = mock_client
 
             with pytest.raises(ToolError, match="No permission"):
-                await wiki_tools_instance.delete_wiki_attachment(auth_token="token", attachment_id=1)
+                await wiki_tools_instance.delete_wiki_attachment(
+                    auth_token="token", attachment_id=1
+                )
 
     @pytest.mark.asyncio
     async def test_delete_wiki_attachment_authentication_error(self, wiki_tools_instance):
@@ -1089,7 +1099,9 @@ class TestDeleteWikiAttachmentExceptionHandlers:
             mock_cls.return_value = mock_client
 
             with pytest.raises(ToolError, match="Authentication failed"):
-                await wiki_tools_instance.delete_wiki_attachment(auth_token="token", attachment_id=1)
+                await wiki_tools_instance.delete_wiki_attachment(
+                    auth_token="token", attachment_id=1
+                )
 
     @pytest.mark.asyncio
     async def test_delete_wiki_attachment_taiga_api_error(self, wiki_tools_instance):
@@ -1102,7 +1114,9 @@ class TestDeleteWikiAttachmentExceptionHandlers:
             mock_cls.return_value = mock_client
 
             with pytest.raises(ToolError, match="Failed to delete attachment"):
-                await wiki_tools_instance.delete_wiki_attachment(auth_token="token", attachment_id=1)
+                await wiki_tools_instance.delete_wiki_attachment(
+                    auth_token="token", attachment_id=1
+                )
 
     @pytest.mark.asyncio
     async def test_delete_wiki_attachment_unexpected_error(self, wiki_tools_instance):
@@ -1115,4 +1129,6 @@ class TestDeleteWikiAttachmentExceptionHandlers:
             mock_cls.return_value = mock_client
 
             with pytest.raises(ToolError, match="Unexpected error"):
-                await wiki_tools_instance.delete_wiki_attachment(auth_token="token", attachment_id=1)
+                await wiki_tools_instance.delete_wiki_attachment(
+                    auth_token="token", attachment_id=1
+                )

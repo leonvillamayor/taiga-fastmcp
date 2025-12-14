@@ -499,9 +499,7 @@ class TestUnlikeProjectExceptionHandlers:
     @pytest.mark.asyncio
     async def test_unlike_project_taiga_api_error(self, project_tools_instance):
         """Verifica manejo de TaigaAPIError en unlike_project."""
-        project_tools_instance._mock_client.post = AsyncMock(
-            side_effect=TaigaAPIError("API error")
-        )
+        project_tools_instance._mock_client.post = AsyncMock(side_effect=TaigaAPIError("API error"))
 
         tools = await project_tools_instance.mcp.get_tools()
         tool = tools["taiga_unlike_project"]
@@ -721,9 +719,7 @@ class TestDuplicateProjectExceptionHandlers:
     @pytest.mark.asyncio
     async def test_duplicate_project_unexpected_error(self, project_tools_instance):
         """Verifica manejo de excepciones inesperadas en duplicate_project."""
-        project_tools_instance._mock_client.post = AsyncMock(
-            side_effect=RuntimeError("Disk full")
-        )
+        project_tools_instance._mock_client.post = AsyncMock(side_effect=RuntimeError("Disk full"))
 
         tools = await project_tools_instance.mcp.get_tools()
         tool = tools["taiga_duplicate_project"]
@@ -883,9 +879,7 @@ class TestGetProjectBySlugExceptionHandlers:
     @pytest.mark.asyncio
     async def test_get_project_by_slug_unexpected_error(self, project_tools_instance):
         """Verifica manejo de excepciones inesperadas en get_project_by_slug."""
-        project_tools_instance._mock_client.get = AsyncMock(
-            side_effect=RuntimeError("Timeout")
-        )
+        project_tools_instance._mock_client.get = AsyncMock(side_effect=RuntimeError("Timeout"))
 
         tools = await project_tools_instance.mcp.get_tools()
         tool = tools["taiga_get_project_by_slug"]
@@ -966,9 +960,7 @@ class TestProjectTagsExceptionHandlers:
     @pytest.mark.asyncio
     async def test_get_project_tags_unexpected_error(self, project_tools_instance):
         """Verifica manejo de excepciones inesperadas en get_project_tags."""
-        project_tools_instance._mock_client.get = AsyncMock(
-            side_effect=RuntimeError("Error")
-        )
+        project_tools_instance._mock_client.get = AsyncMock(side_effect=RuntimeError("Error"))
 
         tools = await project_tools_instance.mcp.get_tools()
         tool = tools["taiga_get_project_tags"]
@@ -996,9 +988,7 @@ class TestProjectTagsExceptionHandlers:
     @pytest.mark.asyncio
     async def test_create_project_tag_unexpected_error(self, project_tools_instance):
         """Verifica manejo de excepciones inesperadas en create_project_tag."""
-        project_tools_instance._mock_client.post = AsyncMock(
-            side_effect=RuntimeError("Error")
-        )
+        project_tools_instance._mock_client.post = AsyncMock(side_effect=RuntimeError("Error"))
 
         tools = await project_tools_instance.mcp.get_tools()
         tool = tools["taiga_create_project_tag"]
@@ -1051,9 +1041,7 @@ class TestProjectTagsExceptionHandlers:
     @pytest.mark.asyncio
     async def test_delete_project_tag_unexpected_error(self, project_tools_instance):
         """Verifica manejo de excepciones inesperadas en delete_project_tag."""
-        project_tools_instance._mock_client.post = AsyncMock(
-            side_effect=RuntimeError("Error")
-        )
+        project_tools_instance._mock_client.post = AsyncMock(side_effect=RuntimeError("Error"))
 
         tools = await project_tools_instance.mcp.get_tools()
         tool = tools["taiga_delete_project_tag"]
@@ -1066,9 +1054,7 @@ class TestProjectTagsExceptionHandlers:
     @pytest.mark.asyncio
     async def test_mix_project_tags_unexpected_error(self, project_tools_instance):
         """Verifica manejo de excepciones inesperadas en mix_project_tags."""
-        project_tools_instance._mock_client.post = AsyncMock(
-            side_effect=RuntimeError("Error")
-        )
+        project_tools_instance._mock_client.post = AsyncMock(side_effect=RuntimeError("Error"))
 
         tools = await project_tools_instance.mcp.get_tools()
         tool = tools["taiga_mix_project_tags"]
@@ -1165,9 +1151,7 @@ class TestExportProjectExceptionHandlers:
     @pytest.mark.asyncio
     async def test_export_project_success(self, project_tools_instance):
         """Verifica export_project exitoso."""
-        project_tools_instance._mock_client.get_raw = AsyncMock(
-            return_value=b'{"project": "data"}'
-        )
+        project_tools_instance._mock_client.get_raw = AsyncMock(return_value=b'{"project": "data"}')
 
         tools = await project_tools_instance.mcp.get_tools()
         tool = tools["taiga_export_project"]
@@ -1249,9 +1233,7 @@ class TestGetProjectStatsExceptionHandlers:
     @pytest.mark.asyncio
     async def test_get_project_stats_unexpected_error(self, project_tools_instance):
         """Verifica manejo de excepciones inesperadas en get_project_stats."""
-        project_tools_instance._mock_client.get = AsyncMock(
-            side_effect=RuntimeError("Stats error")
-        )
+        project_tools_instance._mock_client.get = AsyncMock(side_effect=RuntimeError("Stats error"))
 
         tools = await project_tools_instance.mcp.get_tools()
         tool = tools["taiga_get_project_stats"]
@@ -1287,13 +1269,9 @@ class TestListProjectsExceptionHandlers:
     @pytest.mark.asyncio
     async def test_list_projects_registered_unexpected_error(self, project_tools_instance):
         """Verifica manejo de excepciones inesperadas en list_projects registrada."""
-        with patch(
-            "src.application.tools.project_tools.AutoPaginator"
-        ) as mock_paginator_cls:
+        with patch("src.application.tools.project_tools.AutoPaginator") as mock_paginator_cls:
             mock_paginator = MagicMock()
-            mock_paginator.paginate = AsyncMock(
-                side_effect=RuntimeError("Pagination failed")
-            )
+            mock_paginator.paginate = AsyncMock(side_effect=RuntimeError("Pagination failed"))
             mock_paginator_cls.return_value = mock_paginator
 
             tools = await project_tools_instance.mcp.get_tools()
@@ -1311,9 +1289,7 @@ class TestListProjectsFilters:
     @pytest.mark.asyncio
     async def test_list_projects_with_is_featured(self, project_tools_instance):
         """Verifica list_projects con filtro is_featured."""
-        with patch(
-            "src.application.tools.project_tools.AutoPaginator"
-        ) as mock_paginator_cls:
+        with patch("src.application.tools.project_tools.AutoPaginator") as mock_paginator_cls:
             mock_paginator = MagicMock()
             mock_paginator.paginate = AsyncMock(return_value=[{"id": 1, "name": "Featured"}])
             mock_paginator_cls.return_value = mock_paginator
@@ -1332,9 +1308,7 @@ class TestListProjectsFilters:
     @pytest.mark.asyncio
     async def test_list_projects_with_is_kanban_activated(self, project_tools_instance):
         """Verifica list_projects con filtro is_kanban_activated."""
-        with patch(
-            "src.application.tools.project_tools.AutoPaginator"
-        ) as mock_paginator_cls:
+        with patch("src.application.tools.project_tools.AutoPaginator") as mock_paginator_cls:
             mock_paginator = MagicMock()
             mock_paginator.paginate = AsyncMock(return_value=[{"id": 1, "name": "Kanban"}])
             mock_paginator_cls.return_value = mock_paginator
@@ -1353,9 +1327,7 @@ class TestListProjectsFilters:
     @pytest.mark.asyncio
     async def test_list_projects_with_order_by(self, project_tools_instance):
         """Verifica list_projects con parámetro order_by."""
-        with patch(
-            "src.application.tools.project_tools.AutoPaginator"
-        ) as mock_paginator_cls:
+        with patch("src.application.tools.project_tools.AutoPaginator") as mock_paginator_cls:
             mock_paginator = MagicMock()
             mock_paginator.paginate = AsyncMock(return_value=[{"id": 1, "name": "Project"}])
             mock_paginator_cls.return_value = mock_paginator
@@ -1374,9 +1346,7 @@ class TestListProjectsFilters:
     @pytest.mark.asyncio
     async def test_list_projects_auto_paginate_false(self, project_tools_instance):
         """Verifica list_projects con auto_paginate=False."""
-        with patch(
-            "src.application.tools.project_tools.AutoPaginator"
-        ) as mock_paginator_cls:
+        with patch("src.application.tools.project_tools.AutoPaginator") as mock_paginator_cls:
             mock_paginator = MagicMock()
             mock_paginator.paginate_first_page = AsyncMock(
                 return_value=[{"id": 1, "name": "First Page"}]
@@ -1407,9 +1377,7 @@ class TestUpdateProjectWithParams:
         tools = await project_tools_instance.mcp.get_tools()
         tool = tools["taiga_update_project"]
 
-        result = await tool.fn(
-            auth_token="token", project_id=1, is_kanban_activated=True
-        )
+        result = await tool.fn(auth_token="token", project_id=1, is_kanban_activated=True)
 
         assert result["is_kanban_activated"] is True
 
@@ -1425,9 +1393,7 @@ class TestUpdateProjectWithParams:
         tools = await project_tools_instance.mcp.get_tools()
         tool = tools["taiga_update_project"]
 
-        result = await tool.fn(
-            auth_token="token", project_id=1, is_wiki_activated=False
-        )
+        result = await tool.fn(auth_token="token", project_id=1, is_wiki_activated=False)
 
         assert result["is_wiki_activated"] is False
 
@@ -1480,9 +1446,7 @@ class TestProjectTagsWithValidation:
     @pytest.mark.asyncio
     async def test_edit_project_tag_api_error(self, project_tools_instance):
         """Verifica manejo de TaigaAPIError en edit_project_tag."""
-        project_tools_instance._mock_client.post = AsyncMock(
-            side_effect=TaigaAPIError("API error")
-        )
+        project_tools_instance._mock_client.post = AsyncMock(side_effect=TaigaAPIError("API error"))
 
         tools = await project_tools_instance.mcp.get_tools()
         tool = tools["taiga_edit_project_tag"]
@@ -1530,9 +1494,7 @@ class TestProjectTagsWithValidation:
     @pytest.mark.asyncio
     async def test_delete_project_tag_api_error(self, project_tools_instance):
         """Verifica manejo de TaigaAPIError en delete_project_tag."""
-        project_tools_instance._mock_client.post = AsyncMock(
-            side_effect=TaigaAPIError("API error")
-        )
+        project_tools_instance._mock_client.post = AsyncMock(side_effect=TaigaAPIError("API error"))
 
         tools = await project_tools_instance.mcp.get_tools()
         tool = tools["taiga_delete_project_tag"]
@@ -1585,9 +1547,7 @@ class TestProjectTagsWithValidation:
     @pytest.mark.asyncio
     async def test_mix_project_tags_api_error(self, project_tools_instance):
         """Verifica manejo de TaigaAPIError en mix_project_tags."""
-        project_tools_instance._mock_client.post = AsyncMock(
-            side_effect=TaigaAPIError("API error")
-        )
+        project_tools_instance._mock_client.post = AsyncMock(side_effect=TaigaAPIError("API error"))
 
         tools = await project_tools_instance.mcp.get_tools()
         tool = tools["taiga_mix_project_tags"]
@@ -1639,9 +1599,7 @@ class TestCreateProjectTagExceptions:
     @pytest.mark.asyncio
     async def test_create_project_tag_api_error(self, project_tools_instance):
         """Verifica manejo de TaigaAPIError en create_project_tag."""
-        project_tools_instance._mock_client.post = AsyncMock(
-            side_effect=TaigaAPIError("API error")
-        )
+        project_tools_instance._mock_client.post = AsyncMock(side_effect=TaigaAPIError("API error"))
 
         tools = await project_tools_instance.mcp.get_tools()
         tool = tools["taiga_create_project_tag"]
@@ -1673,9 +1631,7 @@ class TestGetProjectTagsExceptions:
     @pytest.mark.asyncio
     async def test_get_project_tags_api_error(self, project_tools_instance):
         """Verifica manejo de TaigaAPIError en get_project_tags."""
-        project_tools_instance._mock_client.get = AsyncMock(
-            side_effect=TaigaAPIError("API error")
-        )
+        project_tools_instance._mock_client.get = AsyncMock(side_effect=TaigaAPIError("API error"))
 
         tools = await project_tools_instance.mcp.get_tools()
         tool = tools["taiga_get_project_tags"]
@@ -1692,9 +1648,7 @@ class TestGetProjectModulesApiError:
     @pytest.mark.asyncio
     async def test_get_project_modules_api_error(self, project_tools_instance):
         """Verifica manejo de TaigaAPIError en get_project_modules."""
-        project_tools_instance._mock_client.get = AsyncMock(
-            side_effect=TaigaAPIError("API error")
-        )
+        project_tools_instance._mock_client.get = AsyncMock(side_effect=TaigaAPIError("API error"))
 
         tools = await project_tools_instance.mcp.get_tools()
         tool = tools["taiga_get_project_modules"]
@@ -1730,9 +1684,7 @@ class TestBulkUpdateApiError:
     @pytest.mark.asyncio
     async def test_bulk_update_projects_order_api_error(self, project_tools_instance):
         """Verifica manejo de TaigaAPIError en bulk_update_projects_order."""
-        project_tools_instance._mock_client.post = AsyncMock(
-            side_effect=TaigaAPIError("API error")
-        )
+        project_tools_instance._mock_client.post = AsyncMock(side_effect=TaigaAPIError("API error"))
 
         tools = await project_tools_instance.mcp.get_tools()
         tool = tools["taiga_bulk_update_projects_order"]
@@ -1804,9 +1756,7 @@ class TestCreateProjectTagResponseTypes:
         tools = await project_tools_instance.mcp.get_tools()
         tool = tools["taiga_create_project_tag"]
 
-        result = await tool.fn(
-            auth_token="token", project_id=123, tag="new-tag", color="#FF5733"
-        )
+        result = await tool.fn(auth_token="token", project_id=123, tag="new-tag", color="#FF5733")
 
         assert result == ["new-tag", "#FF5733"]
 
@@ -1827,9 +1777,7 @@ class TestEditProjectTagResponseTypes:
         tool = tools["taiga_edit_project_tag"]
 
         with pytest.raises(ToolError, match="permission"):
-            await tool.fn(
-                auth_token="token", project_id=123, from_tag="old", to_tag="new"
-            )
+            await tool.fn(auth_token="token", project_id=123, from_tag="old", to_tag="new")
 
     @pytest.mark.unit
     @pytest.mark.projects
@@ -1927,9 +1875,7 @@ class TestBulkUpdateProjectsOrderResponseTypes:
         tools = await project_tools_instance.mcp.get_tools()
         tool = tools["taiga_bulk_update_projects_order"]
 
-        result = await tool.fn(
-            auth_token="token", projects_order=[[123, 1], [456, 2]]
-        )
+        result = await tool.fn(auth_token="token", projects_order=[[123, 1], [456, 2]])
 
         assert result == [{"id": 123, "order": 1}, {"id": 456, "order": 2}]
 
@@ -2013,9 +1959,7 @@ class TestGetProjectIssuesStatsApiError:
     @pytest.mark.asyncio
     async def test_get_project_issues_stats_api_error(self, project_tools_instance):
         """Verifica manejo de TaigaAPIError en get_project_issues_stats."""
-        project_tools_instance._mock_client.get = AsyncMock(
-            side_effect=TaigaAPIError("API error")
-        )
+        project_tools_instance._mock_client.get = AsyncMock(side_effect=TaigaAPIError("API error"))
 
         tools = await project_tools_instance.mcp.get_tools()
         tool = tools["taiga_get_project_issues_stats"]
@@ -2032,9 +1976,7 @@ class TestGetProjectBySlugApiError:
     @pytest.mark.asyncio
     async def test_get_project_by_slug_api_error(self, project_tools_instance):
         """Verifica manejo de TaigaAPIError en get_project_by_slug."""
-        project_tools_instance._mock_client.get = AsyncMock(
-            side_effect=TaigaAPIError("API error")
-        )
+        project_tools_instance._mock_client.get = AsyncMock(side_effect=TaigaAPIError("API error"))
 
         tools = await project_tools_instance.mcp.get_tools()
         tool = tools["taiga_get_project_by_slug"]

@@ -112,9 +112,7 @@ class TestListUsersRegisteredTool:
             {"id": 2, "username": "user2", "full_name": "User Two"},
         ]
 
-        with patch(
-            "src.application.tools.user_tools.AutoPaginator"
-        ) as mock_paginator_cls:
+        with patch("src.application.tools.user_tools.AutoPaginator") as mock_paginator_cls:
             mock_paginator = MagicMock()
             mock_paginator.paginate = AsyncMock(return_value=expected_users)
             mock_paginator_cls.return_value = mock_paginator
@@ -137,9 +135,7 @@ class TestListUsersRegisteredTool:
         """Verifica list_users con auto_paginate=False."""
         expected_users = [{"id": 1, "username": "user1"}]
 
-        with patch(
-            "src.application.tools.user_tools.AutoPaginator"
-        ) as mock_paginator_cls:
+        with patch("src.application.tools.user_tools.AutoPaginator") as mock_paginator_cls:
             mock_paginator = MagicMock()
             mock_paginator.paginate_first_page = AsyncMock(return_value=expected_users)
             mock_paginator_cls.return_value = mock_paginator
@@ -162,9 +158,7 @@ class TestListUsersRegisteredTool:
         """Verifica list_users con project_id especificado."""
         expected_users = [{"id": 1, "username": "project_member"}]
 
-        with patch(
-            "src.application.tools.user_tools.AutoPaginator"
-        ) as mock_paginator_cls:
+        with patch("src.application.tools.user_tools.AutoPaginator") as mock_paginator_cls:
             mock_paginator = MagicMock()
             mock_paginator.paginate = AsyncMock(return_value=expected_users)
             mock_paginator_cls.return_value = mock_paginator
@@ -189,9 +183,7 @@ class TestListUsersRegisteredTool:
         """Verifica list_users sin project_id (None)."""
         expected_users = [{"id": 1, "username": "all_user"}]
 
-        with patch(
-            "src.application.tools.user_tools.AutoPaginator"
-        ) as mock_paginator_cls:
+        with patch("src.application.tools.user_tools.AutoPaginator") as mock_paginator_cls:
             mock_paginator = MagicMock()
             mock_paginator.paginate = AsyncMock(return_value=expected_users)
             mock_paginator_cls.return_value = mock_paginator
@@ -214,9 +206,7 @@ class TestListUsersRegisteredTool:
     @pytest.mark.asyncio
     async def test_list_users_returns_empty_list_when_not_list(self, user_tools_instance):
         """Verifica que list_users retorna lista vacía si el resultado no es lista."""
-        with patch(
-            "src.application.tools.user_tools.AutoPaginator"
-        ) as mock_paginator_cls:
+        with patch("src.application.tools.user_tools.AutoPaginator") as mock_paginator_cls:
             mock_paginator = MagicMock()
             # Return non-list (e.g., dict or None)
             mock_paginator.paginate = AsyncMock(return_value={"error": "unexpected"})
@@ -234,9 +224,7 @@ class TestListUsersRegisteredTool:
     @pytest.mark.asyncio
     async def test_list_users_returns_empty_list_when_none(self, user_tools_instance):
         """Verifica que list_users retorna lista vacía si el resultado es None."""
-        with patch(
-            "src.application.tools.user_tools.AutoPaginator"
-        ) as mock_paginator_cls:
+        with patch("src.application.tools.user_tools.AutoPaginator") as mock_paginator_cls:
             mock_paginator = MagicMock()
             mock_paginator.paginate = AsyncMock(return_value=None)
             mock_paginator_cls.return_value = mock_paginator
@@ -257,13 +245,9 @@ class TestListUsersExceptionHandling:
     @pytest.mark.asyncio
     async def test_list_users_authentication_error(self, user_tools_instance):
         """Verifica manejo de AuthenticationError en list_users."""
-        with patch(
-            "src.application.tools.user_tools.AutoPaginator"
-        ) as mock_paginator_cls:
+        with patch("src.application.tools.user_tools.AutoPaginator") as mock_paginator_cls:
             mock_paginator = MagicMock()
-            mock_paginator.paginate = AsyncMock(
-                side_effect=AuthenticationError("Token expired")
-            )
+            mock_paginator.paginate = AsyncMock(side_effect=AuthenticationError("Token expired"))
             mock_paginator_cls.return_value = mock_paginator
 
             tools = await user_tools_instance.mcp.get_tools()
@@ -277,13 +261,9 @@ class TestListUsersExceptionHandling:
     @pytest.mark.asyncio
     async def test_list_users_taiga_api_error(self, user_tools_instance):
         """Verifica manejo de TaigaAPIError en list_users."""
-        with patch(
-            "src.application.tools.user_tools.AutoPaginator"
-        ) as mock_paginator_cls:
+        with patch("src.application.tools.user_tools.AutoPaginator") as mock_paginator_cls:
             mock_paginator = MagicMock()
-            mock_paginator.paginate = AsyncMock(
-                side_effect=TaigaAPIError("Rate limit exceeded")
-            )
+            mock_paginator.paginate = AsyncMock(side_effect=TaigaAPIError("Rate limit exceeded"))
             mock_paginator_cls.return_value = mock_paginator
 
             tools = await user_tools_instance.mcp.get_tools()
@@ -297,13 +277,9 @@ class TestListUsersExceptionHandling:
     @pytest.mark.asyncio
     async def test_list_users_unexpected_error(self, user_tools_instance):
         """Verifica manejo de excepciones inesperadas en list_users."""
-        with patch(
-            "src.application.tools.user_tools.AutoPaginator"
-        ) as mock_paginator_cls:
+        with patch("src.application.tools.user_tools.AutoPaginator") as mock_paginator_cls:
             mock_paginator = MagicMock()
-            mock_paginator.paginate = AsyncMock(
-                side_effect=RuntimeError("Connection failed")
-            )
+            mock_paginator.paginate = AsyncMock(side_effect=RuntimeError("Connection failed"))
             mock_paginator_cls.return_value = mock_paginator
 
             tools = await user_tools_instance.mcp.get_tools()
@@ -330,6 +306,7 @@ class TestListUsersDirectMethod:
     async def test_list_users_direct_method_is_async(self, user_tools_instance):
         """Verifica que el método directo list_users es async."""
         import inspect
+
         assert inspect.iscoroutinefunction(user_tools_instance.list_users)
 
     @pytest.mark.unit
@@ -339,16 +316,12 @@ class TestListUsersDirectMethod:
         """Verifica que el método directo list_users funciona."""
         expected_users = [{"id": 1, "username": "direct_user"}]
 
-        with patch(
-            "src.application.tools.user_tools.AutoPaginator"
-        ) as mock_paginator_cls:
+        with patch("src.application.tools.user_tools.AutoPaginator") as mock_paginator_cls:
             mock_paginator = MagicMock()
             mock_paginator.paginate = AsyncMock(return_value=expected_users)
             mock_paginator_cls.return_value = mock_paginator
 
-            result = await user_tools_instance.list_users(
-                auth_token="valid_token"
-            )
+            result = await user_tools_instance.list_users(auth_token="valid_token")
 
             assert result == expected_users
 
@@ -445,9 +418,7 @@ class TestListUsersEdgeCases:
     @pytest.mark.asyncio
     async def test_list_users_empty_list_response(self, user_tools_instance):
         """Verifica list_users con respuesta de lista vacía."""
-        with patch(
-            "src.application.tools.user_tools.AutoPaginator"
-        ) as mock_paginator_cls:
+        with patch("src.application.tools.user_tools.AutoPaginator") as mock_paginator_cls:
             mock_paginator = MagicMock()
             mock_paginator.paginate = AsyncMock(return_value=[])
             mock_paginator_cls.return_value = mock_paginator
@@ -467,9 +438,7 @@ class TestListUsersEdgeCases:
         """Verifica list_users con muchos usuarios."""
         large_user_list = [{"id": i, "username": f"user{i}"} for i in range(100)]
 
-        with patch(
-            "src.application.tools.user_tools.AutoPaginator"
-        ) as mock_paginator_cls:
+        with patch("src.application.tools.user_tools.AutoPaginator") as mock_paginator_cls:
             mock_paginator = MagicMock()
             mock_paginator.paginate = AsyncMock(return_value=large_user_list)
             mock_paginator_cls.return_value = mock_paginator

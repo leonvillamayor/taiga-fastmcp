@@ -650,9 +650,7 @@ class TestMembershipToolsExceptionHandlers:
 
         # Validator raises ValidationError with Spanish message
         with pytest.raises(ToolError, match="Debe proporcionar un nombre de usuario o un email"):
-            await membership_tools.create_membership(
-                auth_token="token", project_id=123, role=5
-            )
+            await membership_tools.create_membership(auth_token="token", project_id=123, role=5)
 
     @pytest.mark.unit
     @pytest.mark.memberships
@@ -726,9 +724,12 @@ class TestMembershipToolsExceptionHandlers:
             side_effect=TaigaAPIError("User is already a member of this project")
         )
 
-        with patch(
-            "src.application.tools.membership_tools.TaigaAPIClient", return_value=mock_client
-        ), pytest.raises(ToolError, match="already a member"):
+        with (
+            patch(
+                "src.application.tools.membership_tools.TaigaAPIClient", return_value=mock_client
+            ),
+            pytest.raises(ToolError, match="already a member"),
+        ):
             await membership_tools.create_membership(
                 auth_token="token", project_id=123, role=5, username="existing_user"
             )
@@ -788,9 +789,7 @@ class TestMembershipToolsExceptionHandlers:
 
         # role = 0 should be invalid
         with pytest.raises(ToolError):
-            await membership_tools.update_membership(
-                auth_token="token", membership_id=10, role=0
-            )
+            await membership_tools.update_membership(auth_token="token", membership_id=10, role=0)
 
     @pytest.mark.unit
     @pytest.mark.memberships
@@ -806,9 +805,7 @@ class TestMembershipToolsExceptionHandlers:
         )
 
         with pytest.raises(ToolError, match="Membership not found"):
-            await membership_tools.update_membership(
-                auth_token="token", membership_id=999, role=5
-            )
+            await membership_tools.update_membership(auth_token="token", membership_id=999, role=5)
 
     @pytest.mark.unit
     @pytest.mark.memberships
@@ -824,9 +821,7 @@ class TestMembershipToolsExceptionHandlers:
         )
 
         with pytest.raises(ToolError, match="Authentication failed"):
-            await membership_tools.update_membership(
-                auth_token="invalid", membership_id=10, role=5
-            )
+            await membership_tools.update_membership(auth_token="invalid", membership_id=10, role=5)
 
     @pytest.mark.unit
     @pytest.mark.memberships
@@ -842,9 +837,7 @@ class TestMembershipToolsExceptionHandlers:
         )
 
         with pytest.raises(ToolError, match="Failed to update membership"):
-            await membership_tools.update_membership(
-                auth_token="token", membership_id=10, role=5
-            )
+            await membership_tools.update_membership(auth_token="token", membership_id=10, role=5)
 
     @pytest.mark.unit
     @pytest.mark.memberships

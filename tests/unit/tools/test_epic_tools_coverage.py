@@ -51,7 +51,10 @@ class TestListEpicsErrorHandling:
 
             # Simular error de paginación
             from src.infrastructure.pagination import AutoPaginator
-            with patch.object(AutoPaginator, "paginate", side_effect=AuthenticationError("Invalid token")):
+
+            with patch.object(
+                AutoPaginator, "paginate", side_effect=AuthenticationError("Invalid token")
+            ):
                 with pytest.raises(ToolError) as exc_info:
                     await epic_tools_instance.list_epics(auth_token="invalid", project=123)
                 assert "Authentication failed" in str(exc_info.value)
@@ -66,7 +69,10 @@ class TestListEpicsErrorHandling:
             mock_cls.return_value = mock_client
 
             from src.infrastructure.pagination import AutoPaginator
-            with patch.object(AutoPaginator, "paginate", side_effect=PermissionDeniedError("No access")):
+
+            with patch.object(
+                AutoPaginator, "paginate", side_effect=PermissionDeniedError("No access")
+            ):
                 with pytest.raises(ToolError) as exc_info:
                     await epic_tools_instance.list_epics(auth_token="token", project=123)
                 assert "Permission denied" in str(exc_info.value)
@@ -81,7 +87,10 @@ class TestListEpicsErrorHandling:
             mock_cls.return_value = mock_client
 
             from src.infrastructure.pagination import AutoPaginator
-            with patch.object(AutoPaginator, "paginate", side_effect=ResourceNotFoundError("Not found")):
+
+            with patch.object(
+                AutoPaginator, "paginate", side_effect=ResourceNotFoundError("Not found")
+            ):
                 with pytest.raises(ToolError) as exc_info:
                     await epic_tools_instance.list_epics(auth_token="token", project=999)
                 assert "not found" in str(exc_info.value).lower()
@@ -96,6 +105,7 @@ class TestListEpicsErrorHandling:
             mock_cls.return_value = mock_client
 
             from src.infrastructure.pagination import AutoPaginator
+
             with patch.object(AutoPaginator, "paginate", side_effect=Exception("Network error")):
                 with pytest.raises(ToolError) as exc_info:
                     await epic_tools_instance.list_epics(auth_token="token", project=123)
@@ -111,13 +121,14 @@ class TestListEpicsErrorHandling:
             mock_cls.return_value = mock_client
 
             from src.infrastructure.pagination import AutoPaginator
-            with patch.object(AutoPaginator, "paginate_first_page", return_value=[
-                {"id": 1, "ref": 1, "subject": "Epic 1", "project": 123}
-            ]) as mock_paginate:
+
+            with patch.object(
+                AutoPaginator,
+                "paginate_first_page",
+                return_value=[{"id": 1, "ref": 1, "subject": "Epic 1", "project": 123}],
+            ) as mock_paginate:
                 result = await epic_tools_instance.list_epics(
-                    auth_token="token",
-                    project=123,
-                    auto_paginate=False
+                    auth_token="token", project=123, auto_paginate=False
                 )
                 mock_paginate.assert_called_once()
                 assert len(result) == 1
@@ -132,14 +143,23 @@ class TestListEpicsErrorHandling:
             mock_cls.return_value = mock_client
 
             from src.infrastructure.pagination import AutoPaginator
-            with patch.object(AutoPaginator, "paginate", return_value=[
-                {"id": 1, "ref": 1, "subject": "Epic 1", "project": 123, "status": 2, "assigned_to": 456}
-            ]) as mock_paginate:
+
+            with patch.object(
+                AutoPaginator,
+                "paginate",
+                return_value=[
+                    {
+                        "id": 1,
+                        "ref": 1,
+                        "subject": "Epic 1",
+                        "project": 123,
+                        "status": 2,
+                        "assigned_to": 456,
+                    }
+                ],
+            ) as mock_paginate:
                 await epic_tools_instance.list_epics(
-                    auth_token="token",
-                    project=123,
-                    status=2,
-                    assigned_to=456
+                    auth_token="token", project=123, status=2, assigned_to=456
                 )
                 # Verificar que se pasaron los parámetros correctos
                 call_args = mock_paginate.call_args
@@ -155,20 +175,14 @@ class TestCreateEpicErrorHandling:
     async def test_create_epic_missing_project(self, epic_tools_instance):
         """Test que create_epic falla sin project."""
         with pytest.raises(ValueError) as exc_info:
-            await epic_tools_instance.create_epic(
-                auth_token="token",
-                subject="Test Epic"
-            )
+            await epic_tools_instance.create_epic(auth_token="token", subject="Test Epic")
         assert "project and subject are required" in str(exc_info.value)
 
     @pytest.mark.asyncio
     async def test_create_epic_missing_subject(self, epic_tools_instance):
         """Test que create_epic falla sin subject."""
         with pytest.raises(ValueError) as exc_info:
-            await epic_tools_instance.create_epic(
-                auth_token="token",
-                project=123
-            )
+            await epic_tools_instance.create_epic(auth_token="token", project=123)
         assert "project and subject are required" in str(exc_info.value)
 
     @pytest.mark.asyncio
@@ -179,10 +193,7 @@ class TestCreateEpicErrorHandling:
             # ValidationError desde validate_input se propaga directamente (no está en try block)
             with pytest.raises(ValidationError) as exc_info:
                 await epic_tools_instance.create_epic(
-                    auth_token="token",
-                    project=123,
-                    subject="Test",
-                    color="invalid"
+                    auth_token="token", project=123, subject="Test", color="invalid"
                 )
             assert "Invalid color format" in str(exc_info.value)
 
@@ -193,20 +204,22 @@ class TestCreateEpicErrorHandling:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.create_epic = AsyncMock(return_value={
-                "id": 1,
-                "ref": 1,
-                "subject": "Full Epic",
-                "description": "Description",
-                "color": "#FF0000",
-                "project": 123,
-                "assigned_to": 456,
-                "status": 2,
-                "tags": ["tag1", "tag2"],
-                "watchers": [789],
-                "client_requirement": True,
-                "team_requirement": False,
-            })
+            mock_client.create_epic = AsyncMock(
+                return_value={
+                    "id": 1,
+                    "ref": 1,
+                    "subject": "Full Epic",
+                    "description": "Description",
+                    "color": "#FF0000",
+                    "project": 123,
+                    "assigned_to": 456,
+                    "status": 2,
+                    "tags": ["tag1", "tag2"],
+                    "watchers": [789],
+                    "client_requirement": True,
+                    "team_requirement": False,
+                }
+            )
             mock_cls.return_value = mock_client
 
             result = await epic_tools_instance.create_epic(
@@ -220,7 +233,7 @@ class TestCreateEpicErrorHandling:
                 tags=["tag1", "tag2"],
                 watchers=[789],
                 client_requirement=True,
-                team_requirement=False
+                team_requirement=False,
             )
 
             assert result["subject"] == "Full Epic"
@@ -343,7 +356,9 @@ class TestGetEpicByRefErrorHandling:
             mock_cls.return_value = mock_client
 
             with pytest.raises(ToolError) as exc_info:
-                await epic_tools_instance.get_epic_by_ref(auth_token="token", project_id=123, ref=999)
+                await epic_tools_instance.get_epic_by_ref(
+                    auth_token="token", project_id=123, ref=999
+                )
             assert "not found" in str(exc_info.value).lower()
 
     @pytest.mark.asyncio
@@ -368,11 +383,7 @@ class TestUpdateEpicFullErrorHandling:
     async def test_update_epic_full_missing_subject(self, epic_tools_instance):
         """Test que update_epic_full falla sin subject."""
         with pytest.raises(ValueError) as exc_info:
-            await epic_tools_instance.update_epic_full(
-                auth_token="token",
-                epic_id=1,
-                project=123
-            )
+            await epic_tools_instance.update_epic_full(auth_token="token", epic_id=1, project=123)
         assert "subject is required" in str(exc_info.value)
 
     @pytest.mark.asyncio
@@ -380,9 +391,7 @@ class TestUpdateEpicFullErrorHandling:
         """Test que update_epic_full falla sin project."""
         with pytest.raises(ValueError) as exc_info:
             await epic_tools_instance.update_epic_full(
-                auth_token="token",
-                epic_id=1,
-                subject="Test"
+                auth_token="token", epic_id=1, subject="Test"
             )
         assert "project is required" in str(exc_info.value)
 
@@ -398,10 +407,7 @@ class TestUpdateEpicFullErrorHandling:
 
             with pytest.raises(ToolError) as exc_info:
                 await epic_tools_instance.update_epic_full(
-                    auth_token="token",
-                    epic_id=1,
-                    project=123,
-                    subject="Test"
+                    auth_token="token", epic_id=1, project=123, subject="Test"
                 )
             assert "Version conflict" in str(exc_info.value)
 
@@ -417,10 +423,7 @@ class TestUpdateEpicFullErrorHandling:
 
             with pytest.raises(ToolError) as exc_info:
                 await epic_tools_instance.update_epic_full(
-                    auth_token="bad",
-                    epic_id=1,
-                    project=123,
-                    subject="Test"
+                    auth_token="bad", epic_id=1, project=123, subject="Test"
                 )
             assert "Authentication failed" in str(exc_info.value)
 
@@ -436,10 +439,7 @@ class TestUpdateEpicFullErrorHandling:
 
             with pytest.raises(ToolError) as exc_info:
                 await epic_tools_instance.update_epic_full(
-                    auth_token="token",
-                    epic_id=1,
-                    project=123,
-                    subject="Test"
+                    auth_token="token", epic_id=1, project=123, subject="Test"
                 )
             assert "Permission denied" in str(exc_info.value)
 
@@ -455,10 +455,7 @@ class TestUpdateEpicFullErrorHandling:
 
             with pytest.raises(ToolError) as exc_info:
                 await epic_tools_instance.update_epic_full(
-                    auth_token="token",
-                    epic_id=999,
-                    project=123,
-                    subject="Test"
+                    auth_token="token", epic_id=999, project=123, subject="Test"
                 )
             assert "not found" in str(exc_info.value).lower()
 
@@ -469,11 +466,7 @@ class TestUpdateEpicFullErrorHandling:
             mock_validate.side_effect = ValidationError("Invalid data")
             with pytest.raises(ToolError) as exc_info:
                 await epic_tools_instance.update_epic_full(
-                    auth_token="token",
-                    epic_id=1,
-                    project=123,
-                    subject="Test",
-                    color="invalid"
+                    auth_token="token", epic_id=1, project=123, subject="Test", color="invalid"
                 )
             assert "Invalid data" in str(exc_info.value)
 
@@ -489,10 +482,7 @@ class TestUpdateEpicFullErrorHandling:
 
             with pytest.raises(ToolError) as exc_info:
                 await epic_tools_instance.update_epic_full(
-                    auth_token="token",
-                    epic_id=1,
-                    project=123,
-                    subject="Test"
+                    auth_token="token", epic_id=1, project=123, subject="Test"
                 )
             assert "Error updating epic" in str(exc_info.value)
 
@@ -507,19 +497,21 @@ class TestUpdateEpicErrorHandling:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.update_epic = AsyncMock(return_value={
-                "id": 1,
-                "ref": 1,
-                "subject": "Original",
-                "status": 2,
-                "project": 123,
-            })
+            mock_client.update_epic = AsyncMock(
+                return_value={
+                    "id": 1,
+                    "ref": 1,
+                    "subject": "Original",
+                    "status": 2,
+                    "project": 123,
+                }
+            )
             mock_cls.return_value = mock_client
 
             result = await epic_tools_instance.update_epic(
                 auth_token="token",
                 epic_id=1,
-                status=2  # Solo cambiar status
+                status=2,  # Solo cambiar status
             )
 
             mock_client.update_epic.assert_called_once()
@@ -532,21 +524,19 @@ class TestUpdateEpicErrorHandling:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.update_epic_full = AsyncMock(return_value={
-                "id": 1,
-                "ref": 1,
-                "subject": "Updated",
-                "project": 123,
-                "version": 3,
-            })
+            mock_client.update_epic_full = AsyncMock(
+                return_value={
+                    "id": 1,
+                    "ref": 1,
+                    "subject": "Updated",
+                    "project": 123,
+                    "version": 3,
+                }
+            )
             mock_cls.return_value = mock_client
 
             result = await epic_tools_instance.update_epic(
-                auth_token="token",
-                epic_id=1,
-                subject="Updated",
-                project=123,
-                version=2
+                auth_token="token", epic_id=1, subject="Updated", project=123, version=2
             )
 
             mock_client.update_epic_full.assert_called_once()
@@ -563,11 +553,7 @@ class TestUpdateEpicErrorHandling:
             mock_cls.return_value = mock_client
 
             with pytest.raises(ToolError) as exc_info:
-                await epic_tools_instance.update_epic(
-                    auth_token="token",
-                    epic_id=1,
-                    status=2
-                )
+                await epic_tools_instance.update_epic(auth_token="token", epic_id=1, status=2)
             assert "Version conflict" in str(exc_info.value)
 
     @pytest.mark.asyncio
@@ -581,11 +567,7 @@ class TestUpdateEpicErrorHandling:
             mock_cls.return_value = mock_client
 
             with pytest.raises(ToolError) as exc_info:
-                await epic_tools_instance.update_epic(
-                    auth_token="bad",
-                    epic_id=1,
-                    status=2
-                )
+                await epic_tools_instance.update_epic(auth_token="bad", epic_id=1, status=2)
             assert "Authentication failed" in str(exc_info.value)
 
     @pytest.mark.asyncio
@@ -599,11 +581,7 @@ class TestUpdateEpicErrorHandling:
             mock_cls.return_value = mock_client
 
             with pytest.raises(ToolError) as exc_info:
-                await epic_tools_instance.update_epic(
-                    auth_token="token",
-                    epic_id=1,
-                    status=2
-                )
+                await epic_tools_instance.update_epic(auth_token="token", epic_id=1, status=2)
             assert "Permission denied" in str(exc_info.value)
 
     @pytest.mark.asyncio
@@ -617,11 +595,7 @@ class TestUpdateEpicErrorHandling:
             mock_cls.return_value = mock_client
 
             with pytest.raises(ToolError) as exc_info:
-                await epic_tools_instance.update_epic(
-                    auth_token="token",
-                    epic_id=999,
-                    status=2
-                )
+                await epic_tools_instance.update_epic(auth_token="token", epic_id=999, status=2)
             assert "not found" in str(exc_info.value).lower()
 
     @pytest.mark.asyncio
@@ -631,9 +605,7 @@ class TestUpdateEpicErrorHandling:
             mock_validate.side_effect = ValidationError("Invalid")
             with pytest.raises(ToolError) as exc_info:
                 await epic_tools_instance.update_epic(
-                    auth_token="token",
-                    epic_id=1,
-                    color="invalid"
+                    auth_token="token", epic_id=1, color="invalid"
                 )
             assert "Invalid" in str(exc_info.value)
 
@@ -648,11 +620,7 @@ class TestUpdateEpicErrorHandling:
             mock_cls.return_value = mock_client
 
             with pytest.raises(ToolError) as exc_info:
-                await epic_tools_instance.update_epic(
-                    auth_token="token",
-                    epic_id=1,
-                    status=2
-                )
+                await epic_tools_instance.update_epic(auth_token="token", epic_id=1, status=2)
             assert "Error updating epic" in str(exc_info.value)
 
 
@@ -662,11 +630,11 @@ class TestUpdateEpicPartialAndPatchEpic:
     @pytest.mark.asyncio
     async def test_update_epic_partial_delegates_to_update_epic(self, epic_tools_instance):
         """Test que update_epic_partial delega a update_epic."""
-        with patch.object(epic_tools_instance, "update_epic", return_value={"id": 1, "status": 2}) as mock:
+        with patch.object(
+            epic_tools_instance, "update_epic", return_value={"id": 1, "status": 2}
+        ) as mock:
             result = await epic_tools_instance.update_epic_partial(
-                auth_token="token",
-                epic_id=1,
-                status=2
+                auth_token="token", epic_id=1, status=2
             )
             mock.assert_called_once()
             assert result["status"] == 2
@@ -674,11 +642,11 @@ class TestUpdateEpicPartialAndPatchEpic:
     @pytest.mark.asyncio
     async def test_patch_epic_delegates_to_update_epic(self, epic_tools_instance):
         """Test que patch_epic delega a update_epic."""
-        with patch.object(epic_tools_instance, "update_epic", return_value={"id": 1, "color": "#FF0000"}) as mock:
+        with patch.object(
+            epic_tools_instance, "update_epic", return_value={"id": 1, "color": "#FF0000"}
+        ) as mock:
             result = await epic_tools_instance.patch_epic(
-                auth_token="token",
-                epic_id=1,
-                color="#FF0000"
+                auth_token="token", epic_id=1, color="#FF0000"
             )
             mock.assert_called_once()
             assert result["color"] == "#FF0000"
@@ -787,9 +755,7 @@ class TestListRelatedUserstories:
             mock.side_effect = AuthenticationError("Invalid")
 
             with pytest.raises(ToolError) as exc_info:
-                await epic_tools_instance.list_related_userstories(
-                    auth_token="bad", epic_id=1
-                )
+                await epic_tools_instance.list_related_userstories(auth_token="bad", epic_id=1)
             assert "Authentication failed" in str(exc_info.value)
 
     @pytest.mark.asyncio
@@ -799,9 +765,7 @@ class TestListRelatedUserstories:
             mock.side_effect = PermissionDeniedError("No access")
 
             with pytest.raises(ToolError) as exc_info:
-                await epic_tools_instance.list_related_userstories(
-                    auth_token="token", epic_id=1
-                )
+                await epic_tools_instance.list_related_userstories(auth_token="token", epic_id=1)
             assert "Permission denied" in str(exc_info.value)
 
     @pytest.mark.asyncio
@@ -811,9 +775,7 @@ class TestListRelatedUserstories:
             mock.side_effect = ResourceNotFoundError("Not found")
 
             with pytest.raises(ToolError) as exc_info:
-                await epic_tools_instance.list_related_userstories(
-                    auth_token="token", epic_id=999
-                )
+                await epic_tools_instance.list_related_userstories(auth_token="token", epic_id=999)
             assert "not found" in str(exc_info.value).lower()
 
     @pytest.mark.asyncio
@@ -823,9 +785,7 @@ class TestListRelatedUserstories:
             mock.side_effect = Exception("Error")
 
             with pytest.raises(ToolError) as exc_info:
-                await epic_tools_instance.list_related_userstories(
-                    auth_token="token", epic_id=1
-                )
+                await epic_tools_instance.list_related_userstories(auth_token="token", epic_id=1)
             assert "Error listing related user stories" in str(exc_info.value)
 
 
@@ -839,11 +799,9 @@ class TestCreateEpicRelatedUserstory:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.create_epic_related_userstory = AsyncMock(return_value={
-                "epic": 1,
-                "user_story": 100,
-                "order": 1
-            })
+            mock_client.create_epic_related_userstory = AsyncMock(
+                return_value={"epic": 1, "user_story": 100, "order": 1}
+            )
             mock_cls.return_value = mock_client
 
             result = await epic_tools_instance.create_epic_related_userstory(
@@ -929,11 +887,9 @@ class TestGetEpicRelatedUserstory:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.get_epic_related_userstory = AsyncMock(return_value={
-                "epic": 1,
-                "user_story": 100,
-                "order": 1
-            })
+            mock_client.get_epic_related_userstory = AsyncMock(
+                return_value={"epic": 1, "user_story": 100, "order": 1}
+            )
             mock_cls.return_value = mock_client
 
             result = await epic_tools_instance.get_epic_related_userstory(
@@ -954,11 +910,9 @@ class TestUpdateEpicRelatedUserstory:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.update_epic_related_userstory = AsyncMock(return_value={
-                "epic": 1,
-                "user_story": 100,
-                "order": 5
-            })
+            mock_client.update_epic_related_userstory = AsyncMock(
+                return_value={"epic": 1, "user_story": 100, "order": 5}
+            )
             mock_cls.return_value = mock_client
 
             result = await epic_tools_instance.update_epic_related_userstory(
@@ -1003,16 +957,16 @@ class TestBulkCreateEpics:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.bulk_create_epics = AsyncMock(return_value=[
-                {"id": 1, "ref": 1, "subject": "Epic 1", "project": 123},
-                {"id": 2, "ref": 2, "subject": "Epic 2", "project": 123}
-            ])
+            mock_client.bulk_create_epics = AsyncMock(
+                return_value=[
+                    {"id": 1, "ref": 1, "subject": "Epic 1", "project": 123},
+                    {"id": 2, "ref": 2, "subject": "Epic 2", "project": 123},
+                ]
+            )
             mock_cls.return_value = mock_client
 
             result = await epic_tools_instance.bulk_create_epics(
-                auth_token="token",
-                project_id=123,
-                bulk_epics="Epic 1\nEpic 2"
+                auth_token="token", project_id=123, bulk_epics="Epic 1\nEpic 2"
             )
 
             assert len(result) == 2
@@ -1027,15 +981,13 @@ class TestBulkCreateEpics:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.bulk_create_epics = AsyncMock(return_value=[
-                {"id": 1, "ref": 1, "subject": "Epic 1", "project": 123}
-            ])
+            mock_client.bulk_create_epics = AsyncMock(
+                return_value=[{"id": 1, "ref": 1, "subject": "Epic 1", "project": 123}]
+            )
             mock_cls.return_value = mock_client
 
             result = await epic_tools_instance.bulk_create_epics(
-                auth_token="token",
-                project_id=123,
-                epics_data=[{"subject": "Epic 1"}]
+                auth_token="token", project_id=123, epics_data=[{"subject": "Epic 1"}]
             )
 
             assert len(result) == 1
@@ -1066,7 +1018,9 @@ class TestBulkCreateEpics:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.bulk_create_epics = AsyncMock(side_effect=PermissionDeniedError("No access"))
+            mock_client.bulk_create_epics = AsyncMock(
+                side_effect=PermissionDeniedError("No access")
+            )
             mock_cls.return_value = mock_client
 
             with pytest.raises(ToolError) as exc_info:
@@ -1103,15 +1057,13 @@ class TestBulkCreateRelatedUserstories:
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
             # Simula que el cliente tiene el método bulk_create_related_userstories
-            mock_client.bulk_create_related_userstories = AsyncMock(return_value=[
-                {"epic": 1, "user_story": 100, "order": 1}
-            ])
+            mock_client.bulk_create_related_userstories = AsyncMock(
+                return_value=[{"epic": 1, "user_story": 100, "order": 1}]
+            )
             mock_cls.return_value = mock_client
 
             result = await epic_tools_instance.bulk_create_related_userstories(
-                auth_token="token",
-                epic_id=1,
-                bulk_userstories=[{"user_story": 100, "order": 1}]
+                auth_token="token", epic_id=1, bulk_userstories=[{"user_story": 100, "order": 1}]
             )
 
             assert len(result) == 1
@@ -1124,15 +1076,13 @@ class TestBulkCreateRelatedUserstories:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.bulk_create_related_userstories = AsyncMock(return_value=[
-                {"epic": 1, "user_story": 100, "order": 1}
-            ])
+            mock_client.bulk_create_related_userstories = AsyncMock(
+                return_value=[{"epic": 1, "user_story": 100, "order": 1}]
+            )
             mock_cls.return_value = mock_client
 
             result = await epic_tools_instance.bulk_create_related_userstories(
-                auth_token="token",
-                epic_id=1,
-                userstories_data=[{"user_story": 100}]
+                auth_token="token", epic_id=1, userstories_data=[{"user_story": 100}]
             )
 
             assert len(result) == 1
@@ -1146,22 +1096,22 @@ class TestBulkCreateRelatedUserstories:
             mock_client.__aexit__ = AsyncMock(return_value=None)
             # Eliminar el atributo para que hasattr retorne False
             del mock_client.bulk_create_related_userstories
-            mock_client.bulk_create_epic_related_userstories = AsyncMock(return_value=[
-                {"epic": 1, "user_story": 100, "order": 1}
-            ])
+            mock_client.bulk_create_epic_related_userstories = AsyncMock(
+                return_value=[{"epic": 1, "user_story": 100, "order": 1}]
+            )
             mock_cls.return_value = mock_client
 
             result = await epic_tools_instance.bulk_create_related_userstories(
-                auth_token="token",
-                epic_id=1,
-                bulk_userstories=[{"user_story": 100}]
+                auth_token="token", epic_id=1, bulk_userstories=[{"user_story": 100}]
             )
 
             assert len(result) == 1
             mock_client.bulk_create_epic_related_userstories.assert_called_once()
 
     @pytest.mark.asyncio
-    async def test_bulk_create_related_userstories_fallback_userstories_data(self, epic_tools_instance):
+    async def test_bulk_create_related_userstories_fallback_userstories_data(
+        self, epic_tools_instance
+    ):
         """Test bulk_create_related_userstories fallback con userstories_data."""
         with patch("src.application.tools.epic_tools.TaigaAPIClient") as mock_cls:
             mock_client = MagicMock()
@@ -1169,15 +1119,13 @@ class TestBulkCreateRelatedUserstories:
             mock_client.__aexit__ = AsyncMock(return_value=None)
             # Eliminar el atributo para que hasattr retorne False
             del mock_client.bulk_create_related_userstories
-            mock_client.bulk_create_epic_related_userstories = AsyncMock(return_value=[
-                {"epic": 1, "user_story": 100}
-            ])
+            mock_client.bulk_create_epic_related_userstories = AsyncMock(
+                return_value=[{"epic": 1, "user_story": 100}]
+            )
             mock_cls.return_value = mock_client
 
             result = await epic_tools_instance.bulk_create_related_userstories(
-                auth_token="token",
-                epic_id=1,
-                userstories_data=[{"user_story": 100}]
+                auth_token="token", epic_id=1, userstories_data=[{"user_story": 100}]
             )
 
             assert len(result) == 1
@@ -1285,15 +1233,15 @@ class TestGetEpicFilters:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.get_epic_filters = AsyncMock(return_value={
-                "statuses": [{"id": 1, "name": "New"}],
-                "assigned_to": [{"id": 1, "full_name": "User"}]
-            })
+            mock_client.get_epic_filters = AsyncMock(
+                return_value={
+                    "statuses": [{"id": 1, "name": "New"}],
+                    "assigned_to": [{"id": 1, "full_name": "User"}],
+                }
+            )
             mock_cls.return_value = mock_client
 
-            result = await epic_tools_instance.get_epic_filters(
-                auth_token="token", project_id=123
-            )
+            result = await epic_tools_instance.get_epic_filters(auth_token="token", project_id=123)
 
             assert "statuses" in result
             mock_client.get_epic_filters.assert_called_once_with(project=123)
@@ -1518,10 +1466,9 @@ class TestGetEpicVoters:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.get_epic_voters = AsyncMock(return_value=[
-                {"id": 1, "full_name": "User 1"},
-                {"id": 2, "full_name": "User 2"}
-            ])
+            mock_client.get_epic_voters = AsyncMock(
+                return_value=[{"id": 1, "full_name": "User 1"}, {"id": 2, "full_name": "User 2"}]
+            )
             mock_cls.return_value = mock_client
 
             result = await epic_tools_instance.get_epic_voters(auth_token="token", epic_id=1)
@@ -1748,10 +1695,9 @@ class TestGetEpicWatchers:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.get_epic_watchers = AsyncMock(return_value=[
-                {"id": 1, "full_name": "User 1"},
-                {"id": 2, "full_name": "User 2"}
-            ])
+            mock_client.get_epic_watchers = AsyncMock(
+                return_value=[{"id": 1, "full_name": "User 1"}, {"id": 2, "full_name": "User 2"}]
+            )
             mock_cls.return_value = mock_client
 
             result = await epic_tools_instance.get_epic_watchers(auth_token="token", epic_id=1)
@@ -1779,7 +1725,9 @@ class TestGetEpicWatchers:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.get_epic_watchers = AsyncMock(side_effect=PermissionDeniedError("No access"))
+            mock_client.get_epic_watchers = AsyncMock(
+                side_effect=PermissionDeniedError("No access")
+            )
             mock_cls.return_value = mock_client
 
             with pytest.raises(ToolError) as exc_info:
@@ -1793,7 +1741,9 @@ class TestGetEpicWatchers:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.get_epic_watchers = AsyncMock(side_effect=ResourceNotFoundError("Not found"))
+            mock_client.get_epic_watchers = AsyncMock(
+                side_effect=ResourceNotFoundError("Not found")
+            )
             mock_cls.return_value = mock_client
 
             with pytest.raises(ToolError) as exc_info:
@@ -1819,6 +1769,7 @@ class TestGetEpicWatchers:
 # Tests para Attachments (EPIC-021 a EPIC-025)
 # =============================================================================
 
+
 class TestListEpicAttachments:
     """Tests para list_epic_attachments."""
 
@@ -1829,15 +1780,15 @@ class TestListEpicAttachments:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.list_epic_attachments = AsyncMock(return_value=[
-                {"id": 1, "attached_file": "file1.pdf", "name": "Doc 1"},
-                {"id": 2, "attached_file": "file2.pdf", "name": "Doc 2"}
-            ])
+            mock_client.list_epic_attachments = AsyncMock(
+                return_value=[
+                    {"id": 1, "attached_file": "file1.pdf", "name": "Doc 1"},
+                    {"id": 2, "attached_file": "file2.pdf", "name": "Doc 2"},
+                ]
+            )
             mock_cls.return_value = mock_client
 
-            result = await epic_tools_instance.list_epic_attachments(
-                auth_token="token", epic_id=1
-            )
+            result = await epic_tools_instance.list_epic_attachments(auth_token="token", epic_id=1)
 
             assert len(result) == 2
             assert result[0]["id"] == 1
@@ -1855,9 +1806,7 @@ class TestListEpicAttachments:
             mock_cls.return_value = mock_client
 
             with pytest.raises(ToolError) as exc_info:
-                await epic_tools_instance.list_epic_attachments(
-                    auth_token="bad", epic_id=1
-                )
+                await epic_tools_instance.list_epic_attachments(auth_token="bad", epic_id=1)
             assert "Authentication failed" in str(exc_info.value)
 
     @pytest.mark.asyncio
@@ -1873,9 +1822,7 @@ class TestListEpicAttachments:
             mock_cls.return_value = mock_client
 
             with pytest.raises(ToolError) as exc_info:
-                await epic_tools_instance.list_epic_attachments(
-                    auth_token="token", epic_id=1
-                )
+                await epic_tools_instance.list_epic_attachments(auth_token="token", epic_id=1)
             assert "Permission denied" in str(exc_info.value)
 
     @pytest.mark.asyncio
@@ -1891,9 +1838,7 @@ class TestListEpicAttachments:
             mock_cls.return_value = mock_client
 
             with pytest.raises(ToolError) as exc_info:
-                await epic_tools_instance.list_epic_attachments(
-                    auth_token="token", epic_id=999
-                )
+                await epic_tools_instance.list_epic_attachments(auth_token="token", epic_id=999)
             assert "not found" in str(exc_info.value).lower()
 
     @pytest.mark.asyncio
@@ -1903,15 +1848,11 @@ class TestListEpicAttachments:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.list_epic_attachments = AsyncMock(
-                side_effect=Exception("Error")
-            )
+            mock_client.list_epic_attachments = AsyncMock(side_effect=Exception("Error"))
             mock_cls.return_value = mock_client
 
             with pytest.raises(ToolError) as exc_info:
-                await epic_tools_instance.list_epic_attachments(
-                    auth_token="token", epic_id=1
-                )
+                await epic_tools_instance.list_epic_attachments(auth_token="token", epic_id=1)
             assert "Error listing epic attachments" in str(exc_info.value)
 
 
@@ -1925,17 +1866,13 @@ class TestCreateEpicAttachment:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.create_epic_attachment = AsyncMock(return_value={
-                "id": 1,
-                "attached_file": "newfile.pdf",
-                "name": "New Doc"
-            })
+            mock_client.create_epic_attachment = AsyncMock(
+                return_value={"id": 1, "attached_file": "newfile.pdf", "name": "New Doc"}
+            )
             mock_cls.return_value = mock_client
 
             result = await epic_tools_instance.create_epic_attachment(
-                auth_token="token",
-                epic_id=1,
-                attached_file="/path/to/file.pdf"
+                auth_token="token", epic_id=1, attached_file="/path/to/file.pdf"
             )
 
             assert result["id"] == 1
@@ -1948,17 +1885,13 @@ class TestCreateEpicAttachment:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.create_epic_attachment = AsyncMock(return_value={
-                "id": 2,
-                "attached_file": "doc.pdf",
-                "name": "Doc"
-            })
+            mock_client.create_epic_attachment = AsyncMock(
+                return_value={"id": 2, "attached_file": "doc.pdf", "name": "Doc"}
+            )
             mock_cls.return_value = mock_client
 
             result = await epic_tools_instance.create_epic_attachment(
-                auth_token="token",
-                object_id=5,
-                attached_file="/path/to/file.pdf"
+                auth_token="token", object_id=5, attached_file="/path/to/file.pdf"
             )
 
             assert result["id"] == 2
@@ -2024,9 +1957,7 @@ class TestCreateEpicAttachment:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.create_epic_attachment = AsyncMock(
-                side_effect=Exception("Error")
-            )
+            mock_client.create_epic_attachment = AsyncMock(side_effect=Exception("Error"))
             mock_cls.return_value = mock_client
 
             with pytest.raises(ToolError) as exc_info:
@@ -2046,11 +1977,9 @@ class TestGetEpicAttachment:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.get_epic_attachment = AsyncMock(return_value={
-                "id": 1,
-                "attached_file": "file.pdf",
-                "name": "Document"
-            })
+            mock_client.get_epic_attachment = AsyncMock(
+                return_value={"id": 1, "attached_file": "file.pdf", "name": "Document"}
+            )
             mock_cls.return_value = mock_client
 
             result = await epic_tools_instance.get_epic_attachment(
@@ -2071,18 +2000,18 @@ class TestUpdateEpicAttachment:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.update_epic_attachment = AsyncMock(return_value={
-                "id": 1,
-                "attached_file": "file.pdf",
-                "name": "Updated Document",
-                "description": "New description"
-            })
+            mock_client.update_epic_attachment = AsyncMock(
+                return_value={
+                    "id": 1,
+                    "attached_file": "file.pdf",
+                    "name": "Updated Document",
+                    "description": "New description",
+                }
+            )
             mock_cls.return_value = mock_client
 
             result = await epic_tools_instance.update_epic_attachment(
-                auth_token="token",
-                attachment_id=1,
-                description="New description"
+                auth_token="token", attachment_id=1, description="New description"
             )
 
             assert result["id"] == 1
@@ -2114,6 +2043,7 @@ class TestDeleteEpicAttachment:
 # Tests para Custom Attributes (EPIC-026 a EPIC-028)
 # =============================================================================
 
+
 class TestListEpicCustomAttributes:
     """Tests para list_epic_custom_attributes."""
 
@@ -2124,10 +2054,12 @@ class TestListEpicCustomAttributes:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.list_epic_custom_attributes = AsyncMock(return_value=[
-                {"id": 1, "name": "Priority", "type": "text"},
-                {"id": 2, "name": "Category", "type": "dropdown"}
-            ])
+            mock_client.list_epic_custom_attributes = AsyncMock(
+                return_value=[
+                    {"id": 1, "name": "Priority", "type": "text"},
+                    {"id": 2, "name": "Category", "type": "dropdown"},
+                ]
+            )
             mock_cls.return_value = mock_client
 
             result = await epic_tools_instance.list_epic_custom_attributes(
@@ -2148,17 +2080,13 @@ class TestCreateEpicCustomAttribute:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.create_epic_custom_attribute = AsyncMock(return_value={
-                "id": 3,
-                "name": "New Attribute",
-                "type": "text"
-            })
+            mock_client.create_epic_custom_attribute = AsyncMock(
+                return_value={"id": 3, "name": "New Attribute", "type": "text"}
+            )
             mock_cls.return_value = mock_client
 
             result = await epic_tools_instance.create_epic_custom_attribute(
-                auth_token="token",
-                project_id=1,
-                name="New Attribute"
+                auth_token="token", project_id=1, name="New Attribute"
             )
 
             assert result["id"] == 3
@@ -2175,11 +2103,13 @@ class TestGetEpicCustomAttributeValues:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.get_epic_custom_attribute_values = AsyncMock(return_value={
-                "epic": 1,
-                "attributes_values": {"1": "High", "2": "Feature"},
-                "version": 1
-            })
+            mock_client.get_epic_custom_attribute_values = AsyncMock(
+                return_value={
+                    "epic": 1,
+                    "attributes_values": {"1": "High", "2": "Feature"},
+                    "version": 1,
+                }
+            )
             mock_cls.return_value = mock_client
 
             result = await epic_tools_instance.get_epic_custom_attribute_values(
@@ -2193,6 +2123,7 @@ class TestGetEpicCustomAttributeValues:
 # =============================================================================
 # Tests para MCP Tool Functions con parámetros opcionales
 # =============================================================================
+
 
 class TestMCPToolFunctionsWithOptionalParams:
     """Tests para las funciones MCP tool con parámetros opcionales."""
@@ -2212,6 +2143,7 @@ class TestMCPToolFunctionsWithOptionalParams:
 
             # Mock pagination
             from src.infrastructure.pagination import AutoPaginator
+
             with patch.object(AutoPaginator, "paginate", new_callable=AsyncMock) as mock_paginate:
                 mock_paginate.return_value = [{"id": 1, "subject": "Epic", "ref": 1}]
 
@@ -2228,7 +2160,7 @@ class TestMCPToolFunctionsWithOptionalParams:
                         project_id=123,
                         status=1,
                         assigned_to=5,
-                        auto_paginate=True
+                        auto_paginate=True,
                     )
                     assert isinstance(result, list)
 
@@ -2241,9 +2173,9 @@ class TestMCPToolFunctionsWithOptionalParams:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.create_epic = AsyncMock(return_value={
-                "id": 1, "subject": "Test Epic", "project": 123, "ref": 1
-            })
+            mock_client.create_epic = AsyncMock(
+                return_value={"id": 1, "subject": "Test Epic", "project": 123, "ref": 1}
+            )
             mock_cls.return_value = mock_client
 
             EpicTools(mcp)
@@ -2264,7 +2196,7 @@ class TestMCPToolFunctionsWithOptionalParams:
                     color="#FF0000",
                     assigned_to=5,
                     status=1,
-                    tags=["tag1", "tag2"]
+                    tags=["tag1", "tag2"],
                 )
                 assert result["id"] == 1
 
@@ -2277,9 +2209,15 @@ class TestMCPToolFunctionsWithOptionalParams:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.update_epic = AsyncMock(return_value={
-                "id": 1, "subject": "Updated Epic", "project": 123, "version": 2, "ref": 1
-            })
+            mock_client.update_epic = AsyncMock(
+                return_value={
+                    "id": 1,
+                    "subject": "Updated Epic",
+                    "project": 123,
+                    "version": 2,
+                    "ref": 1,
+                }
+            )
             mock_cls.return_value = mock_client
 
             EpicTools(mcp)
@@ -2300,7 +2238,7 @@ class TestMCPToolFunctionsWithOptionalParams:
                     color="#00FF00",
                     assigned_to=10,
                     status=2,
-                    tags=["updated"]
+                    tags=["updated"],
                 )
                 assert result["version"] == 2
 
@@ -2313,9 +2251,15 @@ class TestMCPToolFunctionsWithOptionalParams:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.update_epic = AsyncMock(return_value={
-                "id": 1, "subject": "Partial Updated", "project": 123, "version": 3, "ref": 1
-            })
+            mock_client.update_epic = AsyncMock(
+                return_value={
+                    "id": 1,
+                    "subject": "Partial Updated",
+                    "project": 123,
+                    "version": 3,
+                    "ref": 1,
+                }
+            )
             mock_cls.return_value = mock_client
 
             EpicTools(mcp)
@@ -2336,7 +2280,7 @@ class TestMCPToolFunctionsWithOptionalParams:
                     color="#0000FF",
                     assigned_to=15,
                     status=3,
-                    tags=["partial"]
+                    tags=["partial"],
                 )
                 assert result["version"] == 3
 
@@ -2344,6 +2288,7 @@ class TestMCPToolFunctionsWithOptionalParams:
 # =============================================================================
 # Tests adicionales para paths de éxito
 # =============================================================================
+
 
 class TestSuccessPaths:
     """Tests para paths de éxito de métodos internos."""
@@ -2355,12 +2300,9 @@ class TestSuccessPaths:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.get_epic = AsyncMock(return_value={
-                "id": 1,
-                "ref": 10,
-                "subject": "Test Epic",
-                "project": 123
-            })
+            mock_client.get_epic = AsyncMock(
+                return_value={"id": 1, "ref": 10, "subject": "Test Epic", "project": 123}
+            )
             mock_cls.return_value = mock_client
 
             result = await epic_tools_instance.get_epic(auth_token="token", epic_id=1)
@@ -2375,12 +2317,9 @@ class TestSuccessPaths:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.get_epic_by_ref = AsyncMock(return_value={
-                "id": 5,
-                "ref": 25,
-                "subject": "Epic by Ref",
-                "project": 123
-            })
+            mock_client.get_epic_by_ref = AsyncMock(
+                return_value={"id": 5, "ref": 25, "subject": "Epic by Ref", "project": 123}
+            )
             mock_cls.return_value = mock_client
 
             result = await epic_tools_instance.get_epic_by_ref(
@@ -2397,10 +2336,12 @@ class TestSuccessPaths:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.list_epic_related_userstories = AsyncMock(return_value=[
-                {"id": 1, "epic": 1, "user_story": 10, "order": 1},
-                {"id": 2, "epic": 1, "user_story": 20, "order": 2}
-            ])
+            mock_client.list_epic_related_userstories = AsyncMock(
+                return_value=[
+                    {"id": 1, "epic": 1, "user_story": 10, "order": 1},
+                    {"id": 2, "epic": 1, "user_story": 20, "order": 2},
+                ]
+            )
             mock_cls.return_value = mock_client
 
             result = await epic_tools_instance.list_epic_related_userstories(
@@ -2417,18 +2358,13 @@ class TestSuccessPaths:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.create_epic = AsyncMock(return_value={
-                "id": 100,
-                "ref": 50,
-                "subject": "New Epic",
-                "project": 123
-            })
+            mock_client.create_epic = AsyncMock(
+                return_value={"id": 100, "ref": 50, "subject": "New Epic", "project": 123}
+            )
             mock_cls.return_value = mock_client
 
             result = await epic_tools_instance.create_epic(
-                auth_token="token",
-                project=123,
-                subject="New Epic"
+                auth_token="token", project=123, subject="New Epic"
             )
 
             assert result["id"] == 100
@@ -2446,9 +2382,7 @@ class TestSuccessPaths:
 
             with pytest.raises(Exception) as exc_info:
                 await epic_tools_instance.create_epic(
-                    auth_token="token",
-                    project=123,
-                    subject="New Epic"
+                    auth_token="token", project=123, subject="New Epic"
                 )
             assert "Network error" in str(exc_info.value)
 
@@ -2463,9 +2397,9 @@ class TestListRelatedUserstoriesSuccessPaths:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.list_epic_related_userstories = AsyncMock(return_value=[
-                {"id": 1, "epic": 1, "user_story": 10, "order": 1}
-            ])
+            mock_client.list_epic_related_userstories = AsyncMock(
+                return_value=[{"id": 1, "epic": 1, "user_story": 10, "order": 1}]
+            )
             mock_cls.return_value = mock_client
 
             result = await epic_tools_instance.list_related_userstories(
@@ -2487,9 +2421,7 @@ class TestListRelatedUserstoriesSuccessPaths:
             mock_cls.return_value = mock_client
 
             with pytest.raises(ToolError) as exc_info:
-                await epic_tools_instance.list_related_userstories(
-                    auth_token="token", epic_id=999
-                )
+                await epic_tools_instance.list_related_userstories(auth_token="token", epic_id=999)
             assert "not found" in str(exc_info.value).lower()
 
 
@@ -2503,20 +2435,22 @@ class TestMoreSuccessPaths:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.update_epic_full = AsyncMock(return_value={
-                "id": 1,
-                "ref": 10,
-                "subject": "Updated Epic",
-                "project": 123,
-                "version": 2
-            })
+            mock_client.update_epic_full = AsyncMock(
+                return_value={
+                    "id": 1,
+                    "ref": 10,
+                    "subject": "Updated Epic",
+                    "project": 123,
+                    "version": 2,
+                }
+            )
             mock_cls.return_value = mock_client
 
             result = await epic_tools_instance.update_epic_full(
                 auth_token="token",
                 epic_id=1,
                 subject="Updated Epic",
-                project=123  # Required parameter
+                project=123,  # Required parameter
             )
 
             assert result["version"] == 2
@@ -2528,19 +2462,19 @@ class TestMoreSuccessPaths:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.update_epic = AsyncMock(return_value={
-                "id": 1,
-                "ref": 10,
-                "subject": "Patched Epic",
-                "project": 123,
-                "version": 3
-            })
+            mock_client.update_epic = AsyncMock(
+                return_value={
+                    "id": 1,
+                    "ref": 10,
+                    "subject": "Patched Epic",
+                    "project": 123,
+                    "version": 3,
+                }
+            )
             mock_cls.return_value = mock_client
 
             result = await epic_tools_instance.update_epic_partial(
-                auth_token="token",
-                epic_id=1,
-                subject="Patched Epic"
+                auth_token="token", epic_id=1, subject="Patched Epic"
             )
 
             assert result["version"] == 3
@@ -2555,9 +2489,7 @@ class TestMoreSuccessPaths:
             mock_client.delete_epic = AsyncMock(return_value=None)
             mock_cls.return_value = mock_client
 
-            result = await epic_tools_instance.delete_epic(
-                auth_token="token", epic_id=1
-            )
+            result = await epic_tools_instance.delete_epic(auth_token="token", epic_id=1)
 
             assert "deleted" in result["message"].lower()
 
@@ -2568,12 +2500,9 @@ class TestMoreSuccessPaths:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.create_epic_related_userstory = AsyncMock(return_value={
-                "id": 1,
-                "epic": 1,
-                "user_story": 10,
-                "order": 1
-            })
+            mock_client.create_epic_related_userstory = AsyncMock(
+                return_value={"id": 1, "epic": 1, "user_story": 10, "order": 1}
+            )
             mock_cls.return_value = mock_client
 
             result = await epic_tools_instance.create_related_userstory(
@@ -2589,16 +2518,16 @@ class TestMoreSuccessPaths:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.bulk_create_epics = AsyncMock(return_value=[
-                {"id": 1, "ref": 1, "subject": "Epic 1"},
-                {"id": 2, "ref": 2, "subject": "Epic 2"}
-            ])
+            mock_client.bulk_create_epics = AsyncMock(
+                return_value=[
+                    {"id": 1, "ref": 1, "subject": "Epic 1"},
+                    {"id": 2, "ref": 2, "subject": "Epic 2"},
+                ]
+            )
             mock_cls.return_value = mock_client
 
             result = await epic_tools_instance.bulk_create_epics(
-                auth_token="token",
-                project_id=123,
-                bulk_epics="Epic 1\nEpic 2"
+                auth_token="token", project_id=123, bulk_epics="Epic 1\nEpic 2"
             )
 
             assert len(result) == 2
@@ -2610,15 +2539,15 @@ class TestMoreSuccessPaths:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.get_epic_filters = AsyncMock(return_value={
-                "statuses": [{"id": 1, "name": "New"}],
-                "assigned_to": [{"id": 1, "name": "User 1"}]
-            })
+            mock_client.get_epic_filters = AsyncMock(
+                return_value={
+                    "statuses": [{"id": 1, "name": "New"}],
+                    "assigned_to": [{"id": 1, "name": "User 1"}],
+                }
+            )
             mock_cls.return_value = mock_client
 
-            result = await epic_tools_instance.get_epic_filters(
-                auth_token="token", project_id=123
-            )
+            result = await epic_tools_instance.get_epic_filters(auth_token="token", project_id=123)
 
             assert "statuses" in result
 
@@ -2632,9 +2561,7 @@ class TestMoreSuccessPaths:
             mock_client.upvote_epic = AsyncMock(return_value=None)
             mock_cls.return_value = mock_client
 
-            result = await epic_tools_instance.upvote_epic(
-                auth_token="token", epic_id=1
-            )
+            result = await epic_tools_instance.upvote_epic(auth_token="token", epic_id=1)
 
             assert "voted" in result["message"].lower()
 
@@ -2648,9 +2575,7 @@ class TestMoreSuccessPaths:
             mock_client.downvote_epic = AsyncMock(return_value=None)
             mock_cls.return_value = mock_client
 
-            result = await epic_tools_instance.downvote_epic(
-                auth_token="token", epic_id=1
-            )
+            result = await epic_tools_instance.downvote_epic(auth_token="token", epic_id=1)
 
             assert "downvoted" in result["message"].lower()
 
@@ -2661,14 +2586,10 @@ class TestMoreSuccessPaths:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.get_epic_voters = AsyncMock(return_value=[
-                {"id": 1, "full_name": "User 1"}
-            ])
+            mock_client.get_epic_voters = AsyncMock(return_value=[{"id": 1, "full_name": "User 1"}])
             mock_cls.return_value = mock_client
 
-            result = await epic_tools_instance.get_epic_voters(
-                auth_token="token", epic_id=1
-            )
+            result = await epic_tools_instance.get_epic_voters(auth_token="token", epic_id=1)
 
             assert len(result) == 1
 
@@ -2682,9 +2603,7 @@ class TestMoreSuccessPaths:
             mock_client.watch_epic = AsyncMock(return_value=None)
             mock_cls.return_value = mock_client
 
-            result = await epic_tools_instance.watch_epic(
-                auth_token="token", epic_id=1
-            )
+            result = await epic_tools_instance.watch_epic(auth_token="token", epic_id=1)
 
             assert "watching" in result["message"].lower()
 
@@ -2698,9 +2617,7 @@ class TestMoreSuccessPaths:
             mock_client.unwatch_epic = AsyncMock(return_value=None)
             mock_cls.return_value = mock_client
 
-            result = await epic_tools_instance.unwatch_epic(
-                auth_token="token", epic_id=1
-            )
+            result = await epic_tools_instance.unwatch_epic(auth_token="token", epic_id=1)
 
             assert "stopped" in result["message"].lower()
 
@@ -2711,14 +2628,12 @@ class TestMoreSuccessPaths:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.get_epic_watchers = AsyncMock(return_value=[
-                {"id": 1, "full_name": "Watcher 1"}
-            ])
+            mock_client.get_epic_watchers = AsyncMock(
+                return_value=[{"id": 1, "full_name": "Watcher 1"}]
+            )
             mock_cls.return_value = mock_client
 
-            result = await epic_tools_instance.get_epic_watchers(
-                auth_token="token", epic_id=1
-            )
+            result = await epic_tools_instance.get_epic_watchers(auth_token="token", epic_id=1)
 
             assert len(result) == 1
 
@@ -2734,11 +2649,20 @@ class TestMCPToolWrappersWithOptionalParams:
         Mockeamos el método de implementación para evitar la validación de project.
         """
         # Mock the implementation method directly on the instance
-        epic_tools_instance.update_epic_full = AsyncMock(return_value={
-            "id": 1, "ref": 10, "subject": "Updated", "project": 123, "version": 2,
-            "description": "New desc", "color": "#FF0000",
-            "assigned_to": 5, "status": 2, "tags": ["tag1"]
-        })
+        epic_tools_instance.update_epic_full = AsyncMock(
+            return_value={
+                "id": 1,
+                "ref": 10,
+                "subject": "Updated",
+                "project": 123,
+                "version": 2,
+                "description": "New desc",
+                "color": "#FF0000",
+                "assigned_to": 5,
+                "status": 2,
+                "tags": ["tag1"],
+            }
+        )
 
         # Get the tool from MCP
         tool = await epic_tools_instance.mcp.get_tool("taiga_update_epic_full")
@@ -2750,7 +2674,7 @@ class TestMCPToolWrappersWithOptionalParams:
             color="#FF0000",
             assigned_to=5,
             status=2,
-            tags=["tag1"]
+            tags=["tag1"],
         )
 
         assert result["version"] == 2
@@ -2768,19 +2692,14 @@ class TestMCPToolWrappersWithOptionalParams:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.create_epic_related_userstory = AsyncMock(return_value={
-                "id": 1, "epic": 1, "user_story": 10, "order": 5
-            })
+            mock_client.create_epic_related_userstory = AsyncMock(
+                return_value={"id": 1, "epic": 1, "user_story": 10, "order": 5}
+            )
             mock_cls.return_value = mock_client
 
             # Get the tool from MCP
             tool = await epic_tools_instance.mcp.get_tool("taiga_create_epic_related_userstory")
-            result = await tool.fn(
-                auth_token="token",
-                epic_id=1,
-                user_story_id=10,
-                order=5
-            )
+            result = await tool.fn(auth_token="token", epic_id=1, user_story_id=10, order=5)
 
             assert result["order"] == 5
 
@@ -2792,11 +2711,17 @@ class TestMCPToolWrappersWithOptionalParams:
         Mockeamos el método de implementación directamente.
         """
         # Mock the implementation method directly on the instance
-        epic_tools_instance.update_epic_related_userstory = AsyncMock(return_value={
-            "id": 1, "epic": 1, "user_story": 10,
-            "subject": "Updated Story", "description": "New desc",
-            "status": 2, "assigned_to": 5
-        })
+        epic_tools_instance.update_epic_related_userstory = AsyncMock(
+            return_value={
+                "id": 1,
+                "epic": 1,
+                "user_story": 10,
+                "subject": "Updated Story",
+                "description": "New desc",
+                "status": 2,
+                "assigned_to": 5,
+            }
+        )
 
         tool = await epic_tools_instance.mcp.get_tool("taiga_update_epic_related_userstory")
         result = await tool.fn(
@@ -2806,7 +2731,7 @@ class TestMCPToolWrappersWithOptionalParams:
             subject="Updated Story",
             description="New desc",
             status=2,
-            assigned_to=5
+            assigned_to=5,
         )
 
         assert result["subject"] == "Updated Story"
@@ -2823,18 +2748,20 @@ class TestMCPToolWrappersWithOptionalParams:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.create_epic_attachment = AsyncMock(return_value={
-                "id": 1, "name": "file.pdf", "size": 1024,
-                "description": "Important doc", "object_id": 10
-            })
+            mock_client.create_epic_attachment = AsyncMock(
+                return_value={
+                    "id": 1,
+                    "name": "file.pdf",
+                    "size": 1024,
+                    "description": "Important doc",
+                    "object_id": 10,
+                }
+            )
             mock_cls.return_value = mock_client
 
             tool = await epic_tools_instance.mcp.get_tool("taiga_create_epic_attachment")
             result = await tool.fn(
-                auth_token="token",
-                epic_id=10,
-                file="base64_content",
-                description="Important doc"
+                auth_token="token", epic_id=10, file="base64_content", description="Important doc"
             )
 
             assert result["description"] == "Important doc"
@@ -2846,17 +2773,13 @@ class TestMCPToolWrappersWithOptionalParams:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.update_epic_attachment = AsyncMock(return_value={
-                "id": 1, "name": "file.pdf", "description": "Updated desc"
-            })
+            mock_client.update_epic_attachment = AsyncMock(
+                return_value={"id": 1, "name": "file.pdf", "description": "Updated desc"}
+            )
             mock_cls.return_value = mock_client
 
             tool = await epic_tools_instance.mcp.get_tool("taiga_update_epic_attachment")
-            result = await tool.fn(
-                auth_token="token",
-                attachment_id=1,
-                description="Updated desc"
-            )
+            result = await tool.fn(auth_token="token", attachment_id=1, description="Updated desc")
 
             assert result["description"] == "Updated desc"
 
@@ -2867,10 +2790,15 @@ class TestMCPToolWrappersWithOptionalParams:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.create_epic_custom_attribute = AsyncMock(return_value={
-                "id": 1, "name": "Priority", "description": "Priority level",
-                "order": 5, "project": 123
-            })
+            mock_client.create_epic_custom_attribute = AsyncMock(
+                return_value={
+                    "id": 1,
+                    "name": "Priority",
+                    "description": "Priority level",
+                    "order": 5,
+                    "project": 123,
+                }
+            )
             mock_cls.return_value = mock_client
 
             tool = await epic_tools_instance.mcp.get_tool("taiga_create_epic_custom_attribute")
@@ -2879,7 +2807,7 @@ class TestMCPToolWrappersWithOptionalParams:
                 project_id=123,
                 name="Priority",
                 description="Priority level",
-                order=5
+                order=5,
             )
 
             assert result["name"] == "Priority"
@@ -2892,9 +2820,9 @@ class TestMCPToolWrappersWithOptionalParams:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.get_epic = AsyncMock(return_value={
-                "id": 1, "ref": 10, "subject": "Epic", "project": 123
-            })
+            mock_client.get_epic = AsyncMock(
+                return_value={"id": 1, "ref": 10, "subject": "Epic", "project": 123}
+            )
             mock_cls.return_value = mock_client
 
             tool = await epic_tools_instance.mcp.get_tool("taiga_get_epic")
@@ -2909,9 +2837,9 @@ class TestMCPToolWrappersWithOptionalParams:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.get_epic_by_ref = AsyncMock(return_value={
-                "id": 1, "ref": 10, "subject": "Epic", "project": 123
-            })
+            mock_client.get_epic_by_ref = AsyncMock(
+                return_value={"id": 1, "ref": 10, "subject": "Epic", "project": 123}
+            )
             mock_cls.return_value = mock_client
 
             tool = await epic_tools_instance.mcp.get_tool("taiga_get_epic_by_ref")
@@ -2936,20 +2864,20 @@ class TestValidationErrorHandling:
             mock_client = MagicMock()
             mock_client.__aenter__ = AsyncMock(return_value=mock_client)
             mock_client.__aexit__ = AsyncMock(return_value=None)
-            mock_client.create_epic = AsyncMock(return_value={
-                "id": 1, "ref": 10, "subject": "Epic", "project": 123
-            })
+            mock_client.create_epic = AsyncMock(
+                return_value={"id": 1, "ref": 10, "subject": "Epic", "project": 123}
+            )
             mock_cls.return_value = mock_client
 
             # Mock EpicResponse.model_validate to raise domain ValidationError
-            with patch("src.application.tools.epic_tools.EpicResponse.model_validate") as mock_validate:
+            with patch(
+                "src.application.tools.epic_tools.EpicResponse.model_validate"
+            ) as mock_validate:
                 mock_validate.side_effect = DomainValidationError("Invalid epic data")
 
                 with pytest.raises(ToolError) as exc_info:
                     await epic_tools_instance.create_epic(
-                        auth_token="token",
-                        project=123,
-                        subject="New Epic"
+                        auth_token="token", project=123, subject="New Epic"
                     )
                 # ValidationError is caught and converted to ToolError
                 assert "Invalid epic data" in str(exc_info.value)
