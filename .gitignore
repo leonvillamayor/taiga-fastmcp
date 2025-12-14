@@ -83,8 +83,10 @@ Thumbs.db
 # Claude Code configuration (local development only)
 .claude/
 
-# Internal documentation (local only)
-Documentacion/
+# Internal documentation (local only - except files needed for tests)
+Documentacion/*
+!Documentacion/audit_mcp_tools.json
+!Documentacion/tools_normalization_plan.csv
 
 # MCP server configuration (local only)
 .mcp.json
@@ -104,9 +106,6 @@ Tecnico/
 
 # Testing documentation (internal)
 doc_testing/
-
-# Development scripts (internal)
-scripts/
 
 # Local artifacts and temporary files
 all_user_stories_extracted.json
