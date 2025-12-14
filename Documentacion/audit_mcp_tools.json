@@ -1,0 +1,4833 @@
+{
+  "total_tools": 164,
+  "tools_with_prefix": 164,
+  "tools_without_prefix": 0,
+  "tools_without_description": 56,
+  "tools_with_issues": 66,
+  "modules_stats": {
+    "auth_tools": 5,
+    "epic_tools": 28,
+    "issue_tools": 28,
+    "membership_tools": 5,
+    "milestone_tools": 10,
+    "project_tools": 22,
+    "task_tools": 29,
+    "user_tools": 2,
+    "userstory_tools": 15,
+    "webhook_tools": 6,
+    "wiki_tools": 14
+  },
+  "tools": [
+    {
+      "name": "taiga_authenticate",
+      "file": "src/application/tools/auth_tools.py",
+      "function_name": "authenticate",
+      "line_number": 90,
+      "has_prefix": true,
+      "description": "Authenticate with Taiga using username and password",
+      "parameters": [
+        {
+          "name": "username",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "password",
+          "type": "str | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_refresh_token",
+      "file": "src/application/tools/auth_tools.py",
+      "function_name": "refresh_token",
+      "line_number": 203,
+      "has_prefix": true,
+      "description": "Refresh the authentication token",
+      "parameters": [
+        {
+          "name": "refresh_token",
+          "type": "str | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_get_current_user",
+      "file": "src/application/tools/auth_tools.py",
+      "function_name": "get_current_user",
+      "line_number": 290,
+      "has_prefix": true,
+      "description": "Get information about the currently authenticated user",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_logout",
+      "file": "src/application/tools/auth_tools.py",
+      "function_name": "logout",
+      "line_number": 389,
+      "has_prefix": true,
+      "description": "Clear authentication tokens and logout",
+      "parameters": [],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_check_auth",
+      "file": "src/application/tools/auth_tools.py",
+      "function_name": "check_auth",
+      "line_number": 445,
+      "has_prefix": true,
+      "description": "Check current authentication status",
+      "parameters": [],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_list_epics",
+      "file": "src/application/tools/epic_tools.py",
+      "function_name": "list_epics_tool",
+      "line_number": 50,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "status",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "assigned_to",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "auto_paginate",
+          "type": "bool",
+          "default": "True"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_create_epic",
+      "file": "src/application/tools/epic_tools.py",
+      "function_name": "create_epic_tool",
+      "line_number": 120,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "subject",
+          "type": "str"
+        },
+        {
+          "name": "description",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "color",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "assigned_to",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "status",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "tags",
+          "type": "list[str] | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_get_epic",
+      "file": "src/application/tools/epic_tools.py",
+      "function_name": "get_epic_tool",
+      "line_number": 195,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "epic_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_get_epic_by_ref",
+      "file": "src/application/tools/epic_tools.py",
+      "function_name": "get_epic_by_ref_tool",
+      "line_number": 249,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "ref",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_update_epic_full",
+      "file": "src/application/tools/epic_tools.py",
+      "function_name": "update_epic_full_tool",
+      "line_number": 299,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "epic_id",
+          "type": "int"
+        },
+        {
+          "name": "subject",
+          "type": "str"
+        },
+        {
+          "name": "description",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "color",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "assigned_to",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "status",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "tags",
+          "type": "list[str] | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_update_epic_partial",
+      "file": "src/application/tools/epic_tools.py",
+      "function_name": "update_epic_partial_tool",
+      "line_number": 373,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "epic_id",
+          "type": "int"
+        },
+        {
+          "name": "subject",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "description",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "color",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "assigned_to",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "status",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "tags",
+          "type": "list[str] | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_delete_epic",
+      "file": "src/application/tools/epic_tools.py",
+      "function_name": "delete_epic_tool",
+      "line_number": 448,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "epic_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, str]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_list_epic_related_userstories",
+      "file": "src/application/tools/epic_tools.py",
+      "function_name": "list_epic_related_userstories_tool",
+      "line_number": 484,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "epic_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_create_epic_related_userstory",
+      "file": "src/application/tools/epic_tools.py",
+      "function_name": "create_epic_related_userstory_tool",
+      "line_number": 535,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "epic_id",
+          "type": "int"
+        },
+        {
+          "name": "user_story_id",
+          "type": "int"
+        },
+        {
+          "name": "order",
+          "type": "int | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator",
+        "Inconsistent naming: 'userstory' should be 'user_story'"
+      ]
+    },
+    {
+      "name": "taiga_get_epic_related_userstory",
+      "file": "src/application/tools/epic_tools.py",
+      "function_name": "get_epic_related_userstory_tool",
+      "line_number": 586,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "epic_id",
+          "type": "int"
+        },
+        {
+          "name": "userstory_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator",
+        "Inconsistent naming: 'userstory' should be 'user_story'"
+      ]
+    },
+    {
+      "name": "taiga_update_epic_related_userstory",
+      "file": "src/application/tools/epic_tools.py",
+      "function_name": "update_epic_related_userstory_tool",
+      "line_number": 632,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "epic_id",
+          "type": "int"
+        },
+        {
+          "name": "userstory_id",
+          "type": "int"
+        },
+        {
+          "name": "subject",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "description",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "status",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "assigned_to",
+          "type": "int | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator",
+        "Inconsistent naming: 'userstory' should be 'user_story'"
+      ]
+    },
+    {
+      "name": "taiga_delete_epic_related_userstory",
+      "file": "src/application/tools/epic_tools.py",
+      "function_name": "delete_epic_related_userstory_tool",
+      "line_number": 699,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "epic_id",
+          "type": "int"
+        },
+        {
+          "name": "userstory_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, str]",
+      "issues": [
+        "Missing description in decorator",
+        "Inconsistent naming: 'userstory' should be 'user_story'"
+      ]
+    },
+    {
+      "name": "taiga_bulk_create_epics",
+      "file": "src/application/tools/epic_tools.py",
+      "function_name": "bulk_create_epics_tool",
+      "line_number": 741,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "epics_data",
+          "type": "list[dict[str, Any]]"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_get_epic_filters",
+      "file": "src/application/tools/epic_tools.py",
+      "function_name": "get_epic_filters_tool",
+      "line_number": 789,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_upvote_epic",
+      "file": "src/application/tools/epic_tools.py",
+      "function_name": "upvote_epic_tool",
+      "line_number": 832,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "epic_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_downvote_epic",
+      "file": "src/application/tools/epic_tools.py",
+      "function_name": "downvote_epic_tool",
+      "line_number": 867,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "epic_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_get_epic_voters",
+      "file": "src/application/tools/epic_tools.py",
+      "function_name": "get_epic_voters_tool",
+      "line_number": 902,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "epic_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_watch_epic",
+      "file": "src/application/tools/epic_tools.py",
+      "function_name": "watch_epic_tool",
+      "line_number": 943,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "epic_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_unwatch_epic",
+      "file": "src/application/tools/epic_tools.py",
+      "function_name": "unwatch_epic_tool",
+      "line_number": 978,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "epic_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_get_epic_watchers",
+      "file": "src/application/tools/epic_tools.py",
+      "function_name": "get_epic_watchers_tool",
+      "line_number": 1013,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "epic_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_list_epic_attachments",
+      "file": "src/application/tools/epic_tools.py",
+      "function_name": "list_epic_attachments_tool",
+      "line_number": 1059,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "epic_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_create_epic_attachment",
+      "file": "src/application/tools/epic_tools.py",
+      "function_name": "create_epic_attachment_tool",
+      "line_number": 1104,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "epic_id",
+          "type": "int"
+        },
+        {
+          "name": "file",
+          "type": "str"
+        },
+        {
+          "name": "description",
+          "type": "str | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_get_epic_attachment",
+      "file": "src/application/tools/epic_tools.py",
+      "function_name": "get_epic_attachment_tool",
+      "line_number": 1155,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "attachment_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_update_epic_attachment",
+      "file": "src/application/tools/epic_tools.py",
+      "function_name": "update_epic_attachment_tool",
+      "line_number": 1203,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "attachment_id",
+          "type": "int"
+        },
+        {
+          "name": "description",
+          "type": "str | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_delete_epic_attachment",
+      "file": "src/application/tools/epic_tools.py",
+      "function_name": "delete_epic_attachment_tool",
+      "line_number": 1255,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "attachment_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, str]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_list_epic_custom_attributes",
+      "file": "src/application/tools/epic_tools.py",
+      "function_name": "list_epic_custom_attributes_tool",
+      "line_number": 1295,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_create_epic_custom_attribute",
+      "file": "src/application/tools/epic_tools.py",
+      "function_name": "create_epic_custom_attribute_tool",
+      "line_number": 1352,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "str"
+        },
+        {
+          "name": "description",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "order",
+          "type": "int | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_get_epic_custom_attribute_values",
+      "file": "src/application/tools/epic_tools.py",
+      "function_name": "get_epic_custom_attribute_values_tool",
+      "line_number": 1416,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "epic_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_list_issues",
+      "file": "src/application/tools/issue_tools.py",
+      "function_name": "list_issues",
+      "line_number": 38,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "status",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "severity",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "priority",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "type",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "assigned_to",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "tags",
+          "type": "list[str] | None",
+          "default": "None"
+        },
+        {
+          "name": "is_closed",
+          "type": "bool | None",
+          "default": "None"
+        },
+        {
+          "name": "exclude_status",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "exclude_severity",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "exclude_priority",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "exclude_type",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "exclude_assigned_to",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "exclude_tags",
+          "type": "list[str] | None",
+          "default": "None"
+        },
+        {
+          "name": "auto_paginate",
+          "type": "bool",
+          "default": "True"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_create_issue",
+      "file": "src/application/tools/issue_tools.py",
+      "function_name": "create_issue",
+      "line_number": 124,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "subject",
+          "type": "str"
+        },
+        {
+          "name": "type",
+          "type": "int"
+        },
+        {
+          "name": "priority",
+          "type": "int"
+        },
+        {
+          "name": "severity",
+          "type": "int"
+        },
+        {
+          "name": "description",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "status",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "assigned_to",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "milestone_id",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "tags",
+          "type": "list[str] | None",
+          "default": "None"
+        },
+        {
+          "name": "watchers",
+          "type": "list[int] | None",
+          "default": "None"
+        },
+        {
+          "name": "attachments",
+          "type": "list[dict[str, Any]] | None",
+          "default": "None"
+        },
+        {
+          "name": "blocked_note",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "is_blocked",
+          "type": "bool | None",
+          "default": "None"
+        },
+        {
+          "name": "due_date",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "due_date_reason",
+          "type": "str | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_get_issue",
+      "file": "src/application/tools/issue_tools.py",
+      "function_name": "get_issue",
+      "line_number": 232,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "issue_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_get_issue_by_ref",
+      "file": "src/application/tools/issue_tools.py",
+      "function_name": "get_issue_by_ref",
+      "line_number": 275,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "ref",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_update_issue",
+      "file": "src/application/tools/issue_tools.py",
+      "function_name": "update_issue",
+      "line_number": 319,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "issue_id",
+          "type": "int"
+        },
+        {
+          "name": "subject",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "description",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "type",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "priority",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "severity",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "status",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "assigned_to",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "milestone_id",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "tags",
+          "type": "list[str] | None",
+          "default": "None"
+        },
+        {
+          "name": "blocked_note",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "is_blocked",
+          "type": "bool | None",
+          "default": "None"
+        },
+        {
+          "name": "due_date",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "due_date_reason",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "version",
+          "type": "int | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_delete_issue",
+      "file": "src/application/tools/issue_tools.py",
+      "function_name": "delete_issue",
+      "line_number": 417,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "issue_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "bool",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_bulk_create_issues",
+      "file": "src/application/tools/issue_tools.py",
+      "function_name": "bulk_create_issues",
+      "line_number": 449,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "issues",
+          "type": "list[dict[str, Any]]"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_get_issue_filters",
+      "file": "src/application/tools/issue_tools.py",
+      "function_name": "get_issue_filters",
+      "line_number": 528,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_upvote_issue",
+      "file": "src/application/tools/issue_tools.py",
+      "function_name": "upvote_issue",
+      "line_number": 568,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "issue_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_downvote_issue",
+      "file": "src/application/tools/issue_tools.py",
+      "function_name": "downvote_issue",
+      "line_number": 602,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "issue_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_get_issue_voters",
+      "file": "src/application/tools/issue_tools.py",
+      "function_name": "get_issue_voters",
+      "line_number": 635,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "issue_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_watch_issue",
+      "file": "src/application/tools/issue_tools.py",
+      "function_name": "watch_issue",
+      "line_number": 671,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "issue_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_unwatch_issue",
+      "file": "src/application/tools/issue_tools.py",
+      "function_name": "unwatch_issue",
+      "line_number": 705,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "issue_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_get_issue_watchers",
+      "file": "src/application/tools/issue_tools.py",
+      "function_name": "get_issue_watchers",
+      "line_number": 738,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "issue_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_get_issue_attachments",
+      "file": "src/application/tools/issue_tools.py",
+      "function_name": "get_issue_attachments",
+      "line_number": 775,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "issue_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_create_issue_attachment",
+      "file": "src/application/tools/issue_tools.py",
+      "function_name": "create_issue_attachment",
+      "line_number": 813,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "issue_id",
+          "type": "int"
+        },
+        {
+          "name": "file",
+          "type": "bytes"
+        },
+        {
+          "name": "filename",
+          "type": "str"
+        },
+        {
+          "name": "description",
+          "type": "str | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_get_issue_attachment",
+      "file": "src/application/tools/issue_tools.py",
+      "function_name": "get_issue_attachment",
+      "line_number": 866,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "attachment_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_update_issue_attachment",
+      "file": "src/application/tools/issue_tools.py",
+      "function_name": "update_issue_attachment",
+      "line_number": 905,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "attachment_id",
+          "type": "int"
+        },
+        {
+          "name": "description",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "is_deprecated",
+          "type": "bool | None",
+          "default": "None"
+        },
+        {
+          "name": "order",
+          "type": "int | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_delete_issue_attachment",
+      "file": "src/application/tools/issue_tools.py",
+      "function_name": "delete_issue_attachment",
+      "line_number": 957,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "attachment_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "bool",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_get_issue_history",
+      "file": "src/application/tools/issue_tools.py",
+      "function_name": "get_issue_history",
+      "line_number": 989,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "issue_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_get_issue_comment_versions",
+      "file": "src/application/tools/issue_tools.py",
+      "function_name": "get_issue_comment_versions",
+      "line_number": 1027,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "issue_id",
+          "type": "int"
+        },
+        {
+          "name": "comment_id",
+          "type": "str"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_edit_issue_comment",
+      "file": "src/application/tools/issue_tools.py",
+      "function_name": "edit_issue_comment",
+      "line_number": 1066,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "issue_id",
+          "type": "int"
+        },
+        {
+          "name": "comment_id",
+          "type": "str"
+        },
+        {
+          "name": "comment",
+          "type": "str"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_delete_issue_comment",
+      "file": "src/application/tools/issue_tools.py",
+      "function_name": "delete_issue_comment",
+      "line_number": 1109,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "issue_id",
+          "type": "int"
+        },
+        {
+          "name": "comment_id",
+          "type": "str"
+        }
+      ],
+      "return_type": "bool",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_undelete_issue_comment",
+      "file": "src/application/tools/issue_tools.py",
+      "function_name": "undelete_issue_comment",
+      "line_number": 1142,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "issue_id",
+          "type": "int"
+        },
+        {
+          "name": "comment_id",
+          "type": "str"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_get_issue_custom_attributes",
+      "file": "src/application/tools/issue_tools.py",
+      "function_name": "get_issue_custom_attributes",
+      "line_number": 1182,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_create_issue_custom_attribute",
+      "file": "src/application/tools/issue_tools.py",
+      "function_name": "create_issue_custom_attribute",
+      "line_number": 1225,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "str"
+        },
+        {
+          "name": "description",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "order",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "type",
+          "type": "str | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_update_issue_custom_attribute",
+      "file": "src/application/tools/issue_tools.py",
+      "function_name": "update_issue_custom_attribute",
+      "line_number": 1289,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "attribute_id",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "description",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "order",
+          "type": "int | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_delete_issue_custom_attribute",
+      "file": "src/application/tools/issue_tools.py",
+      "function_name": "delete_issue_custom_attribute",
+      "line_number": 1344,
+      "has_prefix": true,
+      "description": "",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "attribute_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "bool",
+      "issues": [
+        "Missing description in decorator"
+      ]
+    },
+    {
+      "name": "taiga_list_memberships",
+      "file": "src/application/tools/membership_tools.py",
+      "function_name": "list_memberships",
+      "line_number": 56,
+      "has_prefix": true,
+      "description": "List project memberships",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "auto_paginate",
+          "type": "bool",
+          "default": "True"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": []
+    },
+    {
+      "name": "taiga_create_membership",
+      "file": "src/application/tools/membership_tools.py",
+      "function_name": "create_membership",
+      "line_number": 171,
+      "has_prefix": true,
+      "description": "Add a member to a project",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "role",
+          "type": "int"
+        },
+        {
+          "name": "username",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "email",
+          "type": "str | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_get_membership",
+      "file": "src/application/tools/membership_tools.py",
+      "function_name": "get_membership",
+      "line_number": 305,
+      "has_prefix": true,
+      "description": "Get membership details",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "membership_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_update_membership",
+      "file": "src/application/tools/membership_tools.py",
+      "function_name": "update_membership",
+      "line_number": 396,
+      "has_prefix": true,
+      "description": "Update membership role",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "membership_id",
+          "type": "int"
+        },
+        {
+          "name": "role",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "is_admin",
+          "type": "bool | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_delete_membership",
+      "file": "src/application/tools/membership_tools.py",
+      "function_name": "delete_membership",
+      "line_number": 519,
+      "has_prefix": true,
+      "description": "Remove a member from project",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "membership_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "bool",
+      "issues": []
+    },
+    {
+      "name": "taiga_list_milestones",
+      "file": "src/application/tools/milestone_tools.py",
+      "function_name": "list_milestones_tool",
+      "line_number": 66,
+      "has_prefix": true,
+      "description": "List all milestones/sprints in a Taiga project with optional filters",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "closed",
+          "type": "bool | None",
+          "default": "None"
+        },
+        {
+          "name": "auto_paginate",
+          "type": "bool",
+          "default": "True"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": []
+    },
+    {
+      "name": "taiga_create_milestone",
+      "file": "src/application/tools/milestone_tools.py",
+      "function_name": "create_milestone_tool",
+      "line_number": 135,
+      "has_prefix": true,
+      "description": "Create a new milestone/sprint in a Taiga project",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "str"
+        },
+        {
+          "name": "estimated_start",
+          "type": "str"
+        },
+        {
+          "name": "estimated_finish",
+          "type": "str"
+        },
+        {
+          "name": "disponibility",
+          "type": "float | None",
+          "default": "0.0"
+        },
+        {
+          "name": "watchers",
+          "type": "list[int] | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_get_milestone",
+      "file": "src/application/tools/milestone_tools.py",
+      "function_name": "get_milestone_tool",
+      "line_number": 224,
+      "has_prefix": true,
+      "description": "Get a specific milestone by its ID",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "milestone_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_update_milestone_full",
+      "file": "src/application/tools/milestone_tools.py",
+      "function_name": "update_milestone_full_tool",
+      "line_number": 278,
+      "has_prefix": true,
+      "description": "Update a milestone (full replacement)",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "milestone_id",
+          "type": "int"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "str"
+        },
+        {
+          "name": "estimated_start",
+          "type": "str"
+        },
+        {
+          "name": "estimated_finish",
+          "type": "str"
+        },
+        {
+          "name": "disponibility",
+          "type": "float | None",
+          "default": "0.0"
+        },
+        {
+          "name": "closed",
+          "type": "bool | None",
+          "default": "False"
+        },
+        {
+          "name": "watchers",
+          "type": "list[int] | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_update_milestone",
+      "file": "src/application/tools/milestone_tools.py",
+      "function_name": "update_milestone_partial_tool",
+      "line_number": 374,
+      "has_prefix": true,
+      "description": "Update specific fields of a milestone (partial update)",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "milestone_id",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "estimated_start",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "estimated_finish",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "disponibility",
+          "type": "float | None",
+          "default": "None"
+        },
+        {
+          "name": "closed",
+          "type": "bool | None",
+          "default": "None"
+        },
+        {
+          "name": "watchers",
+          "type": "list[int] | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_delete_milestone",
+      "file": "src/application/tools/milestone_tools.py",
+      "function_name": "delete_milestone_tool",
+      "line_number": 459,
+      "has_prefix": true,
+      "description": "Delete a milestone",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "milestone_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, str]",
+      "issues": []
+    },
+    {
+      "name": "taiga_get_milestone_stats",
+      "file": "src/application/tools/milestone_tools.py",
+      "function_name": "get_milestone_stats_tool",
+      "line_number": 497,
+      "has_prefix": true,
+      "description": "Get statistics for a specific milestone",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "milestone_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_watch_milestone",
+      "file": "src/application/tools/milestone_tools.py",
+      "function_name": "watch_milestone_tool",
+      "line_number": 548,
+      "has_prefix": true,
+      "description": "Start watching a milestone for updates",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "milestone_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_unwatch_milestone",
+      "file": "src/application/tools/milestone_tools.py",
+      "function_name": "unwatch_milestone_tool",
+      "line_number": 587,
+      "has_prefix": true,
+      "description": "Stop watching a milestone",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "milestone_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_get_milestone_watchers",
+      "file": "src/application/tools/milestone_tools.py",
+      "function_name": "get_milestone_watchers_tool",
+      "line_number": 628,
+      "has_prefix": true,
+      "description": "Get list of users watching a milestone",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "milestone_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": []
+    },
+    {
+      "name": "taiga_list_projects",
+      "file": "src/application/tools/project_tools.py",
+      "function_name": "list_projects",
+      "line_number": 102,
+      "has_prefix": true,
+      "description": "List all projects",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "member_id",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "is_private",
+          "type": "bool | None",
+          "default": "None"
+        },
+        {
+          "name": "is_featured",
+          "type": "bool | None",
+          "default": "None"
+        },
+        {
+          "name": "is_backlog_activated",
+          "type": "bool | None",
+          "default": "None"
+        },
+        {
+          "name": "is_kanban_activated",
+          "type": "bool | None",
+          "default": "None"
+        },
+        {
+          "name": "order_by",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "auto_paginate",
+          "type": "bool",
+          "default": "True"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": []
+    },
+    {
+      "name": "taiga_create_project",
+      "file": "src/application/tools/project_tools.py",
+      "function_name": "create_project",
+      "line_number": 224,
+      "has_prefix": true,
+      "description": "Create a new project",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "name",
+          "type": "str"
+        },
+        {
+          "name": "description",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "is_private",
+          "type": "bool | None",
+          "default": "True"
+        },
+        {
+          "name": "is_backlog_activated",
+          "type": "bool | None",
+          "default": "True"
+        },
+        {
+          "name": "is_issues_activated",
+          "type": "bool | None",
+          "default": "True"
+        },
+        {
+          "name": "is_kanban_activated",
+          "type": "bool | None",
+          "default": "False"
+        },
+        {
+          "name": "is_wiki_activated",
+          "type": "bool | None",
+          "default": "False"
+        },
+        {
+          "name": "videoconferences",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "videoconferences_extra_data",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "total_milestones",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "total_story_points",
+          "type": "float | None",
+          "default": "None"
+        },
+        {
+          "name": "tags",
+          "type": "list[str] | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_get_project",
+      "file": "src/application/tools/project_tools.py",
+      "function_name": "get_project",
+      "line_number": 374,
+      "has_prefix": true,
+      "description": "Get project details",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "slug",
+          "type": "str | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_update_project",
+      "file": "src/application/tools/project_tools.py",
+      "function_name": "update_project",
+      "line_number": 485,
+      "has_prefix": true,
+      "description": "Update project details",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "description",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "is_private",
+          "type": "bool | None",
+          "default": "None"
+        },
+        {
+          "name": "is_backlog_activated",
+          "type": "bool | None",
+          "default": "None"
+        },
+        {
+          "name": "is_issues_activated",
+          "type": "bool | None",
+          "default": "None"
+        },
+        {
+          "name": "is_kanban_activated",
+          "type": "bool | None",
+          "default": "None"
+        },
+        {
+          "name": "is_wiki_activated",
+          "type": "bool | None",
+          "default": "None"
+        },
+        {
+          "name": "version",
+          "type": "int | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_delete_project",
+      "file": "src/application/tools/project_tools.py",
+      "function_name": "delete_project",
+      "line_number": 635,
+      "has_prefix": true,
+      "description": "Delete a project",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "bool",
+      "issues": []
+    },
+    {
+      "name": "taiga_get_project_stats",
+      "file": "src/application/tools/project_tools.py",
+      "function_name": "get_project_stats",
+      "line_number": 701,
+      "has_prefix": true,
+      "description": "Get project statistics",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_duplicate_project",
+      "file": "src/application/tools/project_tools.py",
+      "function_name": "duplicate_project",
+      "line_number": 794,
+      "has_prefix": true,
+      "description": "Duplicate an existing project",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "str"
+        },
+        {
+          "name": "description",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "is_private",
+          "type": "bool | None",
+          "default": "True"
+        },
+        {
+          "name": "users",
+          "type": "list[str] | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_like_project",
+      "file": "src/application/tools/project_tools.py",
+      "function_name": "like_project",
+      "line_number": 908,
+      "has_prefix": true,
+      "description": "Like a project",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_unlike_project",
+      "file": "src/application/tools/project_tools.py",
+      "function_name": "unlike_project",
+      "line_number": 983,
+      "has_prefix": true,
+      "description": "Unlike a project",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_watch_project",
+      "file": "src/application/tools/project_tools.py",
+      "function_name": "watch_project",
+      "line_number": 1058,
+      "has_prefix": true,
+      "description": "Watch a project for notifications",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_unwatch_project",
+      "file": "src/application/tools/project_tools.py",
+      "function_name": "unwatch_project",
+      "line_number": 1133,
+      "has_prefix": true,
+      "description": "Stop watching a project",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_get_project_modules",
+      "file": "src/application/tools/project_tools.py",
+      "function_name": "get_project_modules",
+      "line_number": 1210,
+      "has_prefix": true,
+      "description": "Get project modules configuration",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_update_project_modules",
+      "file": "src/application/tools/project_tools.py",
+      "function_name": "update_project_modules",
+      "line_number": 1294,
+      "has_prefix": true,
+      "description": "Update project modules configuration",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "is_backlog_activated",
+          "type": "bool | None",
+          "default": "None"
+        },
+        {
+          "name": "is_issues_activated",
+          "type": "bool | None",
+          "default": "None"
+        },
+        {
+          "name": "is_kanban_activated",
+          "type": "bool | None",
+          "default": "None"
+        },
+        {
+          "name": "is_wiki_activated",
+          "type": "bool | None",
+          "default": "None"
+        },
+        {
+          "name": "videoconferences",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "videoconferences_extra_data",
+          "type": "str | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_get_project_by_slug",
+      "file": "src/application/tools/project_tools.py",
+      "function_name": "get_project_by_slug",
+      "line_number": 1424,
+      "has_prefix": true,
+      "description": "Get project details by slug",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "slug",
+          "type": "str"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_get_project_issues_stats",
+      "file": "src/application/tools/project_tools.py",
+      "function_name": "get_project_issues_stats",
+      "line_number": 1501,
+      "has_prefix": true,
+      "description": "Get issues statistics for a project",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_get_project_tags",
+      "file": "src/application/tools/project_tools.py",
+      "function_name": "get_project_tags",
+      "line_number": 1589,
+      "has_prefix": true,
+      "description": "Get all tags in a project",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "list[list[str]]",
+      "issues": []
+    },
+    {
+      "name": "taiga_create_project_tag",
+      "file": "src/application/tools/project_tools.py",
+      "function_name": "create_project_tag",
+      "line_number": 1662,
+      "has_prefix": true,
+      "description": "Create a new tag in a project",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "tag",
+          "type": "str"
+        },
+        {
+          "name": "color",
+          "type": "str | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "list[str]",
+      "issues": []
+    },
+    {
+      "name": "taiga_edit_project_tag",
+      "file": "src/application/tools/project_tools.py",
+      "function_name": "edit_project_tag",
+      "line_number": 1753,
+      "has_prefix": true,
+      "description": "Edit an existing tag in a project",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "from_tag",
+          "type": "str"
+        },
+        {
+          "name": "to_tag",
+          "type": "str"
+        },
+        {
+          "name": "color",
+          "type": "str | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "list[str]",
+      "issues": []
+    },
+    {
+      "name": "taiga_delete_project_tag",
+      "file": "src/application/tools/project_tools.py",
+      "function_name": "delete_project_tag",
+      "line_number": 1843,
+      "has_prefix": true,
+      "description": "Delete a tag from a project",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "tag",
+          "type": "str"
+        }
+      ],
+      "return_type": "bool",
+      "issues": []
+    },
+    {
+      "name": "taiga_mix_project_tags",
+      "file": "src/application/tools/project_tools.py",
+      "function_name": "mix_project_tags",
+      "line_number": 1916,
+      "has_prefix": true,
+      "description": "Mix multiple tags into one in a project",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "from_tags",
+          "type": "list[str]"
+        },
+        {
+          "name": "to_tag",
+          "type": "str"
+        }
+      ],
+      "return_type": "list[str]",
+      "issues": []
+    },
+    {
+      "name": "taiga_export_project",
+      "file": "src/application/tools/project_tools.py",
+      "function_name": "export_project",
+      "line_number": 1999,
+      "has_prefix": true,
+      "description": "Export project data",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "bytes",
+      "issues": []
+    },
+    {
+      "name": "taiga_bulk_update_projects_order",
+      "file": "src/application/tools/project_tools.py",
+      "function_name": "bulk_update_projects_order",
+      "line_number": 2067,
+      "has_prefix": true,
+      "description": "Update the order of multiple projects",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "projects_order",
+          "type": "list[list[int]]"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": []
+    },
+    {
+      "name": "taiga_list_tasks",
+      "file": "src/application/tools/task_tools.py",
+      "function_name": "list_tasks_tool",
+      "line_number": 81,
+      "has_prefix": true,
+      "description": "List all tasks in a Taiga project with optional filters",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "user_story_id",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "milestone_id",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "status",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "assigned_to",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "tags",
+          "type": "list[str] | None",
+          "default": "None"
+        },
+        {
+          "name": "is_closed",
+          "type": "bool | None",
+          "default": "None"
+        },
+        {
+          "name": "exclude_status",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "exclude_assigned_to",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "exclude_tags",
+          "type": "list[str] | None",
+          "default": "None"
+        },
+        {
+          "name": "auto_paginate",
+          "type": "bool",
+          "default": "True"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": []
+    },
+    {
+      "name": "taiga_create_task",
+      "file": "src/application/tools/task_tools.py",
+      "function_name": "create_task_tool",
+      "line_number": 159,
+      "has_prefix": true,
+      "description": "Create a new task in a Taiga project",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "subject",
+          "type": "str"
+        },
+        {
+          "name": "description",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "user_story_id",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "milestone_id",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "status",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "assigned_to",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "tags",
+          "type": "list[str] | None",
+          "default": "None"
+        },
+        {
+          "name": "is_blocked",
+          "type": "bool | None",
+          "default": "None"
+        },
+        {
+          "name": "blocked_note",
+          "type": "str | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_get_task",
+      "file": "src/application/tools/task_tools.py",
+      "function_name": "get_task_tool",
+      "line_number": 250,
+      "has_prefix": true,
+      "description": "Get a specific task by its ID",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "task_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_get_task_by_ref",
+      "file": "src/application/tools/task_tools.py",
+      "function_name": "get_task_by_ref_tool",
+      "line_number": 301,
+      "has_prefix": true,
+      "description": "Get a specific task by its reference and project",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "ref",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_update_task_full",
+      "file": "src/application/tools/task_tools.py",
+      "function_name": "update_task_full_tool",
+      "line_number": 348,
+      "has_prefix": true,
+      "description": "Update a task (full replacement)",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "task_id",
+          "type": "int"
+        },
+        {
+          "name": "subject",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "description",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "user_story_id",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "milestone_id",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "status",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "assigned_to",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "tags",
+          "type": "list[str] | None",
+          "default": "None"
+        },
+        {
+          "name": "is_blocked",
+          "type": "bool | None",
+          "default": "None"
+        },
+        {
+          "name": "blocked_note",
+          "type": "str | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_update_task",
+      "file": "src/application/tools/task_tools.py",
+      "function_name": "update_task_partial_tool",
+      "line_number": 443,
+      "has_prefix": true,
+      "description": "Update specific fields of a task (partial update)",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "task_id",
+          "type": "int"
+        },
+        {
+          "name": "subject",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "description",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "user_story_id",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "milestone_id",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "status",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "assigned_to",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "tags",
+          "type": "list[str] | None",
+          "default": "None"
+        },
+        {
+          "name": "is_blocked",
+          "type": "bool | None",
+          "default": "None"
+        },
+        {
+          "name": "blocked_note",
+          "type": "str | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_delete_task",
+      "file": "src/application/tools/task_tools.py",
+      "function_name": "delete_task_tool",
+      "line_number": 533,
+      "has_prefix": true,
+      "description": "Delete a task",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "task_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, str]",
+      "issues": []
+    },
+    {
+      "name": "taiga_bulk_create_tasks",
+      "file": "src/application/tools/task_tools.py",
+      "function_name": "bulk_create_tasks_tool",
+      "line_number": 566,
+      "has_prefix": true,
+      "description": "Create multiple tasks at once",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "bulk_tasks",
+          "type": "str"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": []
+    },
+    {
+      "name": "taiga_get_task_filters",
+      "file": "src/application/tools/task_tools.py",
+      "function_name": "get_task_filters_tool",
+      "line_number": 609,
+      "has_prefix": true,
+      "description": "Get available filters for tasks",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_upvote_task",
+      "file": "src/application/tools/task_tools.py",
+      "function_name": "upvote_task_tool",
+      "line_number": 645,
+      "has_prefix": true,
+      "description": "Add a positive vote to a task",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "task_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_downvote_task",
+      "file": "src/application/tools/task_tools.py",
+      "function_name": "downvote_task_tool",
+      "line_number": 678,
+      "has_prefix": true,
+      "description": "Remove vote from a task",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "task_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_get_task_voters",
+      "file": "src/application/tools/task_tools.py",
+      "function_name": "get_task_voters_tool",
+      "line_number": 713,
+      "has_prefix": true,
+      "description": "Get list of users who voted on a task",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "task_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": []
+    },
+    {
+      "name": "taiga_watch_task",
+      "file": "src/application/tools/task_tools.py",
+      "function_name": "watch_task_tool",
+      "line_number": 749,
+      "has_prefix": true,
+      "description": "Start watching a task for updates",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "task_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_unwatch_task",
+      "file": "src/application/tools/task_tools.py",
+      "function_name": "unwatch_task_tool",
+      "line_number": 782,
+      "has_prefix": true,
+      "description": "Stop watching a task",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "task_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_get_task_watchers",
+      "file": "src/application/tools/task_tools.py",
+      "function_name": "get_task_watchers_tool",
+      "line_number": 816,
+      "has_prefix": true,
+      "description": "Get list of users watching a task",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "task_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": []
+    },
+    {
+      "name": "taiga_list_task_attachments",
+      "file": "src/application/tools/task_tools.py",
+      "function_name": "list_task_attachments_tool",
+      "line_number": 854,
+      "has_prefix": true,
+      "description": "List all attachments of a task",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "task_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": []
+    },
+    {
+      "name": "taiga_create_task_attachment",
+      "file": "src/application/tools/task_tools.py",
+      "function_name": "create_task_attachment_tool",
+      "line_number": 904,
+      "has_prefix": true,
+      "description": "Create a new attachment for a task",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "task_id",
+          "type": "int"
+        },
+        {
+          "name": "attached_file",
+          "type": "str"
+        },
+        {
+          "name": "description",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "is_deprecated",
+          "type": "bool | None",
+          "default": "False"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_get_task_attachment",
+      "file": "src/application/tools/task_tools.py",
+      "function_name": "get_task_attachment_tool",
+      "line_number": 965,
+      "has_prefix": true,
+      "description": "Get a specific task attachment",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "attachment_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_update_task_attachment",
+      "file": "src/application/tools/task_tools.py",
+      "function_name": "update_task_attachment_tool",
+      "line_number": 1006,
+      "has_prefix": true,
+      "description": "Update a task attachment",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "attachment_id",
+          "type": "int"
+        },
+        {
+          "name": "description",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "is_deprecated",
+          "type": "bool | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_delete_task_attachment",
+      "file": "src/application/tools/task_tools.py",
+      "function_name": "delete_task_attachment_tool",
+      "line_number": 1053,
+      "has_prefix": true,
+      "description": "Delete a task attachment",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "attachment_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, str]",
+      "issues": []
+    },
+    {
+      "name": "taiga_get_task_history",
+      "file": "src/application/tools/task_tools.py",
+      "function_name": "get_task_history_tool",
+      "line_number": 1091,
+      "has_prefix": true,
+      "description": "Get the history of changes for a task",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "task_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": []
+    },
+    {
+      "name": "taiga_get_task_comment_versions",
+      "file": "src/application/tools/task_tools.py",
+      "function_name": "get_task_comment_versions_tool",
+      "line_number": 1131,
+      "has_prefix": true,
+      "description": "Get all versions of a task comment",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "task_id",
+          "type": "int"
+        },
+        {
+          "name": "comment_id",
+          "type": "str"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": []
+    },
+    {
+      "name": "taiga_edit_task_comment",
+      "file": "src/application/tools/task_tools.py",
+      "function_name": "edit_task_comment_tool",
+      "line_number": 1172,
+      "has_prefix": true,
+      "description": "Edit a task comment",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "task_id",
+          "type": "int"
+        },
+        {
+          "name": "comment_id",
+          "type": "str"
+        },
+        {
+          "name": "comment",
+          "type": "str"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_delete_task_comment",
+      "file": "src/application/tools/task_tools.py",
+      "function_name": "delete_task_comment_tool",
+      "line_number": 1213,
+      "has_prefix": true,
+      "description": "Delete a task comment",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "task_id",
+          "type": "int"
+        },
+        {
+          "name": "comment_id",
+          "type": "str"
+        }
+      ],
+      "return_type": "dict[str, str]",
+      "issues": []
+    },
+    {
+      "name": "taiga_undelete_task_comment",
+      "file": "src/application/tools/task_tools.py",
+      "function_name": "undelete_task_comment_tool",
+      "line_number": 1255,
+      "has_prefix": true,
+      "description": "Undelete a previously deleted task comment",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "task_id",
+          "type": "int"
+        },
+        {
+          "name": "comment_id",
+          "type": "str"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_list_task_custom_attributes",
+      "file": "src/application/tools/task_tools.py",
+      "function_name": "list_task_custom_attributes_tool",
+      "line_number": 1299,
+      "has_prefix": true,
+      "description": "List custom attributes for tasks in a project",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_create_task_custom_attribute",
+      "file": "src/application/tools/task_tools.py",
+      "function_name": "create_task_custom_attribute_tool",
+      "line_number": 1341,
+      "has_prefix": true,
+      "description": "Create a new custom attribute for tasks",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "str"
+        },
+        {
+          "name": "description",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "field_type",
+          "type": "str | None",
+          "default": "'text'"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_update_task_custom_attribute",
+      "file": "src/application/tools/task_tools.py",
+      "function_name": "update_task_custom_attribute_tool",
+      "line_number": 1400,
+      "has_prefix": true,
+      "description": "Update a custom attribute for tasks",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "attribute_id",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "description",
+          "type": "str | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_delete_task_custom_attribute",
+      "file": "src/application/tools/task_tools.py",
+      "function_name": "delete_task_custom_attribute_tool",
+      "line_number": 1448,
+      "has_prefix": true,
+      "description": "Delete a custom attribute for tasks",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "attribute_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, str]",
+      "issues": []
+    },
+    {
+      "name": "taiga_get_user_stats",
+      "file": "src/application/tools/user_tools.py",
+      "function_name": "get_user_stats",
+      "line_number": 50,
+      "has_prefix": true,
+      "description": "Get statistics for a specific user",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "user_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_list_users",
+      "file": "src/application/tools/user_tools.py",
+      "function_name": "list_users",
+      "line_number": 129,
+      "has_prefix": true,
+      "description": "List users in a project",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "auto_paginate",
+          "type": "bool",
+          "default": "True"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": []
+    },
+    {
+      "name": "taiga_list_userstories",
+      "file": "src/application/tools/userstory_tools.py",
+      "function_name": "list_userstories",
+      "line_number": 96,
+      "has_prefix": true,
+      "description": "List user stories with optional filtering",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "milestone_id",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "status",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "tags",
+          "type": "list[str] | None",
+          "default": "None"
+        },
+        {
+          "name": "assigned_to",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "auto_paginate",
+          "type": "bool",
+          "default": "True"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": []
+    },
+    {
+      "name": "taiga_create_userstory",
+      "file": "src/application/tools/userstory_tools.py",
+      "function_name": "create_userstory",
+      "line_number": 247,
+      "has_prefix": true,
+      "description": "Create a new user story",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "subject",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "description",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "status",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "points",
+          "type": "dict[str, int] | None",
+          "default": "None"
+        },
+        {
+          "name": "tags",
+          "type": "list[str] | None",
+          "default": "None"
+        },
+        {
+          "name": "assigned_to",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "is_blocked",
+          "type": "bool | None",
+          "default": "False"
+        },
+        {
+          "name": "blocked_note",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "milestone",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "client_requirement",
+          "type": "bool | None",
+          "default": "False"
+        },
+        {
+          "name": "team_requirement",
+          "type": "bool | None",
+          "default": "False"
+        },
+        {
+          "name": "attachments",
+          "type": "list[dict[str, str]] | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Inconsistent naming: 'userstory' should be 'user_story'"
+      ]
+    },
+    {
+      "name": "taiga_get_userstory",
+      "file": "src/application/tools/userstory_tools.py",
+      "function_name": "get_userstory",
+      "line_number": 415,
+      "has_prefix": true,
+      "description": "Get detailed information about a specific user story",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "userstory_id",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "project_id",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "ref",
+          "type": "int | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Inconsistent naming: 'userstory' should be 'user_story'"
+      ]
+    },
+    {
+      "name": "taiga_update_userstory",
+      "file": "src/application/tools/userstory_tools.py",
+      "function_name": "update_userstory",
+      "line_number": 569,
+      "has_prefix": true,
+      "description": "Update an existing user story",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "userstory_id",
+          "type": "int"
+        },
+        {
+          "name": "subject",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "description",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "status",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "points",
+          "type": "dict[str, int] | None",
+          "default": "None"
+        },
+        {
+          "name": "tags",
+          "type": "list[str] | None",
+          "default": "None"
+        },
+        {
+          "name": "assigned_to",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "is_blocked",
+          "type": "bool | None",
+          "default": "None"
+        },
+        {
+          "name": "blocked_note",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "is_closed",
+          "type": "bool | None",
+          "default": "None"
+        },
+        {
+          "name": "milestone",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "client_requirement",
+          "type": "bool | None",
+          "default": "None"
+        },
+        {
+          "name": "team_requirement",
+          "type": "bool | None",
+          "default": "None"
+        },
+        {
+          "name": "version",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "custom_attributes",
+          "type": "dict[str, Any] | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Inconsistent naming: 'userstory' should be 'user_story'"
+      ]
+    },
+    {
+      "name": "taiga_delete_userstory",
+      "file": "src/application/tools/userstory_tools.py",
+      "function_name": "delete_userstory",
+      "line_number": 763,
+      "has_prefix": true,
+      "description": "Delete a user story",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "userstory_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "bool",
+      "issues": [
+        "Inconsistent naming: 'userstory' should be 'user_story'"
+      ]
+    },
+    {
+      "name": "taiga_bulk_create_userstories",
+      "file": "src/application/tools/userstory_tools.py",
+      "function_name": "bulk_create_userstories",
+      "line_number": 836,
+      "has_prefix": true,
+      "description": "Create multiple user stories at once",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "bulk_stories",
+          "type": "str"
+        },
+        {
+          "name": "status",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "milestone",
+          "type": "int | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": []
+    },
+    {
+      "name": "taiga_bulk_update_userstories",
+      "file": "src/application/tools/userstory_tools.py",
+      "function_name": "bulk_update_userstories",
+      "line_number": 953,
+      "has_prefix": true,
+      "description": "Update multiple user stories at once",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "story_ids",
+          "type": "list[int]"
+        },
+        {
+          "name": "status",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "milestone",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "assigned_to",
+          "type": "int | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": []
+    },
+    {
+      "name": "taiga_bulk_delete_userstories",
+      "file": "src/application/tools/userstory_tools.py",
+      "function_name": "bulk_delete_userstories",
+      "line_number": 1064,
+      "has_prefix": true,
+      "description": "Delete multiple user stories at once",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "story_ids",
+          "type": "list[int]"
+        }
+      ],
+      "return_type": "bool",
+      "issues": []
+    },
+    {
+      "name": "taiga_move_to_milestone",
+      "file": "src/application/tools/userstory_tools.py",
+      "function_name": "move_to_milestone",
+      "line_number": 1130,
+      "has_prefix": true,
+      "description": "Move user story to a different milestone/sprint",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "userstory_id",
+          "type": "int"
+        },
+        {
+          "name": "milestone_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_get_userstory_history",
+      "file": "src/application/tools/userstory_tools.py",
+      "function_name": "get_userstory_history",
+      "line_number": 1226,
+      "has_prefix": true,
+      "description": "Get change history for a user story",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "userstory_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": [
+        "Inconsistent naming: 'userstory' should be 'user_story'"
+      ]
+    },
+    {
+      "name": "taiga_watch_userstory",
+      "file": "src/application/tools/userstory_tools.py",
+      "function_name": "watch_userstory",
+      "line_number": 1327,
+      "has_prefix": true,
+      "description": "Watch a user story for notifications",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "userstory_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Inconsistent naming: 'userstory' should be 'user_story'"
+      ]
+    },
+    {
+      "name": "taiga_unwatch_userstory",
+      "file": "src/application/tools/userstory_tools.py",
+      "function_name": "unwatch_userstory",
+      "line_number": 1400,
+      "has_prefix": true,
+      "description": "Stop watching a user story",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "userstory_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Inconsistent naming: 'userstory' should be 'user_story'"
+      ]
+    },
+    {
+      "name": "taiga_upvote_userstory",
+      "file": "src/application/tools/userstory_tools.py",
+      "function_name": "upvote_userstory",
+      "line_number": 1473,
+      "has_prefix": true,
+      "description": "Upvote a user story",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "userstory_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Inconsistent naming: 'userstory' should be 'user_story'"
+      ]
+    },
+    {
+      "name": "taiga_downvote_userstory",
+      "file": "src/application/tools/userstory_tools.py",
+      "function_name": "downvote_userstory",
+      "line_number": 1548,
+      "has_prefix": true,
+      "description": "Remove upvote from a user story",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "userstory_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": [
+        "Inconsistent naming: 'userstory' should be 'user_story'"
+      ]
+    },
+    {
+      "name": "taiga_get_userstory_voters",
+      "file": "src/application/tools/userstory_tools.py",
+      "function_name": "get_userstory_voters",
+      "line_number": 1625,
+      "has_prefix": true,
+      "description": "Get list of users who voted for a user story",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "userstory_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": [
+        "Inconsistent naming: 'userstory' should be 'user_story'"
+      ]
+    },
+    {
+      "name": "taiga_list_webhooks",
+      "file": "src/application/tools/webhook_tools.py",
+      "function_name": "list_webhooks",
+      "line_number": 56,
+      "has_prefix": true,
+      "description": "List project webhooks",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "auto_paginate",
+          "type": "bool",
+          "default": "True"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": []
+    },
+    {
+      "name": "taiga_create_webhook",
+      "file": "src/application/tools/webhook_tools.py",
+      "function_name": "create_webhook",
+      "line_number": 162,
+      "has_prefix": true,
+      "description": "Create a new webhook for a project",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "str"
+        },
+        {
+          "name": "url",
+          "type": "str"
+        },
+        {
+          "name": "key",
+          "type": "str"
+        },
+        {
+          "name": "enabled",
+          "type": "bool",
+          "default": "True"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_get_webhook",
+      "file": "src/application/tools/webhook_tools.py",
+      "function_name": "get_webhook",
+      "line_number": 289,
+      "has_prefix": true,
+      "description": "Get webhook details",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "webhook_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_update_webhook",
+      "file": "src/application/tools/webhook_tools.py",
+      "function_name": "update_webhook",
+      "line_number": 378,
+      "has_prefix": true,
+      "description": "Update webhook configuration",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "webhook_id",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "url",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "key",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "enabled",
+          "type": "bool | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_delete_webhook",
+      "file": "src/application/tools/webhook_tools.py",
+      "function_name": "delete_webhook",
+      "line_number": 510,
+      "has_prefix": true,
+      "description": "Delete a webhook",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "webhook_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "bool",
+      "issues": []
+    },
+    {
+      "name": "taiga_test_webhook",
+      "file": "src/application/tools/webhook_tools.py",
+      "function_name": "test_webhook",
+      "line_number": 572,
+      "has_prefix": true,
+      "description": "Test a webhook by sending a test payload",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "webhook_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_list_wiki_pages",
+      "file": "src/application/tools/wiki_tools.py",
+      "function_name": "list_wiki_pages",
+      "line_number": 61,
+      "has_prefix": true,
+      "description": "List all wiki pages in a project",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "auto_paginate",
+          "type": "bool",
+          "default": "True"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": []
+    },
+    {
+      "name": "taiga_create_wiki_page",
+      "file": "src/application/tools/wiki_tools.py",
+      "function_name": "create_wiki_page",
+      "line_number": 161,
+      "has_prefix": true,
+      "description": "Create a new wiki page",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "slug",
+          "type": "str"
+        },
+        {
+          "name": "content",
+          "type": "str"
+        },
+        {
+          "name": "watchers",
+          "type": "list[int] | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_get_wiki_page",
+      "file": "src/application/tools/wiki_tools.py",
+      "function_name": "get_wiki_page",
+      "line_number": 279,
+      "has_prefix": true,
+      "description": "Get details of a specific wiki page",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "wiki_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_get_wiki_page_by_slug",
+      "file": "src/application/tools/wiki_tools.py",
+      "function_name": "get_wiki_page_by_slug",
+      "line_number": 370,
+      "has_prefix": true,
+      "description": "Get wiki page by project and slug",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "slug",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_update_wiki_page",
+      "file": "src/application/tools/wiki_tools.py",
+      "function_name": "update_wiki_page",
+      "line_number": 469,
+      "has_prefix": true,
+      "description": "Update an existing wiki page",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "wiki_id",
+          "type": "int"
+        },
+        {
+          "name": "slug",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "content",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "version",
+          "type": "int | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_delete_wiki_page",
+      "file": "src/application/tools/wiki_tools.py",
+      "function_name": "delete_wiki_page",
+      "line_number": 583,
+      "has_prefix": true,
+      "description": "Delete a wiki page",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "wiki_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "bool",
+      "issues": []
+    },
+    {
+      "name": "taiga_restore_wiki_page",
+      "file": "src/application/tools/wiki_tools.py",
+      "function_name": "restore_wiki_page",
+      "line_number": 642,
+      "has_prefix": true,
+      "description": "Restore a deleted wiki page",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "wiki_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_list_wiki_attachments",
+      "file": "src/application/tools/wiki_tools.py",
+      "function_name": "list_wiki_attachments",
+      "line_number": 731,
+      "has_prefix": true,
+      "description": "List attachments on a wiki page",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "wiki_page_id",
+          "type": "int"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "auto_paginate",
+          "type": "bool",
+          "default": "True"
+        }
+      ],
+      "return_type": "list[dict[str, Any]]",
+      "issues": []
+    },
+    {
+      "name": "taiga_watch_wiki_page",
+      "file": "src/application/tools/wiki_tools.py",
+      "function_name": "watch_wiki_page",
+      "line_number": 846,
+      "has_prefix": true,
+      "description": "Watch a wiki page for notifications",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "page_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_unwatch_wiki_page",
+      "file": "src/application/tools/wiki_tools.py",
+      "function_name": "unwatch_wiki_page",
+      "line_number": 909,
+      "has_prefix": true,
+      "description": "Stop watching a wiki page",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "page_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_create_wiki_link",
+      "file": "src/application/tools/wiki_tools.py",
+      "function_name": "create_wiki_link",
+      "line_number": 974,
+      "has_prefix": true,
+      "description": "Create a wiki link in a project",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "title",
+          "type": "str"
+        },
+        {
+          "name": "href",
+          "type": "str"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_create_wiki_attachment",
+      "file": "src/application/tools/wiki_tools.py",
+      "function_name": "create_wiki_attachment",
+      "line_number": 1059,
+      "has_prefix": true,
+      "description": "Create an attachment on a wiki page",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "wiki_page_id",
+          "type": "int"
+        },
+        {
+          "name": "project_id",
+          "type": "int"
+        },
+        {
+          "name": "attached_file",
+          "type": "str"
+        },
+        {
+          "name": "description",
+          "type": "str | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_update_wiki_attachment",
+      "file": "src/application/tools/wiki_tools.py",
+      "function_name": "update_wiki_attachment",
+      "line_number": 1168,
+      "has_prefix": true,
+      "description": "Update an attachment on a wiki page",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "attachment_id",
+          "type": "int"
+        },
+        {
+          "name": "description",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "is_deprecated",
+          "type": "bool | None",
+          "default": "None"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_delete_wiki_attachment",
+      "file": "src/application/tools/wiki_tools.py",
+      "function_name": "delete_wiki_attachment",
+      "line_number": 1276,
+      "has_prefix": true,
+      "description": "Delete an attachment from a wiki page",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "attachment_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "bool",
+      "issues": []
+    }
+  ]
+}
