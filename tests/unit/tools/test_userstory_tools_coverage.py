@@ -3,7 +3,6 @@ Tests adicionales para cobertura completa de userstory_tools.py.
 Cubre funciones, metodos sincronicos, herramientas MCP y manejadores de excepciones.
 """
 
-from typing import Any
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -43,27 +42,31 @@ class TestGetTaigaClientFunction:
     @pytest.mark.userstories
     def test_get_taiga_client_without_auth_token(self):
         """Verifica que get_taiga_client funciona sin token."""
-        with patch("src.application.tools.userstory_tools.TaigaConfig"):
-            with patch("src.application.tools.userstory_tools.TaigaAPIClient") as mock_client:
-                mock_instance = MagicMock(spec=["some_method"])
-                mock_client.return_value = mock_instance
+        with (
+            patch("src.application.tools.userstory_tools.TaigaConfig"),
+            patch("src.application.tools.userstory_tools.TaigaAPIClient") as mock_client,
+        ):
+            mock_instance = MagicMock(spec=["some_method"])
+            mock_client.return_value = mock_instance
 
-                client = get_taiga_client()
+            client = get_taiga_client()
 
-                assert client is mock_instance
+            assert client is mock_instance
 
     @pytest.mark.unit
     @pytest.mark.userstories
     def test_get_taiga_client_with_auth_token(self):
         """Verifica que get_taiga_client establece el token."""
-        with patch("src.application.tools.userstory_tools.TaigaConfig"):
-            with patch("src.application.tools.userstory_tools.TaigaAPIClient") as mock_client:
-                mock_instance = MagicMock()
-                mock_client.return_value = mock_instance
+        with (
+            patch("src.application.tools.userstory_tools.TaigaConfig"),
+            patch("src.application.tools.userstory_tools.TaigaAPIClient") as mock_client,
+        ):
+            mock_instance = MagicMock()
+            mock_client.return_value = mock_instance
 
-                client = get_taiga_client(auth_token="test_token")
+            client = get_taiga_client(auth_token="test_token")
 
-                assert client.auth_token == "test_token"
+            assert client.auth_token == "test_token"
 
 
 class TestSetClient:

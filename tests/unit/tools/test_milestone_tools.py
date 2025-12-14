@@ -605,7 +605,7 @@ class TestMilestoneToolsViaFastMCP:
     async def test_create_milestone_tool_validation_error(self, mock_taiga_api) -> None:
         """Test create_milestone_tool ValidationError handler."""
         mcp = FastMCP("Test")
-        milestone_tools = MilestoneTools(mcp)
+        MilestoneTools(mcp)
 
         # Get the registered tool
         tools = await mcp.get_tools()
@@ -627,7 +627,7 @@ class TestMilestoneToolsViaFastMCP:
     async def test_update_milestone_full_tool_validation_error(self, mock_taiga_api) -> None:
         """Test update_milestone_full_tool ValidationError handler."""
         mcp = FastMCP("Test")
-        milestone_tools = MilestoneTools(mcp)
+        MilestoneTools(mcp)
 
         tools = await mcp.get_tools()
         update_tool = tools.get("taiga_update_milestone_full")
@@ -649,7 +649,7 @@ class TestMilestoneToolsViaFastMCP:
     async def test_update_milestone_partial_tool_validation_error(self, mock_taiga_api) -> None:
         """Test update_milestone_partial_tool ValidationError handler."""
         mcp = FastMCP("Test")
-        milestone_tools = MilestoneTools(mcp)
+        MilestoneTools(mcp)
 
         tools = await mcp.get_tools()
         update_tool = tools.get("taiga_update_milestone")
@@ -668,7 +668,7 @@ class TestMilestoneToolsViaFastMCP:
     async def test_list_milestones_tool_via_mcp(self, mock_taiga_api) -> None:
         """Test list_milestones through tool wrapper."""
         mcp = FastMCP("Test")
-        milestone_tools = MilestoneTools(mcp)
+        MilestoneTools(mcp)
 
         mock_taiga_api.get(
             "https://api.taiga.io/api/v1/milestones?project=123&page=1&page_size=100"
@@ -688,7 +688,7 @@ class TestMilestoneToolsViaFastMCP:
     async def test_get_milestone_tool_via_mcp(self, mock_taiga_api) -> None:
         """Test get_milestone through tool wrapper."""
         mcp = FastMCP("Test")
-        milestone_tools = MilestoneTools(mcp)
+        MilestoneTools(mcp)
 
         mock_taiga_api.get("https://api.taiga.io/api/v1/milestones/45").mock(
             return_value=httpx.Response(
@@ -708,7 +708,7 @@ class TestMilestoneToolsViaFastMCP:
     async def test_delete_milestone_tool_via_mcp(self, mock_taiga_api) -> None:
         """Test delete_milestone through tool wrapper."""
         mcp = FastMCP("Test")
-        milestone_tools = MilestoneTools(mcp)
+        MilestoneTools(mcp)
 
         mock_taiga_api.delete("https://api.taiga.io/api/v1/milestones/45").mock(
             return_value=httpx.Response(204)
@@ -725,7 +725,7 @@ class TestMilestoneToolsViaFastMCP:
     async def test_get_milestone_stats_tool_via_mcp(self, mock_taiga_api) -> None:
         """Test get_milestone_stats through tool wrapper."""
         mcp = FastMCP("Test")
-        milestone_tools = MilestoneTools(mcp)
+        MilestoneTools(mcp)
 
         mock_taiga_api.get("https://api.taiga.io/api/v1/milestones/45/stats").mock(
             return_value=httpx.Response(
@@ -751,7 +751,7 @@ class TestMilestoneToolsViaFastMCP:
     async def test_watch_milestone_tool_via_mcp(self, mock_taiga_api) -> None:
         """Test watch_milestone through tool wrapper."""
         mcp = FastMCP("Test")
-        milestone_tools = MilestoneTools(mcp)
+        MilestoneTools(mcp)
 
         mock_taiga_api.post("https://api.taiga.io/api/v1/milestones/45/watch").mock(
             return_value=httpx.Response(200, json={"id": 45, "total_watchers": 3})
@@ -769,7 +769,7 @@ class TestMilestoneToolsViaFastMCP:
     async def test_unwatch_milestone_tool_via_mcp(self, mock_taiga_api) -> None:
         """Test unwatch_milestone through tool wrapper."""
         mcp = FastMCP("Test")
-        milestone_tools = MilestoneTools(mcp)
+        MilestoneTools(mcp)
 
         mock_taiga_api.post("https://api.taiga.io/api/v1/milestones/45/unwatch").mock(
             return_value=httpx.Response(200, json={"id": 45, "total_watchers": 2})
@@ -787,7 +787,7 @@ class TestMilestoneToolsViaFastMCP:
     async def test_get_milestone_watchers_tool_via_mcp(self, mock_taiga_api) -> None:
         """Test get_milestone_watchers through tool wrapper."""
         mcp = FastMCP("Test")
-        milestone_tools = MilestoneTools(mcp)
+        MilestoneTools(mcp)
 
         mock_taiga_api.get("https://api.taiga.io/api/v1/milestones/45/watchers").mock(
             return_value=httpx.Response(

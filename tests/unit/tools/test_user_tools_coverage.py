@@ -3,7 +3,6 @@ Tests adicionales para cobertura completa de user_tools.py.
 Cubre las herramientas MCP registradas, excepciones y branches no cubiertos.
 """
 
-from typing import Any
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
