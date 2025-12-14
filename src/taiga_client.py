@@ -1319,7 +1319,9 @@ class TaigaAPIClient:
             Dict with available filters including statuses, types,
             priorities, severities, assigned_to, owners, and tags.
         """
-        return cast("dict[str, Any]", await self.get("/issues/filters_data", params={"project": project}))
+        return cast(
+            "dict[str, Any]", await self.get("/issues/filters_data", params={"project": project})
+        )
 
     async def upvote_issue(self, issue_id: int) -> dict[str, Any]:
         """Upvote issue."""
