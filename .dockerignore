@@ -1,0 +1,68 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv
+venv/
+ENV/
+env/
+.eggs/
+*.egg-info/
+*.egg
+
+# Testing
+.pytest_cache/
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+.hypothesis/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Documentation
+Documentacion/
+Funcional/
+*.md
+!README.md
+
+# Claude configuration
+.claude/
+
+# Local configuration
+.env
+.env.local
+*.local.json
+
+# Build artifacts
+dist/
+build/
+*.spec
+
+# Logs
+*.log
+logs/
+
+# Tests (not needed in production image)
+tests/
+
+# Scripts (not needed in production image)
+scripts/
+
+# Miscellaneous
+.DS_Store
+Thumbs.db
+*.bak
+*.tmp
