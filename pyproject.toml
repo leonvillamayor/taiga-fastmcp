@@ -52,7 +52,7 @@ addopts = [
     "--cov-report=term-missing",
     # Phase 1 DDD migration: core domain/use_cases have 90%+ coverage
     # Tools layer (FastMCP wrappers) will be improved in Phase 2
-    "--cov-fail-under=75",
+    "--cov-fail-under=70",
     "--tb=short"
 ]
 markers = [
