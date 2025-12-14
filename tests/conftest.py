@@ -4,6 +4,7 @@ Define fixtures que se usan en múltiples tests del proyecto MCP Taiga.
 """
 
 import asyncio
+import inspect
 from collections.abc import AsyncGenerator
 from datetime import date, timedelta
 from pathlib import Path
@@ -491,7 +492,7 @@ def pytest_collection_modifyitems(config, items) -> None:
             item.add_marker(pytest.mark.functional)
 
         # Agregar marker asyncio si es función async
-        if asyncio.iscoroutinefunction(item.function):
+        if inspect.iscoroutinefunction(item.function):
             item.add_marker(pytest.mark.asyncio)
 
 
@@ -527,7 +528,7 @@ def wait_for_condition() -> None:
         while elapsed < timeout:
             if (
                 await condition_func()
-                if asyncio.iscoroutinefunction(condition_func)
+                if inspect.iscoroutinefunction(condition_func)
                 else condition_func()
             ):
                 return True

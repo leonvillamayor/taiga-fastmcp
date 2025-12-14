@@ -3,7 +3,7 @@ Attachment entity for Taiga MCP Server.
 Represents a file attachment associated with an epic or other entity.
 """
 
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Any, ClassVar
 
 
@@ -190,7 +190,7 @@ class Attachment:
     @description.setter
     def description(self, value: str | None) -> None:
         self._description = value
-        self._modified_date = datetime.utcnow()
+        self._modified_date = datetime.now(UTC)
 
     @property
     def is_deprecated(self) -> bool:
@@ -199,7 +199,7 @@ class Attachment:
     @is_deprecated.setter
     def is_deprecated(self, value: bool) -> None:
         self._is_deprecated = value
-        self._modified_date = datetime.utcnow()
+        self._modified_date = datetime.now(UTC)
 
     @property
     def content_type(self) -> str | None:
@@ -253,12 +253,12 @@ class Attachment:
     def deprecate(self) -> None:
         """Mark the attachment as deprecated."""
         self._is_deprecated = True
-        self._modified_date = datetime.utcnow()
+        self._modified_date = datetime.now(UTC)
 
     def undeprecate(self) -> None:
         """Mark the attachment as not deprecated."""
         self._is_deprecated = False
-        self._modified_date = datetime.utcnow()
+        self._modified_date = datetime.now(UTC)
 
     def unmark_deprecated(self) -> None:
         """Unmark the attachment as deprecated (alias for undeprecate)."""
@@ -271,8 +271,8 @@ class Attachment:
     def mark_for_deletion(self) -> None:
         """Mark the attachment for deletion by deprecating it."""
         self._is_deprecated = True
-        self._deletion_date = datetime.utcnow()
-        self._modified_date = datetime.utcnow()
+        self._deletion_date = datetime.now(UTC)
+        self._modified_date = datetime.now(UTC)
 
     def set_created_date(self, date: datetime) -> None:
         """Set the creation date."""
@@ -308,7 +308,7 @@ class Attachment:
             description: New description
         """
         self._description = description
-        self._modified_date = datetime.utcnow()
+        self._modified_date = datetime.now(UTC)
 
     def get_size_mb(self) -> float:
         """
