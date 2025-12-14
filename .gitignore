@@ -66,11 +66,6 @@ Thumbs.db
 *.temp
 *.bak
 
-# Local development
-.claude/settings.local.json
-.claude/validation_*.log
-.claude/activity.log
-
 # Build artifacts
 *.pyc
 *.pyo
@@ -80,3 +75,48 @@ Thumbs.db
 
 # Coverage temp files
 .coverage.mighty.*
+
+# =============================================================================
+# Project-specific exclusions (not needed for GitHub)
+# =============================================================================
+
+# Claude Code configuration (local development only)
+.claude/
+
+# Internal documentation (local only)
+Documentacion/
+
+# MCP server configuration (local only)
+.mcp.json
+.mcp*.json
+
+# Pre-commit hooks (local only)
+.pre-commit-config.yaml
+
+# Local documentation files
+CHANGELOG.md
+CLAUDE.md
+guia_uso.md
+
+# Functional and Technical specs (internal)
+Funcional/
+Tecnico/
+
+# Testing documentation (internal)
+doc_testing/
+
+# Development scripts (internal)
+scripts/
+
+# Local artifacts and temporary files
+all_user_stories_extracted.json
+mypy_errors.txt
+fix_mypy_casts.py
+run_mcp_server.sh
+README.ant.md
+
+# Python version file (local pyenv config)
+.python-version
+
+# Main entry point (use src.server module instead)
+main.py
