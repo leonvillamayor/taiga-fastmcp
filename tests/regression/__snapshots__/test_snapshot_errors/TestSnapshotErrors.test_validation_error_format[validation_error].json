@@ -1,0 +1,4 @@
+{
+  "message": "El campo 'subject' es requerido",
+  "type": "ValidationError"
+}

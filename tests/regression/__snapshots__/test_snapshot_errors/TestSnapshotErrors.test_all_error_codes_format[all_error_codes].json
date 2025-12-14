@@ -1,0 +1,37 @@
+{
+  "API_ERROR": {
+    "code": "API_ERROR",
+    "description": "Error de comunicación con la API de Taiga",
+    "http_status": 502
+  },
+  "AUTHENTICATION_ERROR": {
+    "code": "AUTHENTICATION_ERROR",
+    "description": "Autenticación requerida o inválida",
+    "http_status": 401
+  },
+  "CONFLICT": {
+    "code": "CONFLICT",
+    "description": "Conflicto con el estado actual del recurso",
+    "http_status": 409
+  },
+  "INTERNAL_ERROR": {
+    "code": "INTERNAL_ERROR",
+    "description": "Error interno del servidor",
+    "http_status": 500
+  },
+  "NOT_FOUND": {
+    "code": "NOT_FOUND",
+    "description": "El recurso solicitado no existe",
+    "http_status": 404
+  },
+  "PERMISSION_DENIED": {
+    "code": "PERMISSION_DENIED",
+    "description": "No tienes permisos para esta acción",
+    "http_status": 403
+  },
+  "VALIDATION_ERROR": {
+    "code": "VALIDATION_ERROR",
+    "description": "Los datos proporcionados no son válidos",
+    "http_status": 400
+  }
+}

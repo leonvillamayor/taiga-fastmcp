@@ -1,0 +1,60 @@
+{
+  "taiga_create_project": {
+    "description": "Create a new project",
+    "name": "taiga_create_project",
+    "parameters": {
+      "auth_token": {
+        "required": true,
+        "type": "string"
+      },
+      "description": {
+        "required": false,
+        "type": "string"
+      },
+      "is_private": {
+        "required": false,
+        "type": "boolean"
+      },
+      "name": {
+        "required": true,
+        "type": "string"
+      }
+    }
+  },
+  "taiga_get_project": {
+    "description": "Get details of a specific project",
+    "name": "taiga_get_project",
+    "parameters": {
+      "auth_token": {
+        "required": true,
+        "type": "string"
+      },
+      "project_id": {
+        "required": true,
+        "type": "integer"
+      }
+    }
+  },
+  "taiga_list_projects": {
+    "description": "List all projects accessible to the user",
+    "name": "taiga_list_projects",
+    "parameters": {
+      "auth_token": {
+        "required": true,
+        "type": "string"
+      },
+      "is_backlog_activated": {
+        "required": false,
+        "type": "boolean"
+      },
+      "is_kanban_activated": {
+        "required": false,
+        "type": "boolean"
+      },
+      "member": {
+        "required": false,
+        "type": "integer"
+      }
+    }
+  }
+}

@@ -1,0 +1,773 @@
+# Caso de Negocio: Implementación de Herramientas MCP para Gestión de Épicas en Taiga
+
+## Contexto
+
+El servidor MCP (Model Context Protocol) para Taiga permite gestionar proyectos ágiles mediante herramientas programáticas. Actualmente, el servidor implementa herramientas para proyectos, user stories, issues, tasks, milestones, membresías, webhooks y wiki. Sin embargo, **falta la implementación de las herramientas para gestionar Épicas (Epics)**, que son un elemento fundamental para agrupar user stories relacionadas en Taiga.
+
+## Objetivo
+
+Implementar un conjunto completo de herramientas MCP para la gestión de épicas en Taiga, siguiendo los mismos patrones arquitectónicos DDD (Domain-Driven Design) y estándares de calidad que el resto del proyecto.
+
+## Documentación de Referencia
+
+La especificación completa de la API de épicas se encuentra en: `Documentacion/taiga.md` (sección "Epics (Épicas)", líneas 775-942).
+
+## Requerimientos Funcionales
+
+### RF-001: Listar Épicas
+**Descripción**: Obtener lista de épicas de un proyecto con filtros opcionales.
+
+**Endpoint API**: `GET /api/v1/epics`
+
+**Parámetros**:
+- `auth_token` (requerido): Token de autenticación
+- `project` (opcional): ID del proyecto para filtrar épicas
+- `assigned_to` (opcional): ID del usuario asignado
+- `status` (opcional): ID del estado
+- `tags` (opcional): Lista de tags para filtrar
+
+**Salida esperada**: Lista de objetos Epic con toda la información (id, ref, version, subject, description, status, color, project, assigned_to, owner, tags, client_requirement, team_requirement, created_date, modified_date, watchers).
+
+**Criterios de aceptación**:
+- Debe devolver todas las épicas si no se especifican filtros
+- Debe filtrar correctamente por project, assigned_to, status y tags
+- Debe manejar errores de autenticación (401)
+- Debe manejar errores de permisos (403)
+
+---
+
+### RF-002: Crear Épica
+**Descripción**: Crear una nueva épica en un proyecto.
+
+**Endpoint API**: `POST /api/v1/epics`
+
+**Parámetros**:
+- `auth_token` (requerido): Token de autenticación
+- `project` (requerido): ID del proyecto
+- `subject` (requerido): Título de la épica
+- `description` (opcional): Descripción detallada
+- `color` (opcional): Color en formato hexadecimal (ej: "#A5694F")
+- `assigned_to` (opcional): ID del usuario asignado
+- `status` (opcional): ID del estado
+- `tags` (opcional): Lista de tags
+- `client_requirement` (opcional): Boolean indicando si es requerimiento del cliente
+- `team_requirement` (opcional): Boolean indicando si es requerimiento del equipo
+
+**Salida esperada**: Objeto Epic creado con ID asignado y todos los campos.
+
+**Criterios de aceptación**:
+- Debe crear la épica con los campos proporcionados
+- Debe asignar automáticamente un ID único
+- Debe validar que el proyecto existe
+- Debe manejar errores de validación (400)
+- Debe manejar errores de permisos (403)
+
+---
+
+### RF-003: Obtener Épica por ID
+**Descripción**: Obtener información detallada de una épica específica por su ID.
+
+**Endpoint API**: `GET /api/v1/epics/{epicId}`
+
+**Parámetros**:
+- `auth_token` (requerido): Token de autenticación
+- `epic_id` (requerido): ID de la épica
+
+**Salida esperada**: Objeto Epic completo con toda la información.
+
+**Criterios de aceptación**:
+- Debe devolver la épica si existe y el usuario tiene permisos
+- Debe retornar 404 si la épica no existe
+- Debe retornar 403 si el usuario no tiene permisos
+
+---
+
+### RF-004: Obtener Épica por Referencia
+**Descripción**: Obtener una épica por su número de referencia (ref) dentro de un proyecto.
+
+**Endpoint API**: `GET /api/v1/epics/by_ref?ref={ref}&project={projectId}`
+
+**Parámetros**:
+- `auth_token` (requerido): Token de autenticación
+- `ref` (requerido): Número de referencia de la épica
+- `project` (requerido): ID del proyecto
+
+**Salida esperada**: Objeto Epic completo.
+
+**Criterios de aceptación**:
+- Debe devolver la épica correcta basada en ref y project
+- Debe retornar 404 si no existe una épica con ese ref en el proyecto
+- Debe manejar errores de autenticación y permisos
+
+---
+
+### RF-005: Actualizar Épica (Completo)
+**Descripción**: Actualización completa (PUT) de una épica existente.
+
+**Endpoint API**: `PUT /api/v1/epics/{epicId}`
+
+**Parámetros**:
+- `auth_token` (requerido): Token de autenticación
+- `epic_id` (requerido): ID de la épica
+- `version` (requerido): Versión actual de la épica (control de concurrencia)
+- `subject` (requerido): Título de la épica
+- `project` (requerido): ID del proyecto
+- Todos los demás campos del RF-002 como opcionales
+
+**Salida esperada**: Objeto Epic actualizado con version incrementada.
+
+**Criterios de aceptación**:
+- Debe actualizar todos los campos proporcionados
+- Debe validar el campo version para control de concurrencia
+- Debe retornar 409 (Conflict) si la version no coincide
+- Debe incrementar el campo version automáticamente
+- Debe manejar errores de validación y permisos
+
+---
+
+### RF-006: Actualizar Épica (Parcial)
+**Descripción**: Actualización parcial (PATCH) de una épica existente.
+
+**Endpoint API**: `PATCH /api/v1/epics/{epicId}`
+
+**Parámetros**:
+- `auth_token` (requerido): Token de autenticación
+- `epic_id` (requerido): ID de la épica
+- `version` (requerido): Versión actual de la épica
+- Cualquier combinación de campos opcionales del RF-002
+
+**Salida esperada**: Objeto Epic actualizado con version incrementada.
+
+**Criterios de aceptación**:
+- Debe actualizar SOLO los campos proporcionados
+- Debe mantener los valores previos de los campos no especificados
+- Debe validar version para control de concurrencia
+- Debe manejar errores de validación y permisos
+
+---
+
+### RF-007: Eliminar Épica
+**Descripción**: Eliminar una épica existente.
+
+**Endpoint API**: `DELETE /api/v1/epics/{epicId}`
+
+**Parámetros**:
+- `auth_token` (requerido): Token de autenticación
+- `epic_id` (requerido): ID de la épica
+
+**Salida esperada**: Código 204 No Content en caso de éxito.
+
+**Criterios de aceptación**:
+- Debe eliminar la épica si existe
+- Debe retornar 404 si la épica no existe
+- Debe retornar 403 si el usuario no tiene permisos de eliminación
+- NO debe eliminar las user stories relacionadas (solo desvincula)
+
+---
+
+### RF-008: Crear Múltiples Épicas (Bulk)
+**Descripción**: Crear múltiples épicas en un solo request.
+
+**Endpoint API**: `POST /api/v1/epics/bulk_create`
+
+**Parámetros**:
+- `auth_token` (requerido): Token de autenticación
+- `project_id` (requerido): ID del proyecto
+- `bulk_epics` (requerido): Lista de objetos con datos de épicas a crear
+
+**Salida esperada**: Lista de objetos Epic creados.
+
+**Criterios de aceptación**:
+- Debe crear todas las épicas proporcionadas en la lista
+- Cada épica debe tener subject como mínimo
+- Debe manejar transacciones de forma atómica (todo o nada)
+- Debe retornar errores de validación específicos por épica
+
+---
+
+### RF-009: Listar User Stories Relacionadas con Épica
+**Descripción**: Obtener lista de user stories asociadas a una épica.
+
+**Endpoint API**: `GET /api/v1/epics/{epicId}/related_userstories`
+
+**Parámetros**:
+- `auth_token` (requerido): Token de autenticación
+- `epic_id` (requerido): ID de la épica
+
+**Salida esperada**: Lista de objetos RelatedUserStory con información de la relación (id, user_story, epic, order).
+
+**Criterios de aceptación**:
+- Debe devolver todas las user stories relacionadas con la épica
+- Debe incluir información completa de cada user story
+- Debe respetar el orden (campo order)
+- Debe retornar lista vacía si no hay user stories relacionadas
+
+---
+
+### RF-010: Relacionar User Story con Épica
+**Descripción**: Crear relación entre una user story y una épica.
+
+**Endpoint API**: `POST /api/v1/epics/{epicId}/related_userstories`
+
+**Parámetros**:
+- `auth_token` (requerido): Token de autenticación
+- `epic_id` (requerido): ID de la épica
+- `user_story` (requerido): ID de la user story
+- `order` (opcional): Posición de orden de la user story en la épica
+
+**Salida esperada**: Objeto RelatedUserStory creado.
+
+**Criterios de aceptación**:
+- Debe crear la relación entre epic y user story
+- Debe validar que ambas existan y pertenezcan al mismo proyecto
+- Debe evitar duplicados (misma user story relacionada dos veces)
+- Debe manejar errores de validación
+
+---
+
+### RF-011: Obtener Relación Epic-UserStory
+**Descripción**: Obtener información de una relación específica entre epic y user story.
+
+**Endpoint API**: `GET /api/v1/epics/{epicId}/related_userstories/{usId}`
+
+**Parámetros**:
+- `auth_token` (requerido): Token de autenticación
+- `epic_id` (requerido): ID de la épica
+- `related_userstory_id` (requerido): ID de la relación (no de la user story)
+
+**Salida esperada**: Objeto RelatedUserStory.
+
+**Criterios de aceptación**:
+- Debe devolver la relación si existe
+- Debe retornar 404 si la relación no existe
+
+---
+
+### RF-012: Actualizar Relación Epic-UserStory
+**Descripción**: Actualizar una relación existente (por ejemplo, cambiar el orden).
+
+**Endpoint API**: `PATCH /api/v1/epics/{epicId}/related_userstories/{usId}`
+
+**Parámetros**:
+- `auth_token` (requerido): Token de autenticación
+- `epic_id` (requerido): ID de la épica
+- `related_userstory_id` (requerido): ID de la relación
+- `order` (opcional): Nuevo valor de orden
+
+**Salida esperada**: Objeto RelatedUserStory actualizado.
+
+**Criterios de aceptación**:
+- Debe actualizar el campo order
+- Debe validar que la relación existe
+- Debe manejar errores de permisos
+
+---
+
+### RF-013: Eliminar Relación Epic-UserStory
+**Descripción**: Desvincular una user story de una épica.
+
+**Endpoint API**: `DELETE /api/v1/epics/{epicId}/related_userstories/{usId}`
+
+**Parámetros**:
+- `auth_token` (requerido): Token de autenticación
+- `epic_id` (requerido): ID de la épica
+- `related_userstory_id` (requerido): ID de la relación
+
+**Salida esperada**: Código 204 No Content.
+
+**Criterios de aceptación**:
+- Debe eliminar la relación sin afectar la épica ni la user story
+- Debe retornar 404 si la relación no existe
+- Debe manejar errores de permisos
+
+---
+
+### RF-014: Relacionar Múltiples User Stories (Bulk)
+**Descripción**: Relacionar múltiples user stories con una épica en un solo request.
+
+**Endpoint API**: `POST /api/v1/epics/{epicId}/related_userstories/bulk_create`
+
+**Parámetros**:
+- `auth_token` (requerido): Token de autenticación
+- `epic_id` (requerido): ID de la épica
+- `bulk_userstories` (requerido): Lista de IDs de user stories
+
+**Salida esperada**: Lista de objetos RelatedUserStory creados.
+
+**Criterios de aceptación**:
+- Debe crear relaciones para todas las user stories proporcionadas
+- Debe validar que todas las user stories existan y pertenezcan al proyecto de la épica
+- Debe evitar duplicados
+- Debe manejar transacciones de forma atómica
+
+---
+
+### RF-015: Obtener Filtros Disponibles para Épicas
+**Descripción**: Obtener datos disponibles para filtrar épicas (statuses, asignados, tags).
+
+**Endpoint API**: `GET /api/v1/epics/filters_data`
+
+**Parámetros**:
+- `auth_token` (requerido): Token de autenticación
+- `project` (requerido): ID del proyecto
+
+**Salida esperada**: Objeto con datos de filtrado disponibles.
+
+**Criterios de aceptación**:
+- Debe devolver lista de statuses disponibles para épicas
+- Debe devolver lista de usuarios asignables
+- Debe devolver lista de tags usados en épicas del proyecto
+
+---
+
+### RF-016: Votar Épica (Upvote)
+**Descripción**: Dar un voto positivo a una épica.
+
+**Endpoint API**: `POST /api/v1/epics/{epicId}/upvote`
+
+**Parámetros**:
+- `auth_token` (requerido): Token de autenticación
+- `epic_id` (requerido): ID de la épica
+
+**Salida esperada**: Objeto Epic actualizado con total_voters incrementado.
+
+**Criterios de aceptación**:
+- Debe agregar el voto del usuario autenticado
+- Debe evitar votos duplicados del mismo usuario
+- Debe incrementar el contador total_voters
+
+---
+
+### RF-017: Quitar Voto de Épica (Downvote)
+**Descripción**: Quitar el voto de una épica.
+
+**Endpoint API**: `POST /api/v1/epics/{epicId}/downvote`
+
+**Parámetros**:
+- `auth_token` (requerido): Token de autenticación
+- `epic_id` (requerido): ID de la épica
+
+**Salida esperada**: Objeto Epic actualizado con total_voters decrementado.
+
+**Criterios de aceptación**:
+- Debe quitar el voto del usuario autenticado
+- Debe retornar error si el usuario no ha votado previamente
+- Debe decrementar el contador total_voters
+
+---
+
+### RF-018: Obtener Votantes de Épica
+**Descripción**: Listar usuarios que han votado una épica.
+
+**Endpoint API**: `GET /api/v1/epics/{epicId}/voters`
+
+**Parámetros**:
+- `auth_token` (requerido): Token de autenticación
+- `epic_id` (requerido): ID de la épica
+
+**Salida esperada**: Lista de objetos User con información de votantes.
+
+**Criterios de aceptación**:
+- Debe devolver lista completa de usuarios que votaron
+- Debe incluir información básica del usuario (id, username, full_name)
+- Debe retornar lista vacía si no hay votos
+
+---
+
+### RF-019: Observar Épica (Watch)
+**Descripción**: Agregar al usuario actual como observador de una épica.
+
+**Endpoint API**: `POST /api/v1/epics/{epicId}/watch`
+
+**Parámetros**:
+- `auth_token` (requerido): Token de autenticación
+- `epic_id` (requerido): ID de la épica
+
+**Salida esperada**: Objeto Epic actualizado con watchers actualizado.
+
+**Criterios de aceptación**:
+- Debe agregar al usuario a la lista de watchers
+- Debe evitar duplicados
+- El usuario recibirá notificaciones de cambios en la épica
+
+---
+
+### RF-020: Dejar de Observar Épica (Unwatch)
+**Descripción**: Quitar al usuario actual como observador de una épica.
+
+**Endpoint API**: `POST /api/v1/epics/{epicId}/unwatch`
+
+**Parámetros**:
+- `auth_token` (requerido): Token de autenticación
+- `epic_id` (requerido): ID de la épica
+
+**Salida esperada**: Objeto Epic actualizado con watchers actualizado.
+
+**Criterios de aceptación**:
+- Debe quitar al usuario de la lista de watchers
+- Debe retornar error si el usuario no estaba observando
+- El usuario dejará de recibir notificaciones
+
+---
+
+### RF-021: Obtener Observadores de Épica
+**Descripción**: Listar usuarios que están observando una épica.
+
+**Endpoint API**: `GET /api/v1/epics/{epicId}/watchers`
+
+**Parámetros**:
+- `auth_token` (requerido): Token de autenticación
+- `epic_id` (requerido): ID de la épica
+
+**Salida esperada**: Lista de objetos User con información de observadores.
+
+**Criterios de aceptación**:
+- Debe devolver lista completa de watchers
+- Debe incluir información básica del usuario
+- Debe retornar lista vacía si no hay observadores
+
+---
+
+### RF-022: Listar Adjuntos de Épica
+**Descripción**: Obtener lista de archivos adjuntos de una épica.
+
+**Endpoint API**: `GET /api/v1/epics/attachments`
+
+**Parámetros**:
+- `auth_token` (requerido): Token de autenticación
+- `epic_id` (opcional): ID de la épica para filtrar
+- `project` (opcional): ID del proyecto para filtrar
+
+**Salida esperada**: Lista de objetos Attachment.
+
+**Criterios de aceptación**:
+- Debe devolver todos los adjuntos de la épica especificada
+- Debe soportar filtrado por epic_id o project
+- Debe incluir metadata (nombre, tamaño, URL, etc.)
+
+---
+
+### RF-023: Crear Adjunto en Épica
+**Descripción**: Subir un archivo adjunto a una épica.
+
+**Endpoint API**: `POST /api/v1/epics/attachments`
+
+**Parámetros**:
+- `auth_token` (requerido): Token de autenticación
+- `project` (requerido): ID del proyecto
+- `object_id` (requerido): ID de la épica
+- `attached_file` (requerido): Archivo a subir (multipart/form-data)
+- `description` (opcional): Descripción del adjunto
+- `is_deprecated` (opcional): Boolean marcando si está deprecado
+
+**Salida esperada**: Objeto Attachment creado.
+
+**Criterios de aceptación**:
+- Debe subir el archivo al servidor
+- Debe validar tamaño máximo de archivo
+- Debe validar tipos de archivo permitidos
+- Debe generar URL de acceso al archivo
+
+---
+
+### RF-024: Obtener Adjunto de Épica
+**Descripción**: Obtener información de un adjunto específico.
+
+**Endpoint API**: `GET /api/v1/epics/attachments/{attachmentId}`
+
+**Parámetros**:
+- `auth_token` (requerido): Token de autenticación
+- `attachment_id` (requerido): ID del adjunto
+
+**Salida esperada**: Objeto Attachment completo.
+
+**Criterios de aceptación**:
+- Debe devolver información completa del adjunto
+- Debe retornar 404 si el adjunto no existe
+- Debe manejar permisos de acceso
+
+---
+
+### RF-025: Actualizar Adjunto de Épica
+**Descripción**: Actualizar metadata de un adjunto (descripción, deprecado).
+
+**Endpoint API**: `PATCH /api/v1/epics/attachments/{attachmentId}`
+
+**Parámetros**:
+- `auth_token` (requerido): Token de autenticación
+- `attachment_id` (requerido): ID del adjunto
+- `description` (opcional): Nueva descripción
+- `is_deprecated` (opcional): Boolean marcando si está deprecado
+
+**Salida esperada**: Objeto Attachment actualizado.
+
+**Criterios de aceptación**:
+- Debe actualizar solo los campos proporcionados
+- No debe permitir cambiar el archivo (solo metadata)
+- Debe validar permisos de edición
+
+---
+
+### RF-026: Eliminar Adjunto de Épica
+**Descripción**: Eliminar un archivo adjunto de una épica.
+
+**Endpoint API**: `DELETE /api/v1/epics/attachments/{attachmentId}`
+
+**Parámetros**:
+- `auth_token` (requerido): Token de autenticación
+- `attachment_id` (requerido): ID del adjunto
+
+**Salida esperada**: Código 204 No Content.
+
+**Criterios de aceptación**:
+- Debe eliminar el archivo del servidor
+- Debe eliminar el registro del adjunto
+- Debe retornar 404 si el adjunto no existe
+- Debe validar permisos de eliminación
+
+---
+
+## Requerimientos No Funcionales
+
+### RNF-001: Arquitectura DDD
+**Descripción**: La implementación debe seguir la arquitectura Domain-Driven Design del proyecto.
+
+**Criterios de aceptación**:
+- Capa Domain: Entidades Epic, RelatedUserStory, Attachment, interfaces de repositorio
+- Capa Application: Casos de uso para cada operación CRUD
+- Capa Infrastructure: Implementación de clientes HTTP, configuración
+- Separación clara de responsabilidades entre capas
+
+---
+
+### RNF-002: Consistencia con Patrón Existente
+**Descripción**: Las herramientas de épicas deben seguir los mismos patrones que las herramientas ya implementadas (user stories, issues, tasks).
+
+**Criterios de aceptación**:
+- Misma estructura de nombres de funciones y herramientas
+- Mismo manejo de errores y excepciones
+- Misma estructura de documentación de herramientas
+- Reutilización de componentes comunes (auth, config, excepciones)
+
+---
+
+### RNF-003: Gestión de Errores
+**Descripción**: Manejo robusto de errores de API y casos edge.
+
+**Criterios de aceptación**:
+- Errores de autenticación (401) con mensajes claros
+- Errores de permisos (403) con mensajes claros
+- Errores de validación (400) con detalles específicos
+- Errores de recursos no encontrados (404)
+- Errores de concurrencia (409) con información de versión
+- Errores de servidor (500) con logging apropiado
+- Timeouts y errores de red manejados adecuadamente
+
+---
+
+### RNF-004: Validación de Datos
+**Descripción**: Validación exhaustiva de inputs y outputs.
+
+**Criterios de aceptación**:
+- Validación de tipos de parámetros
+- Validación de formatos (colores hexadecimales, fechas, etc.)
+- Validación de rangos y límites
+- Validación de relaciones entre entidades (epic-project, userstory-epic)
+- Mensajes de validación descriptivos
+
+---
+
+### RNF-005: Testabilidad
+**Descripción**: Código 100% testeable con tests unitarios, de integración y funcionales.
+
+**Criterios de aceptación**:
+- Cobertura de tests >= 80%
+- Tests unitarios para toda la lógica de dominio
+- Tests de integración para casos de uso
+- Tests funcionales para herramientas MCP
+- Mocks para dependencias externas (API de Taiga)
+- Fixtures compartidos entre tests
+
+---
+
+### RNF-006: Documentación de Código
+**Descripción**: Código auto-documentado con docstrings y type hints.
+
+**Criterios de aceptación**:
+- Docstrings en formato Google para todas las funciones públicas
+- Type hints completos en firmas de funciones
+- Comentarios explicativos en lógica compleja
+- Ejemplos de uso en docstrings de herramientas MCP
+
+---
+
+### RNF-007: Performance
+**Descripción**: Operaciones eficientes sin llamadas redundantes a la API.
+
+**Criterios de aceptación**:
+- Minimizar número de requests HTTP
+- Usar operaciones bulk cuando sea posible
+- Caché de datos inmutables cuando corresponda
+- Timeout apropiado para requests HTTP (30 segundos)
+
+---
+
+### RNF-008: Compatibilidad con MCP
+**Descripción**: Herramientas compatibles con el estándar Model Context Protocol.
+
+**Criterios de aceptación**:
+- Definición correcta de herramientas con decorador @server.call_tool
+- Schemas de entrada validados con Pydantic
+- Formato de salida consistente (dict o string)
+- Manejo de errores compatible con MCP
+
+---
+
+### RNF-009: Seguridad
+**Descripción**: Manejo seguro de credenciales y tokens.
+
+**Criterios de aceptación**:
+- Tokens NUNCA en logs o mensajes de error
+- Validación de permisos en todas las operaciones
+- Headers de autenticación correctos
+- HTTPS para comunicación con API de Taiga
+
+---
+
+### RNF-010: Mantenibilidad
+**Descripción**: Código fácil de mantener y extender.
+
+**Criterios de aceptación**:
+- Funciones con responsabilidad única (SRP)
+- Evitar duplicación de código (DRY)
+- Nombres descriptivos de variables y funciones
+- Estructura modular y desacoplada
+- Configuración externalizada
+
+---
+
+## Estructura de Archivos Esperada
+
+Basándose en el patrón existente del proyecto:
+
+```
+src/
+├── domain/
+│   ├── entities/
+│   │   ├── epic.py              # Entidad Epic
+│   │   └── related_userstory.py # Entidad RelatedUserStory
+│   └── repositories/
+│       └── epic_repository.py   # Interfaz del repositorio
+│
+├── application/
+│   └── use_cases/
+│       ├── epic_use_cases.py    # Casos de uso CRUD de épicas
+│       └── related_userstory_use_cases.py  # Casos de uso de relaciones
+│
+├── infrastructure/
+│   └── repositories/
+│       └── epic_repository_impl.py  # Implementación del repositorio
+│
+└── tools/
+    └── epic_tools.py            # Herramientas MCP registradas
+
+tests/
+├── unit/
+│   ├── test_epic_entity.py
+│   └── test_related_userstory_entity.py
+│
+├── integration/
+│   ├── test_epic_use_cases.py
+│   └── test_related_userstory_use_cases.py
+│
+└── functional/
+    └── test_epic_tools.py
+```
+
+---
+
+## Ejemplos de Uso
+
+### Ejemplo 1: Crear Épica y Relacionar User Stories
+
+```python
+# 1. Crear una nueva épica
+epic = create_epic(
+    auth_token="Bearer eyJhbG...",
+    project=309804,
+    subject="Módulo de Autenticación",
+    description="Epic que agrupa toda la funcionalidad de autenticación",
+    color="#A5694F",
+    tags=["auth", "security"]
+)
+
+# 2. Relacionar múltiples user stories
+related = bulk_create_related_userstories(
+    auth_token="Bearer eyJhbG...",
+    epic_id=epic["id"],
+    bulk_userstories=[123456, 123457, 123458]
+)
+```
+
+### Ejemplo 2: Gestionar Observadores y Votos
+
+```python
+# 1. Observar una épica
+watch_epic(
+    auth_token="Bearer eyJhbG...",
+    epic_id=456789
+)
+
+# 2. Votar la épica
+upvote_epic(
+    auth_token="Bearer eyJhbG...",
+    epic_id=456789
+)
+
+# 3. Ver quién está observando
+watchers = get_epic_watchers(
+    auth_token="Bearer eyJhbG...",
+    epic_id=456789
+)
+```
+
+### Ejemplo 3: Actualizar y Filtrar Épicas
+
+```python
+# 1. Actualizar estado de épica
+updated = update_epic(
+    auth_token="Bearer eyJhbG...",
+    epic_id=456789,
+    version=1,
+    status=2,
+    subject="Módulo de Autenticación - Actualizado"
+)
+
+# 2. Filtrar épicas por tag
+epics = list_epics(
+    auth_token="Bearer eyJhbG...",
+    project=309804,
+    tags=["security"]
+)
+```
+
+---
+
+## Criterios de Éxito
+
+1. **Tests en Verde**: Todos los tests (unitarios, integración, funcionales) pasan al 100%
+2. **Cobertura >= 80%**: Cobertura de código alcanza o supera el 80%
+3. **Documentación Completa**: Documentación técnica de arquitectura y API generada
+4. **Compatibilidad MCP**: Herramientas registradas y funcionales en el servidor MCP
+5. **Sin Regresiones**: Todos los tests existentes siguen pasando
+6. **Patrones Consistentes**: Arquitectura y código consistente con el resto del proyecto
+
+---
+
+## Notas Adicionales
+
+- El campo `version` es crítico para el control de concurrencia optimista. Todas las operaciones de actualización DEBEN validarlo.
+- Las épicas y user stories deben pertenecer al mismo proyecto.
+- Los adjuntos se manejan con multipart/form-data, no JSON.
+- Los colores deben estar en formato hexadecimal válido.
+- Las relaciones epic-userstory son independientes: eliminar una relación NO elimina la epic ni la user story.

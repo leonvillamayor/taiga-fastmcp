@@ -1,0 +1,101 @@
+# Pre-commit hooks configuration for Taiga MCP Server
+# Install with: uv run pre-commit install
+# Run manually: uv run pre-commit run --all-files
+
+repos:
+  # Ruff - Fast Python linter and formatter
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.8.4
+    hooks:
+      # Run the linter
+      - id: ruff
+        name: ruff-lint
+        args: [--fix, --exit-non-zero-on-fix]
+        types_or: [python, pyi]
+        exclude: ^(scripts/|fix_.*\.py|apply_.*\.py)
+      # Run the formatter
+      - id: ruff-format
+        name: ruff-format
+        types_or: [python, pyi]
+        exclude: ^(scripts/|fix_.*\.py|apply_.*\.py)
+
+  # Mypy - Static type checker
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.10.0
+    hooks:
+      - id: mypy
+        name: mypy-type-check
+        args: [--config-file=pyproject.toml]
+        additional_dependencies:
+          - pydantic>=2.0
+          - pydantic-settings>=2.0
+          - httpx>=0.27.0
+          - types-aiofiles
+          - types-requests
+        pass_filenames: true
+        types: [python]
+        exclude: ^(tests/|scripts/|fix_.*\.py|apply_.*\.py)
+
+  # General file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      # Prevent committing large files
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+      # Check for files that would conflict in case-insensitive filesystems
+      - id: check-case-conflict
+      # Check for merge conflicts
+      - id: check-merge-conflict
+      # Check JSON syntax
+      - id: check-json
+      # Check YAML syntax
+      - id: check-yaml
+        args: ['--unsafe']  # Allow custom tags
+      # Check TOML syntax
+      - id: check-toml
+      # Detect private keys
+      - id: detect-private-key
+      # Ensure files end with newline
+      - id: end-of-file-fixer
+        exclude: ^(\.venv/|htmlcov/|\.pytest_cache/)
+      # Remove trailing whitespace
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+        exclude: ^(\.venv/|htmlcov/|\.pytest_cache/)
+      # Check that executables have shebangs
+      - id: check-executables-have-shebangs
+      # Check that scripts with shebangs are executable
+      - id: check-shebang-scripts-are-executable
+      # Fix mixed line endings
+      - id: mixed-line-ending
+        args: ['--fix=lf']
+
+  # Python-specific checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      # Check for debugger imports and breakpoints
+      - id: debug-statements
+      # Check docstring is first
+      - id: check-docstring-first
+      # Ensure test files are named correctly
+      - id: name-tests-test
+        args: ['--pytest-test-first']
+        exclude: ^tests/(conftest\.py|conftest_.*\.py|fixtures/|__init__\.py)
+
+  # Security checks
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.9
+    hooks:
+      - id: bandit
+        name: bandit-security-check
+        args: ['-c', 'pyproject.toml', '-r', 'src/']
+        additional_dependencies: ['bandit[toml]']
+
+# Global settings
+default_language_version:
+  python: python3.11
+
+# Performance: run hooks in parallel when possible
+default_install_hook_types: [pre-commit, pre-push]

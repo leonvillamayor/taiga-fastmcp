@@ -1,0 +1,177 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[Hook] Archivo modificado: $CLAUDE_FILE_PATH' >> .claude/activity.log"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[Hook] Comando ejecutado: $CLAUDE_BASH_COMMAND' >> .claude/activity.log"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "mkdir -p $(dirname $CLAUDE_FILE_PATH)"
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "matcher": "experto-tdd|experto-ddd",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[Subagent] Iniciando $CLAUDE_SUBAGENT_NAME - $(date)' >> .claude/activity.log"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "matcher": "experto-tdd",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[Subagent] Experto TDD terminó - $(date)' >> .claude/activity.log"
+          },
+          {
+            "type": "command",
+            "command": "chmod +x .claude/hooks/validate-experto-tdd.sh && .claude/hooks/validate-experto-tdd.sh 2>&1 | tee .claude/validation_tdd.log"
+          },
+          {
+            "type": "prompt",
+            "prompt": "🔍 VALIDACIÓN AUTOMÁTICA EJECUTADA\n\nSe ha ejecutado el script de validación exhaustiva para el Experto TDD.\n\nLee el archivo .claude/validation_tdd.log para ver el resultado completo.\n\nTareas:\n1. Si la validación PASÓ (exit 0): Resume los resultados positivos y confirma que se puede continuar con el Experto DDD.\n2. Si la validación FALLÓ (exit 1): Lista TODOS los errores encontrados y solicita al usuario que los corrija antes de continuar.\n3. Si hay WARNINGS: Menciónalos pero indica que no son bloqueantes.\n\nNO continúes con el siguiente experto hasta que la validación sea exitosa."
+          }
+        ]
+      },
+      {
+        "matcher": "experto-ddd",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[Subagent] Experto DDD terminó - $(date)' >> .claude/activity.log"
+          },
+          {
+            "type": "command",
+            "command": "chmod +x .claude/hooks/validate-experto-ddd.sh && .claude/hooks/validate-experto-ddd.sh 2>&1 | tee .claude/validation_ddd.log"
+          },
+          {
+            "type": "prompt",
+            "prompt": "🔍 VALIDACIÓN AUTOMÁTICA EJECUTADA\n\nSe ha ejecutado el script de validación exhaustiva para el Experto DDD.\n\nLee el archivo .claude/validation_ddd.log para ver el resultado completo.\n\nTareas:\n1. Si la validación PASÓ (exit 0): Resume los resultados (tests en verde, cobertura, arquitectura) y confirma que se puede continuar con el Experto Documentación.\n2. Si la validación FALLÓ (exit 1): Lista TODOS los errores encontrados, especialmente:\n   - Tests que no pasaron\n   - Problemas de cobertura\n   - Violaciones de DDD\n   Y solicita correcciones antes de continuar.\n3. Si hay WARNINGS: Menciónalos pero indica que no son bloqueantes.\n\nNO continúes con el siguiente experto hasta que la validación sea exitosa."
+          }
+        ]
+      },
+      {
+        "matcher": "experto-documentacion",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[Subagent] Experto Documentación terminó - $(date)' >> .claude/activity.log"
+          },
+          {
+            "type": "command",
+            "command": "chmod +x .claude/hooks/validate-experto-documentacion.sh && .claude/hooks/validate-experto-documentacion.sh 2>&1 | tee .claude/validation_doc.log"
+          },
+          {
+            "type": "prompt",
+            "prompt": "🔍 VALIDACIÓN AUTOMÁTICA EJECUTADA\n\nSe ha ejecutado el script de validación exhaustiva para el Experto Documentación.\n\nLee el archivo .claude/validation_doc.log para ver el resultado completo.\n\nTareas:\n1. Si la validación PASÓ (exit 0): Presenta un RESUMEN FINAL del flujo completo TDD/DDD mostrando:\n   - ✅ Fase TDD: Requerimientos identificados, tests creados\n   - ✅ Fase DDD: Tests en verde, cobertura, arquitectura\n   - ✅ Fase Documentación: Archivos generados\n   - 🚀 Confirma que la aplicación está lista para usar\n2. Si la validación FALLÓ (exit 1): Lista TODOS los errores de documentación encontrados y solicita correcciones.\n3. Si hay WARNINGS: Menciónalos como mejoras recomendadas.\n\nEste es el ÚLTIMO paso del flujo completo."
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '\\n========================================' >> .claude/activity.log && echo '[Session Start] $(date)' >> .claude/activity.log && echo '========================================' >> .claude/activity.log"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[Session End] $(date)' >> .claude/activity.log && echo '========================================\\n' >> .claude/activity.log"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[User] $(date): Prompt submitted\" >> .claude/activity.log"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Read(src/**/*.py)",
+      "Read(tests/**/*.py)",
+      "Read(Documentacion/**)",
+      "Read(*.md)",
+      "Read(*.txt)",
+      "Read(*.toml)",
+      "Read(*.json)",
+      "Grep(**)",
+      "Glob(**)",
+      "Bash(uv:*)",
+      "Bash(pytest:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)"
+    ],
+    "ask": [
+      "Write(src/**)",
+      "Edit(src/**)",
+      "Write(tests/**)",
+      "Edit(tests/**)",
+      "Write(Documentacion/**)",
+      "Edit(Documentacion/**)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
+    ],
+    "deny": [
+      "Bash(rm:*)",
+      "Bash(sudo:*)",
+      "Write(.git/**)",
+      "Edit(.git/**)",
+      "Delete(**)",
+      "Write(/etc/**)",
+      "Write(/usr/**)"
+    ]
+  },
+  "mcp": {
+    "timeout": 10000
+  },
+  "model": "claude-opus-4-5",
+  "outputStyles": {
+    "default": "detailed"
+  }
+}

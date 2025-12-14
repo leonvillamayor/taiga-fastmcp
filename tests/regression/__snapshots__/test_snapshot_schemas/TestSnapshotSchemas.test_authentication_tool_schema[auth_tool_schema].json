@@ -1,0 +1,14 @@
+{
+  "description": "Authenticate with Taiga API",
+  "name": "taiga_authenticate",
+  "parameters": {
+    "password": {
+      "required": true,
+      "type": "string"
+    },
+    "username": {
+      "required": true,
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,165 @@
+Current Name,Proposed Name,Module,Return Type Current,Return Type Target,Issues,Priority
+taiga_authenticate,taiga_authenticate,auth_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_refresh_token,taiga_refresh_token,auth_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_get_current_user,taiga_get_current_user,auth_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_logout,taiga_logout,auth_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_check_auth,taiga_check_auth,auth_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_list_epics,taiga_list_epics,epic_tools,"list[dict[str, Any]]","list[dict[str, Any]]",Missing description in decorator,LOW
+taiga_create_epic,taiga_create_epic,epic_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_get_epic,taiga_get_epic,epic_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_get_epic_by_ref,taiga_get_epic_by_ref,epic_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_update_epic_full,taiga_update_epic_full,epic_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_update_epic_partial,taiga_update_epic_partial,epic_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_delete_epic,taiga_delete_epic,epic_tools,"dict[str, str]","dict[str, str]",Missing description in decorator,LOW
+taiga_list_epic_related_userstories,taiga_list_epic_related_userstories,epic_tools,"list[dict[str, Any]]","list[dict[str, Any]]",Missing description in decorator,LOW
+taiga_create_epic_related_userstory,taiga_create_epic_related_userstory,epic_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator; Inconsistent naming: 'userstory' should be 'user_story',MEDIUM
+taiga_get_epic_related_userstory,taiga_get_epic_related_userstory,epic_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator; Inconsistent naming: 'userstory' should be 'user_story',MEDIUM
+taiga_update_epic_related_userstory,taiga_update_epic_related_userstory,epic_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator; Inconsistent naming: 'userstory' should be 'user_story',MEDIUM
+taiga_delete_epic_related_userstory,taiga_delete_epic_related_userstory,epic_tools,"dict[str, str]","dict[str, str]",Missing description in decorator; Inconsistent naming: 'userstory' should be 'user_story',MEDIUM
+taiga_bulk_create_epics,taiga_bulk_create_epics,epic_tools,"list[dict[str, Any]]","list[dict[str, Any]]",Missing description in decorator,LOW
+taiga_get_epic_filters,taiga_get_epic_filters,epic_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_upvote_epic,taiga_upvote_epic,epic_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_downvote_epic,taiga_downvote_epic,epic_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_get_epic_voters,taiga_get_epic_voters,epic_tools,"list[dict[str, Any]]","list[dict[str, Any]]",Missing description in decorator,LOW
+taiga_watch_epic,taiga_watch_epic,epic_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_unwatch_epic,taiga_unwatch_epic,epic_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_get_epic_watchers,taiga_get_epic_watchers,epic_tools,"list[dict[str, Any]]","list[dict[str, Any]]",Missing description in decorator,LOW
+taiga_list_epic_attachments,taiga_list_epic_attachments,epic_tools,"list[dict[str, Any]]","list[dict[str, Any]]",Missing description in decorator,LOW
+taiga_create_epic_attachment,taiga_create_epic_attachment,epic_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_get_epic_attachment,taiga_get_epic_attachment,epic_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_update_epic_attachment,taiga_update_epic_attachment,epic_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_delete_epic_attachment,taiga_delete_epic_attachment,epic_tools,"dict[str, str]","dict[str, str]",Missing description in decorator,LOW
+taiga_list_epic_custom_attributes,taiga_list_epic_custom_attributes,epic_tools,"list[dict[str, Any]]","list[dict[str, Any]]",Missing description in decorator,LOW
+taiga_create_epic_custom_attribute,taiga_create_epic_custom_attribute,epic_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_get_epic_custom_attribute_values,taiga_get_epic_custom_attribute_values,epic_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_list_issues,taiga_list_issues,issue_tools,"list[dict[str, Any]]","list[dict[str, Any]]",Missing description in decorator,LOW
+taiga_create_issue,taiga_create_issue,issue_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_get_issue,taiga_get_issue,issue_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_get_issue_by_ref,taiga_get_issue_by_ref,issue_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_update_issue,taiga_update_issue,issue_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_delete_issue,taiga_delete_issue,issue_tools,bool,bool,Missing description in decorator,LOW
+taiga_bulk_create_issues,taiga_bulk_create_issues,issue_tools,"list[dict[str, Any]]","list[dict[str, Any]]",Missing description in decorator,LOW
+taiga_get_issue_filters,taiga_get_issue_filters,issue_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_upvote_issue,taiga_upvote_issue,issue_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_downvote_issue,taiga_downvote_issue,issue_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_get_issue_voters,taiga_get_issue_voters,issue_tools,"list[dict[str, Any]]","list[dict[str, Any]]",Missing description in decorator,LOW
+taiga_watch_issue,taiga_watch_issue,issue_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_unwatch_issue,taiga_unwatch_issue,issue_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_get_issue_watchers,taiga_get_issue_watchers,issue_tools,"list[dict[str, Any]]","list[dict[str, Any]]",Missing description in decorator,LOW
+taiga_get_issue_attachments,taiga_get_issue_attachments,issue_tools,"list[dict[str, Any]]","list[dict[str, Any]]",Missing description in decorator,LOW
+taiga_create_issue_attachment,taiga_create_issue_attachment,issue_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_get_issue_attachment,taiga_get_issue_attachment,issue_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_update_issue_attachment,taiga_update_issue_attachment,issue_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_delete_issue_attachment,taiga_delete_issue_attachment,issue_tools,bool,bool,Missing description in decorator,LOW
+taiga_get_issue_history,taiga_get_issue_history,issue_tools,"list[dict[str, Any]]","list[dict[str, Any]]",Missing description in decorator,LOW
+taiga_get_issue_comment_versions,taiga_get_issue_comment_versions,issue_tools,"list[dict[str, Any]]","list[dict[str, Any]]",Missing description in decorator,LOW
+taiga_edit_issue_comment,taiga_edit_issue_comment,issue_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_delete_issue_comment,taiga_delete_issue_comment,issue_tools,bool,bool,Missing description in decorator,LOW
+taiga_undelete_issue_comment,taiga_undelete_issue_comment,issue_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_get_issue_custom_attributes,taiga_get_issue_custom_attributes,issue_tools,"list[dict[str, Any]]","list[dict[str, Any]]",Missing description in decorator,LOW
+taiga_create_issue_custom_attribute,taiga_create_issue_custom_attribute,issue_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_update_issue_custom_attribute,taiga_update_issue_custom_attribute,issue_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_delete_issue_custom_attribute,taiga_delete_issue_custom_attribute,issue_tools,bool,bool,Missing description in decorator,LOW
+taiga_list_memberships,taiga_list_memberships,membership_tools,"list[dict[str, Any]]","list[dict[str, Any]]",,DONE
+taiga_create_membership,taiga_create_membership,membership_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_get_membership,taiga_get_membership,membership_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_update_membership,taiga_update_membership,membership_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_delete_membership,taiga_delete_membership,membership_tools,bool,bool,,DONE
+taiga_list_milestones,taiga_list_milestones,milestone_tools,"list[dict[str, Any]]","list[dict[str, Any]]",,DONE
+taiga_create_milestone,taiga_create_milestone,milestone_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_get_milestone,taiga_get_milestone,milestone_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_update_milestone_full,taiga_update_milestone_full,milestone_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_update_milestone,taiga_update_milestone,milestone_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_delete_milestone,taiga_delete_milestone,milestone_tools,"dict[str, str]","dict[str, str]",,DONE
+taiga_get_milestone_stats,taiga_get_milestone_stats,milestone_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_watch_milestone,taiga_watch_milestone,milestone_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_unwatch_milestone,taiga_unwatch_milestone,milestone_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_get_milestone_watchers,taiga_get_milestone_watchers,milestone_tools,"list[dict[str, Any]]","list[dict[str, Any]]",,DONE
+taiga_list_projects,taiga_list_projects,project_tools,"list[dict[str, Any]]","list[dict[str, Any]]",,DONE
+taiga_create_project,taiga_create_project,project_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_get_project,taiga_get_project,project_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_update_project,taiga_update_project,project_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_delete_project,taiga_delete_project,project_tools,bool,bool,,DONE
+taiga_get_project_stats,taiga_get_project_stats,project_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_duplicate_project,taiga_duplicate_project,project_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_like_project,taiga_like_project,project_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_unlike_project,taiga_unlike_project,project_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_watch_project,taiga_watch_project,project_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_unwatch_project,taiga_unwatch_project,project_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_get_project_modules,taiga_get_project_modules,project_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_update_project_modules,taiga_update_project_modules,project_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_get_project_by_slug,taiga_get_project_by_slug,project_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_get_project_issues_stats,taiga_get_project_issues_stats,project_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_get_project_tags,taiga_get_project_tags,project_tools,list[list[str]],list[list[str]],,DONE
+taiga_create_project_tag,taiga_create_project_tag,project_tools,list[str],list[str],,DONE
+taiga_edit_project_tag,taiga_edit_project_tag,project_tools,list[str],list[str],,DONE
+taiga_delete_project_tag,taiga_delete_project_tag,project_tools,bool,bool,,DONE
+taiga_mix_project_tags,taiga_mix_project_tags,project_tools,list[str],list[str],,DONE
+taiga_export_project,taiga_export_project,project_tools,bytes,bytes,,DONE
+taiga_bulk_update_projects_order,taiga_bulk_update_projects_order,project_tools,"list[dict[str, Any]]","list[dict[str, Any]]",,DONE
+taiga_list_tasks,taiga_list_tasks,task_tools,"list[dict[str, Any]]","list[dict[str, Any]]",,DONE
+taiga_create_task,taiga_create_task,task_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_get_task,taiga_get_task,task_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_get_task_by_ref,taiga_get_task_by_ref,task_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_update_task_full,taiga_update_task_full,task_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_update_task,taiga_update_task,task_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_delete_task,taiga_delete_task,task_tools,"dict[str, str]","dict[str, str]",,DONE
+taiga_bulk_create_tasks,taiga_bulk_create_tasks,task_tools,"list[dict[str, Any]]","list[dict[str, Any]]",,DONE
+taiga_get_task_filters,taiga_get_task_filters,task_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_upvote_task,taiga_upvote_task,task_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_downvote_task,taiga_downvote_task,task_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_get_task_voters,taiga_get_task_voters,task_tools,"list[dict[str, Any]]","list[dict[str, Any]]",,DONE
+taiga_watch_task,taiga_watch_task,task_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_unwatch_task,taiga_unwatch_task,task_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_get_task_watchers,taiga_get_task_watchers,task_tools,"list[dict[str, Any]]","list[dict[str, Any]]",,DONE
+taiga_list_task_attachments,taiga_list_task_attachments,task_tools,"list[dict[str, Any]]","list[dict[str, Any]]",,DONE
+taiga_create_task_attachment,taiga_create_task_attachment,task_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_get_task_attachment,taiga_get_task_attachment,task_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_update_task_attachment,taiga_update_task_attachment,task_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_delete_task_attachment,taiga_delete_task_attachment,task_tools,"dict[str, str]","dict[str, str]",,DONE
+taiga_get_task_history,taiga_get_task_history,task_tools,"list[dict[str, Any]]","list[dict[str, Any]]",,DONE
+taiga_get_task_comment_versions,taiga_get_task_comment_versions,task_tools,"list[dict[str, Any]]","list[dict[str, Any]]",,DONE
+taiga_edit_task_comment,taiga_edit_task_comment,task_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_delete_task_comment,taiga_delete_task_comment,task_tools,"dict[str, str]","dict[str, str]",,DONE
+taiga_undelete_task_comment,taiga_undelete_task_comment,task_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_list_task_custom_attributes,taiga_list_task_custom_attributes,task_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_create_task_custom_attribute,taiga_create_task_custom_attribute,task_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_update_task_custom_attribute,taiga_update_task_custom_attribute,task_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_delete_task_custom_attribute,taiga_delete_task_custom_attribute,task_tools,"dict[str, str]","dict[str, str]",,DONE
+taiga_get_user_stats,taiga_get_user_stats,user_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_list_users,taiga_list_users,user_tools,"list[dict[str, Any]]","list[dict[str, Any]]",,DONE
+taiga_list_userstories,taiga_list_userstories,userstory_tools,"list[dict[str, Any]]","list[dict[str, Any]]",,DONE
+taiga_create_userstory,taiga_create_userstory,userstory_tools,"dict[str, Any]","dict[str, Any]",Inconsistent naming: 'userstory' should be 'user_story',MEDIUM
+taiga_get_userstory,taiga_get_userstory,userstory_tools,"dict[str, Any]","dict[str, Any]",Inconsistent naming: 'userstory' should be 'user_story',MEDIUM
+taiga_update_userstory,taiga_update_userstory,userstory_tools,"dict[str, Any]","dict[str, Any]",Inconsistent naming: 'userstory' should be 'user_story',MEDIUM
+taiga_delete_userstory,taiga_delete_userstory,userstory_tools,bool,bool,Inconsistent naming: 'userstory' should be 'user_story',MEDIUM
+taiga_bulk_create_userstories,taiga_bulk_create_userstories,userstory_tools,"list[dict[str, Any]]","list[dict[str, Any]]",,DONE
+taiga_bulk_update_userstories,taiga_bulk_update_userstories,userstory_tools,"list[dict[str, Any]]","list[dict[str, Any]]",,DONE
+taiga_bulk_delete_userstories,taiga_bulk_delete_userstories,userstory_tools,bool,bool,,DONE
+taiga_move_to_milestone,taiga_move_to_milestone,userstory_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_get_userstory_history,taiga_get_userstory_history,userstory_tools,"list[dict[str, Any]]","list[dict[str, Any]]",Inconsistent naming: 'userstory' should be 'user_story',MEDIUM
+taiga_watch_userstory,taiga_watch_userstory,userstory_tools,"dict[str, Any]","dict[str, Any]",Inconsistent naming: 'userstory' should be 'user_story',MEDIUM
+taiga_unwatch_userstory,taiga_unwatch_userstory,userstory_tools,"dict[str, Any]","dict[str, Any]",Inconsistent naming: 'userstory' should be 'user_story',MEDIUM
+taiga_upvote_userstory,taiga_upvote_userstory,userstory_tools,"dict[str, Any]","dict[str, Any]",Inconsistent naming: 'userstory' should be 'user_story',MEDIUM
+taiga_downvote_userstory,taiga_downvote_userstory,userstory_tools,"dict[str, Any]","dict[str, Any]",Inconsistent naming: 'userstory' should be 'user_story',MEDIUM
+taiga_get_userstory_voters,taiga_get_userstory_voters,userstory_tools,"list[dict[str, Any]]","list[dict[str, Any]]",Inconsistent naming: 'userstory' should be 'user_story',MEDIUM
+taiga_list_webhooks,taiga_list_webhooks,webhook_tools,"list[dict[str, Any]]","list[dict[str, Any]]",,DONE
+taiga_create_webhook,taiga_create_webhook,webhook_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_get_webhook,taiga_get_webhook,webhook_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_update_webhook,taiga_update_webhook,webhook_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_delete_webhook,taiga_delete_webhook,webhook_tools,bool,bool,,DONE
+taiga_test_webhook,taiga_test_webhook,webhook_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_list_wiki_pages,taiga_list_wiki_pages,wiki_tools,"list[dict[str, Any]]","list[dict[str, Any]]",,DONE
+taiga_create_wiki_page,taiga_create_wiki_page,wiki_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_get_wiki_page,taiga_get_wiki_page,wiki_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_get_wiki_page_by_slug,taiga_get_wiki_page_by_slug,wiki_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_update_wiki_page,taiga_update_wiki_page,wiki_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_delete_wiki_page,taiga_delete_wiki_page,wiki_tools,bool,bool,,DONE
+taiga_restore_wiki_page,taiga_restore_wiki_page,wiki_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_list_wiki_attachments,taiga_list_wiki_attachments,wiki_tools,"list[dict[str, Any]]","list[dict[str, Any]]",,DONE
+taiga_watch_wiki_page,taiga_watch_wiki_page,wiki_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_unwatch_wiki_page,taiga_unwatch_wiki_page,wiki_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_create_wiki_link,taiga_create_wiki_link,wiki_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_create_wiki_attachment,taiga_create_wiki_attachment,wiki_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_update_wiki_attachment,taiga_update_wiki_attachment,wiki_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_delete_wiki_attachment,taiga_delete_wiki_attachment,wiki_tools,bool,bool,,DONE

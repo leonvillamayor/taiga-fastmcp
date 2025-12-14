@@ -1,0 +1,100 @@
+Verifica de forma exhaustiva y minuciosa que todo lo requerido por la tarea se ha realizado. Hazlo paso a paso y si faltara algo por realizar, implantalo. No elimines la ejecucion de ninguna herramienta de calidad de codigo:
+
+- Realiza paso a paso lo indicado en la tarea, de forma extricta.
+- Nunca deshabilites con overrides las capacidades y configuraciones de ruff y mypy por otras menos extrictas, ni otra herramienta configurada, para terminar una tarea.
+- No generes documentos que no han sido requeridos por la tarea.
+- Siempre utiliza uv para ejecutar python, pytest, mypy, ruff y todas las herramientas configuradas en el proyecto
+- Siempre utiliza uv para gestionar el entorno virtual y añadir y eliminar paquetes python.
+- Always use context7 when I need code generation, setup or configuration steps, or
+library/API documentation. This means you should automatically use the Context7 MCP
+tools to resolve library id and get library docs without me having to explicitly ask.
+- Siempre codifica python tipado
+- Cuando se detecten errores en mypy, corrigelos uno a uno y paso a paso
+
+---
+
+### Tarea 3.10: Optimización de Consultas Batch
+
+**Problema**: Operaciones bulk hacen llamadas individuales secuenciales
+**Objetivo**: Optimizar operaciones batch con concurrencia controlada
+**Prioridad**: MEDIA
+**Dependencias**: Tarea 3.1, 3.4
+**Estimación**: 6 horas
+
+#### Pasos de Implementación
+
+1. Crear `src/infrastructure/batch.py`:
+   ```python
+   """Sistema de operaciones batch optimizadas."""
+   import asyncio
+   from typing import List, Callable, TypeVar, Any
+   from dataclasses import dataclass
+
+   T = TypeVar('T')
+
+   @dataclass
+   class BatchConfig:
+       max_concurrency: int = 5
+       chunk_size: int = 10
+       fail_fast: bool = False
+
+   class BatchExecutor:
+       """Ejecutor de operaciones batch con concurrencia controlada."""
+
+       def __init__(self, config: BatchConfig = None):
+           self.config = config or BatchConfig()
+
+       async def execute(self,
+                         items: List[Any],
+                         operation: Callable[[Any], T]
+                        ) -> List[T]:
+           """Ejecuta operación para cada item con concurrencia controlada."""
+           semaphore = asyncio.Semaphore(self.config.max_concurrency)
+           results = []
+
+           async def bounded_operation(item: Any) -> T:
+               async with semaphore:
+                   return await operation(item)
+
+           tasks = [bounded_operation(item) for item in items]
+
+           if self.config.fail_fast:
+               results = await asyncio.gather(*tasks)
+           else:
+               results = await asyncio.gather(*tasks, return_exceptions=True)
+
+           return results
+   ```
+
+2. Identificar operaciones bulk existentes
+
+3. Refactorizar para usar BatchExecutor
+
+4. Agregar reportes de progreso
+
+#### Tests Asociados
+
+- [ ] Test 3.10.1: Batch respeta max_concurrency
+- [ ] Test 3.10.2: Resultados en orden correcto
+- [ ] Test 3.10.3: fail_fast detiene en primer error
+- [ ] Test 3.10.4: Sin fail_fast continúa tras errores
+- [ ] Test 3.10.5: Performance mejor que secuencial
+
+#### Criterios de Aceptación
+
+- [ ] Operaciones bulk usan concurrencia controlada
+- [ ] Respeta rate limiting
+- [ ] +200% performance en bulk creates
+- [ ] Errores manejados según configuración
+- [ ] Tests pasan
+
+#### Archivos Afectados
+
+- `src/infrastructure/batch.py` - **NUEVO** - Sistema batch
+- `src/application/tools/*_tools.py` - Usar BatchExecutor
+- `tests/integration/test_batch.py` - **NUEVO** - Tests
+
+---
+
+
+***Cuando termines la tarea, verifica punto por punto que todo lo requerido se ha realizado.***

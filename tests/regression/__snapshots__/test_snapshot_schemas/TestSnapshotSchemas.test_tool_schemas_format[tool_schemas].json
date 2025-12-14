@@ -1,0 +1,220 @@
+{
+  "taiga_authenticate": {
+    "description": "Authenticate with Taiga API",
+    "name": "taiga_authenticate",
+    "parameters": {
+      "password": {
+        "required": true,
+        "type": "string"
+      },
+      "username": {
+        "required": true,
+        "type": "string"
+      }
+    }
+  },
+  "taiga_create_epic": {
+    "description": "Create a new epic",
+    "name": "taiga_create_epic",
+    "parameters": {
+      "auth_token": {
+        "required": true,
+        "type": "string"
+      },
+      "color": {
+        "required": false,
+        "type": "string"
+      },
+      "description": {
+        "required": false,
+        "type": "string"
+      },
+      "project_id": {
+        "required": true,
+        "type": "integer"
+      },
+      "subject": {
+        "required": true,
+        "type": "string"
+      }
+    }
+  },
+  "taiga_create_project": {
+    "description": "Create a new project",
+    "name": "taiga_create_project",
+    "parameters": {
+      "auth_token": {
+        "required": true,
+        "type": "string"
+      },
+      "description": {
+        "required": false,
+        "type": "string"
+      },
+      "is_private": {
+        "required": false,
+        "type": "boolean"
+      },
+      "name": {
+        "required": true,
+        "type": "string"
+      }
+    }
+  },
+  "taiga_get_epic": {
+    "description": "Get details of a specific epic",
+    "name": "taiga_get_epic",
+    "parameters": {
+      "auth_token": {
+        "required": true,
+        "type": "string"
+      },
+      "epic_id": {
+        "required": true,
+        "type": "integer"
+      }
+    }
+  },
+  "taiga_get_project": {
+    "description": "Get details of a specific project",
+    "name": "taiga_get_project",
+    "parameters": {
+      "auth_token": {
+        "required": true,
+        "type": "string"
+      },
+      "project_id": {
+        "required": true,
+        "type": "integer"
+      }
+    }
+  },
+  "taiga_list_epics": {
+    "description": "List epics for a project",
+    "name": "taiga_list_epics",
+    "parameters": {
+      "assigned_to": {
+        "required": false,
+        "type": "integer"
+      },
+      "auth_token": {
+        "required": true,
+        "type": "string"
+      },
+      "project_id": {
+        "required": true,
+        "type": "integer"
+      },
+      "status": {
+        "required": false,
+        "type": "integer"
+      }
+    }
+  },
+  "taiga_list_issues": {
+    "description": "List issues for a project",
+    "name": "taiga_list_issues",
+    "parameters": {
+      "auth_token": {
+        "required": true,
+        "type": "string"
+      },
+      "project_id": {
+        "required": true,
+        "type": "integer"
+      },
+      "status": {
+        "required": false,
+        "type": "integer"
+      },
+      "type": {
+        "required": false,
+        "type": "integer"
+      }
+    }
+  },
+  "taiga_list_milestones": {
+    "description": "List milestones/sprints for a project",
+    "name": "taiga_list_milestones",
+    "parameters": {
+      "auth_token": {
+        "required": true,
+        "type": "string"
+      },
+      "closed": {
+        "required": false,
+        "type": "boolean"
+      },
+      "project_id": {
+        "required": true,
+        "type": "integer"
+      }
+    }
+  },
+  "taiga_list_projects": {
+    "description": "List all projects accessible to the user",
+    "name": "taiga_list_projects",
+    "parameters": {
+      "auth_token": {
+        "required": true,
+        "type": "string"
+      },
+      "is_backlog_activated": {
+        "required": false,
+        "type": "boolean"
+      },
+      "is_kanban_activated": {
+        "required": false,
+        "type": "boolean"
+      },
+      "member": {
+        "required": false,
+        "type": "integer"
+      }
+    }
+  },
+  "taiga_list_tasks": {
+    "description": "List tasks for a project or user story",
+    "name": "taiga_list_tasks",
+    "parameters": {
+      "auth_token": {
+        "required": true,
+        "type": "string"
+      },
+      "project_id": {
+        "required": true,
+        "type": "integer"
+      },
+      "status": {
+        "required": false,
+        "type": "integer"
+      },
+      "user_story": {
+        "required": false,
+        "type": "integer"
+      }
+    }
+  },
+  "taiga_list_userstories": {
+    "description": "List user stories for a project",
+    "name": "taiga_list_userstories",
+    "parameters": {
+      "auth_token": {
+        "required": true,
+        "type": "string"
+      },
+      "milestone": {
+        "required": false,
+        "type": "integer"
+      },
+      "project_id": {
+        "required": true,
+        "type": "integer"
+      },
+      "status": {
+        "required": false,
+        "type": "integer"
+      }
+    }
+  }
+}

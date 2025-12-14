@@ -1,0 +1,56 @@
+{
+  "api_error": {
+    "error": {
+      "code": "API_ERROR",
+      "details": {
+        "reason": "Service Unavailable",
+        "status_code": 503
+      },
+      "message": "Error de comunicación con la API de Taiga"
+    },
+    "success": false
+  },
+  "conflict": {
+    "error": {
+      "code": "CONFLICT",
+      "details": {
+        "current_version": 2,
+        "provided_version": 1
+      },
+      "message": "Conflicto de versión"
+    },
+    "success": false
+  },
+  "not_found": {
+    "error": {
+      "code": "NOT_FOUND",
+      "details": {
+        "resource_id": 999999,
+        "resource_type": "project"
+      },
+      "message": "Recurso no encontrado"
+    },
+    "success": false
+  },
+  "permission_denied": {
+    "error": {
+      "code": "PERMISSION_DENIED",
+      "details": {
+        "required_permission": "modify_project"
+      },
+      "message": "No tienes permisos para realizar esta acción"
+    },
+    "success": false
+  },
+  "validation_error": {
+    "error": {
+      "code": "VALIDATION_ERROR",
+      "details": {
+        "error": "Este campo es requerido",
+        "field": "subject"
+      },
+      "message": "Error de validación"
+    },
+    "success": false
+  }
+}

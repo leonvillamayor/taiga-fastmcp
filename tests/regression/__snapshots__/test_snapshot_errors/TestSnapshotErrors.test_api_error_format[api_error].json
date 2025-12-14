@@ -1,0 +1,6 @@
+{
+  "message": "Error de comunicación con Taiga API",
+  "response_body": "{\"detail\": \"Service Unavailable\"}",
+  "status_code": 503,
+  "type": "TaigaAPIError"
+}

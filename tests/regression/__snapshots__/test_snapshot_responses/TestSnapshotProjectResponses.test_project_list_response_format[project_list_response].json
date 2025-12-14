@@ -1,0 +1,87 @@
+{
+  "count": 2,
+  "projects": [
+    {
+      "created_date": "2025-01-15T10:00:00Z",
+      "description": "Proyecto de prueba para snapshot testing",
+      "i_am_admin": null,
+      "i_am_member": null,
+      "i_am_owner": null,
+      "id": 123456,
+      "is_backlog_activated": true,
+      "is_fan": null,
+      "is_issues_activated": true,
+      "is_kanban_activated": true,
+      "is_private": false,
+      "is_watcher": null,
+      "is_wiki_activated": true,
+      "members": [
+        888691,
+        888692
+      ],
+      "milestones": null,
+      "modified_date": "2025-01-15T12:00:00Z",
+      "name": "Test Project",
+      "owner": {
+        "full_name": "Test User",
+        "id": 888691,
+        "photo": null,
+        "username": "test_user"
+      },
+      "slug": "test-project",
+      "tags": [
+        "test",
+        "snapshot"
+      ],
+      "tags_colors": null,
+      "total_fans": null,
+      "total_milestones": 3,
+      "total_story_points": 100.0,
+      "total_watchers": null,
+      "version": null,
+      "videoconferences": null,
+      "videoconferences_extra_data": null
+    },
+    {
+      "created_date": "2025-01-15T10:00:00Z",
+      "description": "Proyecto de prueba para snapshot testing",
+      "i_am_admin": null,
+      "i_am_member": null,
+      "i_am_owner": null,
+      "id": 123457,
+      "is_backlog_activated": true,
+      "is_fan": null,
+      "is_issues_activated": true,
+      "is_kanban_activated": true,
+      "is_private": false,
+      "is_watcher": null,
+      "is_wiki_activated": true,
+      "members": [
+        888691,
+        888692
+      ],
+      "milestones": null,
+      "modified_date": "2025-01-15T12:00:00Z",
+      "name": "Project 2",
+      "owner": {
+        "full_name": "Test User",
+        "id": 888691,
+        "photo": null,
+        "username": "test_user"
+      },
+      "slug": "test-project",
+      "tags": [
+        "test",
+        "snapshot"
+      ],
+      "tags_colors": null,
+      "total_fans": null,
+      "total_milestones": 3,
+      "total_story_points": 100.0,
+      "total_watchers": null,
+      "version": null,
+      "videoconferences": null,
+      "videoconferences_extra_data": null
+    }
+  ]
+}

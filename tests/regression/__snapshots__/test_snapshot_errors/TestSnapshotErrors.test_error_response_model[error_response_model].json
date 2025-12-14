@@ -1,0 +1,9 @@
+{
+  "details": {
+    "constraint": "required",
+    "field": "name"
+  },
+  "error": "VALIDATION_ERROR",
+  "message": "El campo 'name' es requerido",
+  "success": false
+}

@@ -1,0 +1,4 @@
+{
+  "message": "Token inválido o expirado",
+  "type": "AuthenticationError"
+}

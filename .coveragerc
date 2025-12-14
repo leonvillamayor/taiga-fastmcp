@@ -1,0 +1,83 @@
+# Coverage.py configuration file
+# This file complements the configuration in pyproject.toml
+# For basic settings, see [tool.coverage.*] in pyproject.toml
+
+[run]
+# Primary source directory
+source = src
+
+# Branch coverage measurement
+branch = True
+
+# Parallel mode for concurrent test execution
+parallel = True
+
+# Context tracking for test-specific coverage
+dynamic_context = test_function
+
+# Files to exclude from coverage
+omit =
+    tests/*
+    **/__init__.py
+    # Low-level HTTP infrastructure - mocked in tests
+    src/taiga_client.py
+    # Scripts directory
+    scripts/*
+
+[report]
+# Minimum coverage percentage to pass
+fail_under = 75
+
+# Show missing lines in terminal report
+show_missing = True
+
+# Precision for percentage display
+precision = 2
+
+# Lines to exclude from coverage
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise AssertionError
+    raise NotImplementedError
+    if __name__ == .__main__.:
+    if TYPE_CHECKING:
+    @abstractmethod
+    @abc.abstractmethod
+    # Debug and logging statements
+    if self.debug:
+    if debug:
+    logger\.debug
+
+# Skip fully covered files in report
+skip_covered = False
+
+# Skip empty files
+skip_empty = True
+
+[html]
+# HTML report directory
+directory = htmlcov
+
+# Show which test contexts covered each line
+show_contexts = True
+
+# Report title
+title = Taiga MCP Server Coverage Report
+
+[xml]
+# XML report output file
+output = coverage.xml
+
+[json]
+# JSON report output file
+output = coverage.json
+
+# Include pretty-printed output
+pretty_print = True
+
+[paths]
+# Map paths for combining coverage from different runs
+source =
+    src/
+    */src/

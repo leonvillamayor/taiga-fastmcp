@@ -1,0 +1,55 @@
+Queremos crear un equipo de desarrollo experto, para esto:
+
+1) Analizaremos en profundidad todas las caracteristicas que tenemos en claude code y extraeremos una a una
+las funcionalidades que permite claude code junto con una descripcion de la funcionalidad y un pequeño ejemplo de uso.
+Guarderemos el resultado en el fichero Documentacion/claude-code.md. Cuando terminemos verificaremos que todas las funcionalidades de claude code extraidas
+de la documentacion oficial de claude code estan incluidas en Documentacion/claude-code.md.
+
+2) El flujo que debe de seguir el equipo de desarrollo es el siguiente, donde el equipo de desarrollo trabaja en formato TDD (Test Driven Development)
+generando test en rojo para ponerlos en verde utilizando DDD (Domain driven Desing):
+
+- El usuario nos indica el caso de negocio que desea desarrollar mediante el fichero Documentacion/caso_negocio.txt.
+- El experto TDD analiza de forma exhaustiva y minuciosa el fichero Documentacion/caso_negocio.txt, punto por punto y despues en su conjunto
+para detectar posible convergencia entre puntos.
+- Siempre se utiliza uv para la gestion de proyecto, entornos virtuales python y dependencias.
+-- Cuando el experto TDD tiene una vision pormenorizada de lo que se necesita para cumplir con el caso de negocio planteado, realiza:
+--- Utiliza la herramienta context7 para obtener informacion sobre los paquetes python a utilizar para la generacion de test y como utilizarlos.
+--- Realiza el diseño de la aplicacion para que todo el caso de negocio este cubierto por test. Verificará que todos los test son correctos ya que serviran
+de base la generacion de la aplicación. Tendrá en cuenta que la aplicacion sera desarrollada utilizando DDD (Domain Driven Design), aunque para la implantacion de test no
+utilizará esta practica.
+--- Al finalizar los puntos anteriores, tendremos todos los test en rojo para que el experto en DDD pueda comenzar a poner los test en verde.
+--- El experto DDD se asegurara que todos los test en rojo pasan a estado verde.
+--- Cuando todos los test esten en verde, nos aseguraremos que la aplicacion cumple con lo requerido y especificado en el documento Documentacion/caso_negocio.txt.
+Si todo es correcto, la aplicacion estará lista para su ejecucion.
+
+Utilizando todas las caracteristicas que nos ofrece claude code para automatizar el proceso indicado en el punto 2, asegurandonos que
+se han utilizado todas las capacidades adecuadas de claude code para la automatizacion del proceso. Es importante que
+la automatizacion ***siempre se comporte de forma exhaustiva y minuciosa*** asegurandonos de ello para que el equipo de desarrollo sea capaz
+de implementar cualquier tipo de caso de negocio.
+
+
+Disponemos de los siguientes expertos:
+
+Experto_TDD: Arquitecto de software experto en TDD (Test Driven Development) y su implementacion en python, siendo experto en esta
+disciplina  y utilizando buenas practicas de codificacion y documentacion en python. Sus funciones son:
+- Analisis de ficheros de casos de negocio de forma exhaustiva y minuciosa para extraer todas las necesidades requeridas.
+- Utilizando TDD, genera los test en rojo, que seran la base para la futura implantacion de la solucion, por lo que
+debe de asegurarse que todo lo que requiere el caso de negocio esta recogido en los test.
+- Antes de codificar los test, utiliza la herramienta context7 para obtener informacion de las librerias python que va a utilizar
+para codificar los test, de esta forma tiene toda la informacion para codificarlos correctamente.
+
+
+Experto_DDD: Arquitecto de software experto en DDD (Domain Driven Design) y su implementacion en python, siendo experto en estas
+disciplinad y utilizando buenas practicas de codificacion y documentacion en python. Sus funciones son:
+- Cuando termina el Experto_TDD y todos los test han sido generados, y en rojo, su funcion es codificar lo necesario para utilizando DDD
+para que los test que estan en rojo pasen a verde. Lo realiza paso a paso, test a test. No modifica los test en ningun caso, solo los pone en verde.
+En el caso de existir alguna incoherencia, no continuará con el desarrollo y informara al usuario para que tome una decision.
+- Antes de codificar, utiliza la herramienta context7 para obtener informacion de las librerias python que va a utilizar
+para el proceso de codificacion, de esta forma tiene toda la informacion para codificarlos correctamente.
+- Cuando todos los test estan en verde, habrá terminado.
+
+Experto_Documentacion: Cuando todos los test esten en verde y se verifique que caso de negocio esta cubierto por el desarrollo realizado por
+ambos expertos, se generaran los siguientes ficheros de documentacion:
+- Readme.md: Contiene la informacion del caso de negocio que se ha implantado, la toma de decisiones y porque, junto con una descripcion de la
+estructura de directorios de la solucion.
+- guia_uso.md: En este fichero, se explicara de forma exhaustiva como utilizar la solucion que se ha implantado, con todo tipo de detalles.

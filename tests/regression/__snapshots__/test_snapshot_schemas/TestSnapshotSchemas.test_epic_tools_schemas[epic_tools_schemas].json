@@ -1,0 +1,64 @@
+{
+  "taiga_create_epic": {
+    "description": "Create a new epic",
+    "name": "taiga_create_epic",
+    "parameters": {
+      "auth_token": {
+        "required": true,
+        "type": "string"
+      },
+      "color": {
+        "required": false,
+        "type": "string"
+      },
+      "description": {
+        "required": false,
+        "type": "string"
+      },
+      "project_id": {
+        "required": true,
+        "type": "integer"
+      },
+      "subject": {
+        "required": true,
+        "type": "string"
+      }
+    }
+  },
+  "taiga_get_epic": {
+    "description": "Get details of a specific epic",
+    "name": "taiga_get_epic",
+    "parameters": {
+      "auth_token": {
+        "required": true,
+        "type": "string"
+      },
+      "epic_id": {
+        "required": true,
+        "type": "integer"
+      }
+    }
+  },
+  "taiga_list_epics": {
+    "description": "List epics for a project",
+    "name": "taiga_list_epics",
+    "parameters": {
+      "assigned_to": {
+        "required": false,
+        "type": "integer"
+      },
+      "auth_token": {
+        "required": true,
+        "type": "string"
+      },
+      "project_id": {
+        "required": true,
+        "type": "integer"
+      },
+      "status": {
+        "required": false,
+        "type": "integer"
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+Queremos generar un servidor mcp utilizando el framework fastmcp (https://github.com/jlowin/fastmcp) que sea capaz de realizar cualquier tipo de operacion sobre taiga. Para lograrlo:
+
+Utilizando la documentación recogida en Documentacion/fastmcp.md y Documentacion/taiga.md:
+- Crearemos un servidor mcp, utilizando todas las capacidades necesarias de fastmcp y usandolas de forma efectiva y buenas practicas, que permita los protocolos de transporte (ambos y por separado): stdio y HTTP Transport (Streamable) que ofrezca herramientas
+para interactuar con taiga, utilizando el documento Documentacion/taiga.md donde se explican cada una de sus funcionalidades y que deberan de ser codificadas en forma de herramientas
+que se expondran en el servidor mcp.
+- Se verificará que el servidor mcp ha aplicado correctamente las buenas practicas y funcionalidades de fastmcp y que expone todas las herramientas para trabajar con taiga. Entre otras, el servidor mcp debe
+de exponer y orquestar todas las funcionalidades recogidas en Documentacion/taiga.md mediante herramientas del servidor mcp.
+-- Poder configurar las credenciales para el uso de taiga utilizando el fichero .env de la raiz que contendra:
+  --env TAIGA_API_URL=https://api.taiga.io/api/v1 \
+  --env TAIGA_USERNAME=javier@leonvillamayor.org \
+  --env TAIGA_PASSWORD=#Actv2021 \
+-- Los test utilizaran las credenciales incluidas en .env para interactuar con taiga y verificar que todo funciona correctamente.
+-- En el documento servidor_mcp_doc.md se describira de forma detallada la generacion, arranque, parada, etc del servidor mcp y como utilizarlo.
+-- En el documento cliente_mcp_doc.md se describirá de forma detallada la instalación y configuración del cliente mcp para que pueda ser incluido en claude code.

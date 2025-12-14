@@ -1,0 +1,41 @@
+1) Necesito que Generes un proyecto privado en taiga que se llame SSPP.
+2) Crees una epica en taiga que se llame alvag dentro del proyecto SSPP.
+3) Por cada fichero incluido en Funcional/
+- Debes de obtener una a una las historias de usuario y criterios de aceptacion.
+- Para cada historia de usuario obtenida crear la historia de usuario en taiga con:
+-- la descripcion de la historia de usuario obtenida del fichero.
+-- los criterios de aceptacion de la historia de usuario.
+-- Añadir las tags relevantes en la historia de usuario.
+-- Añadir las tareas a realizar en la historia de usuario, con una descripcion completa para que un usuario sea realizar la tarea con todas las garantias.
+-- Asignar al usuario javier@leonvillamayor.org la historia de usuario.
+-- Enlazar la historia de usuario a la epica alvag.
+
+
+
+
+Antes de continuar, utiliza los documentos Documentacion/fastmcp.md y Documentacion/taiga.md para ampliar el
+servidor mcp actual con las herramienta para hacer crud en epicas, tareas, gestion de miembros, etc, con el fin de que
+podamos completar mediante este servidor mcp lo requerido.
+
+
+uv run python -m taiga_mcp_server --transport http --host 127.0.0.1 --port 8000
+
+
+uv run python -m taiga_mcp_server --transport http --host 127.0.0.1 --port 8000
+
+IN
+claude mcp add --transport http taiga-http http://127.0.0.1:8000/mcp
+
+Tenemos un proyecto que implementa un servidor/cliente mcp, que utiliza uv para gestionar el proyecto y los entornos virtuales,  que permite interactuar con taiga. Necesito
+que  verifiques el codigo del proyecto, fichero a fichero. El objetivo es que el proyecto lea las credenciales
+incluidas en el fichero .env, se conecte y que cada herramienta haga lo que se pide.
+
+Queremos refactorizar el codigo para que se utilicen buenas practicas de programacion python, DDD (Domain Driven Desing), previo uso de TDD (Test Driven Development),
+donde los test estaran en rojo y el codigo debera implementar lo necesario para que los test aparezcan en verde.
+Como queremos implantar herramientas con fastmcp que utilicen uno a uno todos los servicios que ofrece taiga mediante su api, analizaremos el fichero Documentacion/taiga.md de forma
+exhaustiva y minuciosa para extraer todas las funcionalidades que taiga ofrece mediante su api y que deben de ser usables mediante herramientas mediante nuestra implantacion con fastmcp.
+
+Los test deben de ser exhaustivos para garantizar que la logica de negocio cumple con los requerimientos.
+
+Como utilizamos el framework fastmcp, debemos de utilizar todas las facilidades que ofrece este framework para que
+la definición del servidor y cliente mcp siga las buenas practicas.

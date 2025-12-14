@@ -1,0 +1,2 @@
+Necesito que pruebes una a una las herramientas que tienes para taiga. Adicionalmente, necesito que analices
+los logs del servidor mcp. Cuando hayas terminado, muestra un informe con el uso de herramientas y los errores que puedan contener.

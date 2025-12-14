@@ -1,0 +1,95 @@
+{
+  "count": 2,
+  "epics": [
+    {
+      "assigned_to": 888691,
+      "assigned_to_extra_info": {
+        "full_name": "Test User",
+        "id": 888691,
+        "photo": null,
+        "username": "test_user"
+      },
+      "blocked_note": null,
+      "client_requirement": true,
+      "color": "#A5694F",
+      "created_date": "2025-01-10T08:00:00Z",
+      "description": "Descripción de la epic de prueba para snapshot testing",
+      "epics_order": null,
+      "id": 456789,
+      "is_blocked": null,
+      "is_voter": null,
+      "is_watcher": null,
+      "modified_date": "2025-01-15T12:00:00Z",
+      "owner": 888691,
+      "project": 123456,
+      "ref": 5,
+      "status": 1,
+      "status_extra_info": {
+        "color": "#999999",
+        "id": null,
+        "is_closed": false,
+        "name": "New",
+        "slug": null
+      },
+      "subject": "Epic de Prueba",
+      "tags": [
+        "epic",
+        "test"
+      ],
+      "team_requirement": false,
+      "total_voters": null,
+      "total_watchers": null,
+      "user_stories_counts": {
+        "progress": 60.0,
+        "total": 5
+      },
+      "version": 1,
+      "watchers": null
+    },
+    {
+      "assigned_to": 888691,
+      "assigned_to_extra_info": {
+        "full_name": "Test User",
+        "id": 888691,
+        "photo": null,
+        "username": "test_user"
+      },
+      "blocked_note": null,
+      "client_requirement": true,
+      "color": "#A5694F",
+      "created_date": "2025-01-10T08:00:00Z",
+      "description": "Descripción de la epic de prueba para snapshot testing",
+      "epics_order": null,
+      "id": 456790,
+      "is_blocked": null,
+      "is_voter": null,
+      "is_watcher": null,
+      "modified_date": "2025-01-15T12:00:00Z",
+      "owner": 888691,
+      "project": 123456,
+      "ref": 6,
+      "status": 1,
+      "status_extra_info": {
+        "color": "#999999",
+        "id": null,
+        "is_closed": false,
+        "name": "New",
+        "slug": null
+      },
+      "subject": "Epic 2",
+      "tags": [
+        "epic",
+        "test"
+      ],
+      "team_requirement": false,
+      "total_voters": null,
+      "total_watchers": null,
+      "user_stories_counts": {
+        "progress": 60.0,
+        "total": 5
+      },
+      "version": 1,
+      "watchers": null
+    }
+  ]
+}
