@@ -47,6 +47,7 @@ class ProjectResponse(BaseResponse):
         is_kanban_activated: Si el kanban está activo.
         is_wiki_activated: Si la wiki está activa.
         is_issues_activated: Si los issues están activos.
+        is_epics_activated: Si los epics están activos.
         total_milestones: Total de milestones.
         total_story_points: Total de story points.
         tags: Lista de tags del proyecto.
@@ -67,6 +68,7 @@ class ProjectResponse(BaseResponse):
     is_kanban_activated: bool | None = None
     is_wiki_activated: bool | None = None
     is_issues_activated: bool | None = None
+    is_epics_activated: bool | None = None
     total_milestones: int | None = None
     total_story_points: float | None = None
     tags: list[str] | None = None
@@ -219,10 +221,10 @@ class ProjectIssuesStatsResponse(BaseResponse):
     total_issues: int | None = None
     opened_issues: int | None = None
     closed_issues: int | None = None
-    issues_per_type: dict[str, int] | None = None
-    issues_per_status: dict[str, int] | None = None
-    issues_per_priority: dict[str, int] | None = None
-    issues_per_severity: dict[str, int] | None = None
-    issues_per_assigned_to: dict[str, int] | None = None
-    last_four_weeks_days: dict[str, int] | None = None
+    issues_per_type: dict[str, Any] | None = None
+    issues_per_status: dict[str, Any] | None = None
+    issues_per_priority: dict[str, Any] | None = None
+    issues_per_severity: dict[str, Any] | None = None
+    issues_per_assigned_to: dict[str, Any] | None = None
+    last_four_weeks_days: dict[str, Any] | None = None
     created_vs_closed: list[dict[str, Any]] | None = None

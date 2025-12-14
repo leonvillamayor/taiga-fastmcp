@@ -213,12 +213,21 @@ class IssueTools:
                     k: v
                     for k, v in locals().items()
                     if k
-                    not in ["self", "auth_token", "project_id", "milestone_id", "validation_data"]
+                    not in [
+                        "self",
+                        "auth_token",
+                        "project_id",
+                        "milestone_id",
+                        "validation_data",
+                        "type",  # Excluir 'type' para renombrarlo
+                    ]
                     and v is not None
                 }
                 data["project"] = project_id  # API expects 'project'
                 if milestone_id is not None:
                     data["milestone"] = milestone_id  # API expects 'milestone'
+                if type is not None:
+                    data["issue_type"] = type  # Client expects 'issue_type', not 'type'
 
                 async with TaigaAPIClient(self.config) as client:
                     client.auth_token = auth_token

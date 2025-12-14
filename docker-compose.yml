@@ -10,16 +10,17 @@
 
 services:
   # =============================================================================
-  # Main MCP Server Service (Default)
+  # Base MCP Server Service (used as template, never runs directly)
   # =============================================================================
-  taiga-mcp-server:
+  taiga-mcp-server-base:
     build:
       context: .
       dockerfile: Dockerfile
       args:
         - BUILDKIT_INLINE_CACHE=1
     image: taiga-mcp-server:latest
-    container_name: taiga-mcp-server
+    profiles:
+      - donotstart
 
     # Load environment from .env file
     env_file:
@@ -42,7 +43,7 @@ services:
 
     # Health check configuration
     healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/mcp', timeout=5)"]
+      test: ["CMD", "python", "-c", "import urllib.request; req = urllib.request.Request('http://localhost:8000/mcp', headers={'Accept': 'application/json, text/event-stream'}, method='POST'); urllib.request.urlopen(req, timeout=5)"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -76,11 +77,21 @@ services:
       - taiga-mcp-network
 
   # =============================================================================
+  # Default Service (docker compose up)
+  # =============================================================================
+  taiga-mcp-server:
+    extends:
+      service: taiga-mcp-server-base
+    container_name: taiga-mcp-server
+    profiles:
+      - default
+
+  # =============================================================================
   # Production Profile
   # =============================================================================
   taiga-mcp-server-prod:
     extends:
-      service: taiga-mcp-server
+      service: taiga-mcp-server-base
     container_name: taiga-mcp-server-prod
     profiles:
       - prod
@@ -123,7 +134,7 @@ services:
   # =============================================================================
   taiga-mcp-server-dev:
     extends:
-      service: taiga-mcp-server
+      service: taiga-mcp-server-base
     container_name: taiga-mcp-server-dev
     profiles:
       - dev
