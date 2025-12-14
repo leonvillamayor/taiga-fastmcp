@@ -209,3 +209,7 @@ El proyecto usa GitHub Actions para CI:
 ## Licencia
 
 Este proyecto esta licenciado bajo la GNU General Public License v3.0 - ver [LICENSE](LICENSE) para detalles.
+
+## Autor
+
+**Javier León** - [javier@leonvillamayor.org](mailto:javier@leonvillamayor.org)
