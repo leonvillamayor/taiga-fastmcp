@@ -162,13 +162,15 @@ class TestTaigaConfig:
 
     def test_has_credentials_with_token(self) -> None:
         """Verifica detección de credenciales con token."""
-        config = TaigaConfig(auth_token="test_token")
-        assert config.has_credentials() is True
+        with patch.dict(os.environ, {"TAIGA_AUTH_TOKEN": "test_token"}):
+            config = TaigaConfig(_env_file=None)
+            assert config.has_credentials() is True
 
     def test_has_credentials_with_username_password(self) -> None:
         """Verifica detección de credenciales con usuario y contraseña."""
-        config = TaigaConfig(username="user", password="pass")
-        assert config.has_credentials() is True
+        with patch.dict(os.environ, {"TAIGA_USERNAME": "user", "TAIGA_PASSWORD": "pass"}):
+            config = TaigaConfig(_env_file=None)
+            assert config.has_credentials() is True
 
     @patch.dict(os.environ, {}, clear=True)
     def test_has_credentials_without_credentials(self) -> None:
@@ -190,13 +192,15 @@ class TestTaigaConfig:
 
     def test_validate_for_authentication_with_token(self) -> None:
         """Verifica validación exitosa con token."""
-        config = TaigaConfig(auth_token="test_token")
-        config.validate_for_authentication()  # No debe lanzar excepción
+        with patch.dict(os.environ, {"TAIGA_AUTH_TOKEN": "test_token"}):
+            config = TaigaConfig(_env_file=None)
+            config.validate_for_authentication()  # No debe lanzar excepción
 
     def test_validate_for_authentication_with_credentials(self) -> None:
         """Verifica validación exitosa con usuario y contraseña."""
-        config = TaigaConfig(username="user", password="pass")
-        config.validate_for_authentication()  # No debe lanzar excepción
+        with patch.dict(os.environ, {"TAIGA_USERNAME": "user", "TAIGA_PASSWORD": "pass"}):
+            config = TaigaConfig(_env_file=None)
+            config.validate_for_authentication()  # No debe lanzar excepción
 
     @patch.dict(os.environ, {}, clear=True)
     def test_validate_for_authentication_without_credentials(self) -> None:
