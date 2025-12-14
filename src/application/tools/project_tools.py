@@ -230,6 +230,7 @@ class ProjectTools:
             is_issues_activated: bool | None = True,
             is_kanban_activated: bool | None = False,
             is_wiki_activated: bool | None = False,
+            is_epics_activated: bool | None = False,
             videoconferences: str | None = None,
             videoconferences_extra_data: str | None = None,
             total_milestones: int | None = None,
@@ -251,6 +252,7 @@ class ProjectTools:
                 is_issues_activated: Activar módulo de issues (default: True)
                 is_kanban_activated: Activar módulo kanban (default: False)
                 is_wiki_activated: Activar módulo wiki (default: False)
+                is_epics_activated: Activar módulo epics (default: False)
                 videoconferences: Tipo de videoconferencia ("whereby-com", "jitsi", etc.)
                 videoconferences_extra_data: Datos adicionales para videoconferencia
                 total_milestones: Número total de milestones planificados
@@ -268,6 +270,7 @@ class ProjectTools:
                 - is_issues_activated: Si issues está activo
                 - is_kanban_activated: Si kanban está activo
                 - is_wiki_activated: Si wiki está activo
+                - is_epics_activated: Si epics está activo
                 - videoconferences: Configuración de videoconferencia
                 - tags: Lista de etiquetas
                 - message: Mensaje de confirmación
@@ -317,6 +320,8 @@ class ProjectTools:
                     project_data["is_kanban_activated"] = is_kanban_activated
                 if is_wiki_activated is not None:
                     project_data["is_wiki_activated"] = is_wiki_activated
+                if is_epics_activated is not None:
+                    project_data["is_epics_activated"] = is_epics_activated
                 if videoconferences:
                     project_data["videoconferences"] = videoconferences
                 if videoconferences_extra_data:
@@ -492,6 +497,7 @@ class ProjectTools:
             is_issues_activated: bool | None = None,
             is_kanban_activated: bool | None = None,
             is_wiki_activated: bool | None = None,
+            is_epics_activated: bool | None = None,
             version: int | None = None,
         ) -> dict[str, Any]:
             """
@@ -510,6 +516,7 @@ class ProjectTools:
                 is_issues_activated: Activar/desactivar issues (opcional)
                 is_kanban_activated: Activar/desactivar kanban (opcional)
                 is_wiki_activated: Activar/desactivar wiki (opcional)
+                is_epics_activated: Activar/desactivar epics (opcional)
                 version: Versión actual para control de concurrencia (opcional)
 
             Returns:
@@ -523,6 +530,7 @@ class ProjectTools:
                 - is_issues_activated: Estado de issues
                 - is_kanban_activated: Estado de kanban
                 - is_wiki_activated: Estado de wiki
+                - is_epics_activated: Estado de epics
                 - version: Nueva versión del proyecto
                 - message: Mensaje de confirmación
 
@@ -569,6 +577,8 @@ class ProjectTools:
                     update_data["is_kanban_activated"] = is_kanban_activated
                 if is_wiki_activated is not None:
                     update_data["is_wiki_activated"] = is_wiki_activated
+                if is_epics_activated is not None:
+                    update_data["is_epics_activated"] = is_epics_activated
                 if version is not None:
                     update_data["version"] = version
 

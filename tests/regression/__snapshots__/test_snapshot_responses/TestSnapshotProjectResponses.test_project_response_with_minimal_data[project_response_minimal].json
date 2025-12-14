@@ -6,6 +6,7 @@
   "i_am_owner": null,
   "id": 1,
   "is_backlog_activated": null,
+  "is_epics_activated": null,
   "is_fan": null,
   "is_issues_activated": null,
   "is_kanban_activated": null,
