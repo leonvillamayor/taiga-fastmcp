@@ -11,19 +11,19 @@ from src.infrastructure.repositories.base_repository_impl import BaseRepositoryI
 from src.taiga_client import TaigaAPIClient
 
 
-class TestEntity(BaseEntity):
-    """Test entity for repository tests."""
+class SampleEntity(BaseEntity):
+    """Sample entity for repository tests."""
 
     name: str = ""
     description: str | None = None
 
 
-class TestBaseRepositoryImpl(BaseRepositoryImpl[TestEntity]):
-    """Test implementation of BaseRepositoryImpl."""
+class ConcreteBaseRepositoryImpl(BaseRepositoryImpl[SampleEntity]):
+    """Concrete implementation of BaseRepositoryImpl for testing."""
 
     def __init__(self, client: TaigaAPIClient) -> None:
         """Initialize test repository."""
-        super().__init__(client=client, entity_class=TestEntity, endpoint="test_entities")
+        super().__init__(client=client, entity_class=SampleEntity, endpoint="test_entities")
 
 
 @pytest.fixture
@@ -38,26 +38,26 @@ def mock_client() -> MagicMock:
 
 
 @pytest.fixture
-def repository(mock_client: MagicMock) -> TestBaseRepositoryImpl:
+def repository(mock_client: MagicMock) -> ConcreteBaseRepositoryImpl:
     """Create a test repository instance."""
-    return TestBaseRepositoryImpl(client=mock_client)
+    return ConcreteBaseRepositoryImpl(client=mock_client)
 
 
 class TestToEntity:
     """Tests for _to_entity method."""
 
-    def test_to_entity_converts_dict_to_entity(self, repository: TestBaseRepositoryImpl) -> None:
+    def test_to_entity_converts_dict_to_entity(self, repository: ConcreteBaseRepositoryImpl) -> None:
         """Test that _to_entity correctly converts a dictionary to an entity."""
         data = {"id": 1, "name": "Test", "description": "A test entity", "version": 1}
         entity = repository._to_entity(data)
 
-        assert isinstance(entity, TestEntity)
+        assert isinstance(entity, SampleEntity)
         assert entity.id == 1
         assert entity.name == "Test"
         assert entity.description == "A test entity"
         assert entity.version == 1
 
-    def test_to_entity_handles_minimal_data(self, repository: TestBaseRepositoryImpl) -> None:
+    def test_to_entity_handles_minimal_data(self, repository: ConcreteBaseRepositoryImpl) -> None:
         """Test that _to_entity handles minimal required data."""
         data: dict[str, Any] = {"id": None, "version": 1}
         entity = repository._to_entity(data)
@@ -70,9 +70,9 @@ class TestToEntity:
 class TestToDict:
     """Tests for _to_dict method."""
 
-    def test_to_dict_converts_entity_to_dict(self, repository: TestBaseRepositoryImpl) -> None:
+    def test_to_dict_converts_entity_to_dict(self, repository: ConcreteBaseRepositoryImpl) -> None:
         """Test that _to_dict correctly converts an entity to a dictionary."""
-        entity = TestEntity(id=1, name="Test", description="A test", version=2)
+        entity = SampleEntity(id=1, name="Test", description="A test", version=2)
         data = repository._to_dict(entity)
 
         assert data["id"] == 1
@@ -80,16 +80,16 @@ class TestToDict:
         assert data["description"] == "A test"
         assert data["version"] == 2
 
-    def test_to_dict_excludes_none_by_default(self, repository: TestBaseRepositoryImpl) -> None:
+    def test_to_dict_excludes_none_by_default(self, repository: ConcreteBaseRepositoryImpl) -> None:
         """Test that _to_dict excludes None values by default."""
-        entity = TestEntity(id=1, name="Test", description=None, version=1)
+        entity = SampleEntity(id=1, name="Test", description=None, version=1)
         data = repository._to_dict(entity)
 
         assert "description" not in data
 
-    def test_to_dict_includes_none_when_specified(self, repository: TestBaseRepositoryImpl) -> None:
+    def test_to_dict_includes_none_when_specified(self, repository: ConcreteBaseRepositoryImpl) -> None:
         """Test that _to_dict includes None values when exclude_none is False."""
-        entity = TestEntity(id=1, name="Test", description=None, version=1)
+        entity = SampleEntity(id=1, name="Test", description=None, version=1)
         data = repository._to_dict(entity, exclude_none=False)
 
         assert "description" in data
@@ -101,7 +101,7 @@ class TestGetById:
 
     @pytest.mark.asyncio
     async def test_get_by_id_returns_entity_when_found(
-        self, repository: TestBaseRepositoryImpl, mock_client: MagicMock
+        self, repository: ConcreteBaseRepositoryImpl, mock_client: MagicMock
     ) -> None:
         """Test that get_by_id returns an entity when found."""
         mock_client.get.return_value = {
@@ -120,7 +120,7 @@ class TestGetById:
 
     @pytest.mark.asyncio
     async def test_get_by_id_returns_none_when_not_found(
-        self, repository: TestBaseRepositoryImpl, mock_client: MagicMock
+        self, repository: ConcreteBaseRepositoryImpl, mock_client: MagicMock
     ) -> None:
         """Test that get_by_id returns None when entity is not found."""
         mock_client.get.side_effect = Exception("Not found")
@@ -131,7 +131,7 @@ class TestGetById:
 
     @pytest.mark.asyncio
     async def test_get_by_id_returns_none_for_empty_response(
-        self, repository: TestBaseRepositoryImpl, mock_client: MagicMock
+        self, repository: ConcreteBaseRepositoryImpl, mock_client: MagicMock
     ) -> None:
         """Test that get_by_id returns None for empty response."""
         mock_client.get.return_value = None
@@ -142,7 +142,7 @@ class TestGetById:
 
     @pytest.mark.asyncio
     async def test_get_by_id_returns_none_for_list_response(
-        self, repository: TestBaseRepositoryImpl, mock_client: MagicMock
+        self, repository: ConcreteBaseRepositoryImpl, mock_client: MagicMock
     ) -> None:
         """Test that get_by_id returns None when response is a list (not dict)."""
         mock_client.get.return_value = [{"id": 1, "name": "Test"}]
@@ -157,7 +157,7 @@ class TestList:
 
     @pytest.mark.asyncio
     async def test_list_returns_entities(
-        self, repository: TestBaseRepositoryImpl, mock_client: MagicMock
+        self, repository: ConcreteBaseRepositoryImpl, mock_client: MagicMock
     ) -> None:
         """Test that list returns a list of entities."""
         mock_client.get.return_value = [
@@ -174,7 +174,7 @@ class TestList:
 
     @pytest.mark.asyncio
     async def test_list_with_filters(
-        self, repository: TestBaseRepositoryImpl, mock_client: MagicMock
+        self, repository: ConcreteBaseRepositoryImpl, mock_client: MagicMock
     ) -> None:
         """Test that list applies filters correctly."""
         mock_client.get.return_value = [{"id": 1, "name": "Filtered", "version": 1}]
@@ -186,7 +186,7 @@ class TestList:
 
     @pytest.mark.asyncio
     async def test_list_with_pagination(
-        self, repository: TestBaseRepositoryImpl, mock_client: MagicMock
+        self, repository: ConcreteBaseRepositoryImpl, mock_client: MagicMock
     ) -> None:
         """Test that list applies pagination correctly."""
         mock_client.get.return_value = [{"id": 3, "name": "Page 2", "version": 1}]
@@ -198,7 +198,7 @@ class TestList:
 
     @pytest.mark.asyncio
     async def test_list_returns_empty_on_error(
-        self, repository: TestBaseRepositoryImpl, mock_client: MagicMock
+        self, repository: ConcreteBaseRepositoryImpl, mock_client: MagicMock
     ) -> None:
         """Test that list returns an empty list on error."""
         mock_client.get.side_effect = Exception("API error")
@@ -209,7 +209,7 @@ class TestList:
 
     @pytest.mark.asyncio
     async def test_list_returns_empty_for_non_list_response(
-        self, repository: TestBaseRepositoryImpl, mock_client: MagicMock
+        self, repository: ConcreteBaseRepositoryImpl, mock_client: MagicMock
     ) -> None:
         """Test that list returns empty for non-list response."""
         mock_client.get.return_value = {"error": "unexpected"}
@@ -224,10 +224,10 @@ class TestCreate:
 
     @pytest.mark.asyncio
     async def test_create_returns_created_entity(
-        self, repository: TestBaseRepositoryImpl, mock_client: MagicMock
+        self, repository: ConcreteBaseRepositoryImpl, mock_client: MagicMock
     ) -> None:
         """Test that create returns the created entity with assigned ID."""
-        new_entity = TestEntity(name="New Entity", description="New description")
+        new_entity = SampleEntity(name="New Entity", description="New description")
         mock_client.post.return_value = {
             "id": 42,
             "name": "New Entity",
@@ -243,10 +243,10 @@ class TestCreate:
 
     @pytest.mark.asyncio
     async def test_create_removes_id_and_version_from_request(
-        self, repository: TestBaseRepositoryImpl, mock_client: MagicMock
+        self, repository: ConcreteBaseRepositoryImpl, mock_client: MagicMock
     ) -> None:
         """Test that create removes id and version from request data."""
-        new_entity = TestEntity(id=100, name="Test", version=5)
+        new_entity = SampleEntity(id=100, name="Test", version=5)
         mock_client.post.return_value = {"id": 1, "name": "Test", "version": 1}
 
         await repository.create(new_entity)
@@ -262,10 +262,10 @@ class TestUpdate:
 
     @pytest.mark.asyncio
     async def test_update_returns_updated_entity(
-        self, repository: TestBaseRepositoryImpl, mock_client: MagicMock
+        self, repository: ConcreteBaseRepositoryImpl, mock_client: MagicMock
     ) -> None:
         """Test that update returns the updated entity."""
-        entity = TestEntity(id=1, name="Updated Name", version=2)
+        entity = SampleEntity(id=1, name="Updated Name", version=2)
         mock_client.patch.return_value = {
             "id": 1,
             "name": "Updated Name",
@@ -280,19 +280,19 @@ class TestUpdate:
         mock_client.patch.assert_called_once()
 
     @pytest.mark.asyncio
-    async def test_update_raises_error_without_id(self, repository: TestBaseRepositoryImpl) -> None:
+    async def test_update_raises_error_without_id(self, repository: ConcreteBaseRepositoryImpl) -> None:
         """Test that update raises ValueError when entity has no ID."""
-        entity = TestEntity(name="No ID", version=1)
+        entity = SampleEntity(name="No ID", version=1)
 
         with pytest.raises(ValueError, match="Entity must have an ID"):
             await repository.update(entity)
 
     @pytest.mark.asyncio
     async def test_update_raises_not_found_error(
-        self, repository: TestBaseRepositoryImpl, mock_client: MagicMock
+        self, repository: ConcreteBaseRepositoryImpl, mock_client: MagicMock
     ) -> None:
         """Test that update raises ResourceNotFoundError for 404."""
-        entity = TestEntity(id=999, name="Missing", version=1)
+        entity = SampleEntity(id=999, name="Missing", version=1)
         mock_client.patch.side_effect = Exception("404 Not Found")
 
         with pytest.raises(ResourceNotFoundError):
@@ -300,10 +300,10 @@ class TestUpdate:
 
     @pytest.mark.asyncio
     async def test_update_raises_concurrency_error(
-        self, repository: TestBaseRepositoryImpl, mock_client: MagicMock
+        self, repository: ConcreteBaseRepositoryImpl, mock_client: MagicMock
     ) -> None:
         """Test that update raises ConcurrencyError for version conflict."""
-        entity = TestEntity(id=1, name="Conflict", version=1)
+        entity = SampleEntity(id=1, name="Conflict", version=1)
         mock_client.patch.side_effect = Exception("409 Conflict")
 
         with pytest.raises(ConcurrencyError):
@@ -315,7 +315,7 @@ class TestDelete:
 
     @pytest.mark.asyncio
     async def test_delete_returns_true_on_success(
-        self, repository: TestBaseRepositoryImpl, mock_client: MagicMock
+        self, repository: ConcreteBaseRepositoryImpl, mock_client: MagicMock
     ) -> None:
         """Test that delete returns True on successful deletion."""
         mock_client.delete.return_value = None
@@ -327,7 +327,7 @@ class TestDelete:
 
     @pytest.mark.asyncio
     async def test_delete_returns_false_on_error(
-        self, repository: TestBaseRepositoryImpl, mock_client: MagicMock
+        self, repository: ConcreteBaseRepositoryImpl, mock_client: MagicMock
     ) -> None:
         """Test that delete returns False on error."""
         mock_client.delete.side_effect = Exception("Delete failed")
@@ -342,7 +342,7 @@ class TestExists:
 
     @pytest.mark.asyncio
     async def test_exists_returns_true_when_found(
-        self, repository: TestBaseRepositoryImpl, mock_client: MagicMock
+        self, repository: ConcreteBaseRepositoryImpl, mock_client: MagicMock
     ) -> None:
         """Test that exists returns True when entity is found."""
         mock_client.get.return_value = {"id": 1, "name": "Exists", "version": 1}
@@ -353,7 +353,7 @@ class TestExists:
 
     @pytest.mark.asyncio
     async def test_exists_returns_false_when_not_found(
-        self, repository: TestBaseRepositoryImpl, mock_client: MagicMock
+        self, repository: ConcreteBaseRepositoryImpl, mock_client: MagicMock
     ) -> None:
         """Test that exists returns False when entity is not found."""
         mock_client.get.side_effect = Exception("Not found")
@@ -368,7 +368,7 @@ class TestCount:
 
     @pytest.mark.asyncio
     async def test_count_returns_number_of_entities(
-        self, repository: TestBaseRepositoryImpl, mock_client: MagicMock
+        self, repository: ConcreteBaseRepositoryImpl, mock_client: MagicMock
     ) -> None:
         """Test that count returns the number of matching entities."""
         mock_client.get.return_value = [
@@ -383,7 +383,7 @@ class TestCount:
 
     @pytest.mark.asyncio
     async def test_count_with_filters(
-        self, repository: TestBaseRepositoryImpl, mock_client: MagicMock
+        self, repository: ConcreteBaseRepositoryImpl, mock_client: MagicMock
     ) -> None:
         """Test that count applies filters correctly."""
         mock_client.get.return_value = [{"id": 1, "name": "Filtered", "version": 1}]
@@ -398,10 +398,10 @@ class TestGetOrCreate:
 
     @pytest.mark.asyncio
     async def test_get_or_create_returns_existing_by_id(
-        self, repository: TestBaseRepositoryImpl, mock_client: MagicMock
+        self, repository: ConcreteBaseRepositoryImpl, mock_client: MagicMock
     ) -> None:
         """Test that get_or_create returns existing entity when found by ID."""
-        entity = TestEntity(id=1, name="Existing", version=1)
+        entity = SampleEntity(id=1, name="Existing", version=1)
         mock_client.get.return_value = {
             "id": 1,
             "name": "Existing",
@@ -415,10 +415,10 @@ class TestGetOrCreate:
 
     @pytest.mark.asyncio
     async def test_get_or_create_creates_new_entity(
-        self, repository: TestBaseRepositoryImpl, mock_client: MagicMock
+        self, repository: ConcreteBaseRepositoryImpl, mock_client: MagicMock
     ) -> None:
         """Test that get_or_create creates new entity when not found."""
-        entity = TestEntity(name="New Entity", version=1)
+        entity = SampleEntity(name="New Entity", version=1)
         mock_client.get.return_value = []  # List endpoint returns empty
         mock_client.post.return_value = {
             "id": 42,
@@ -433,10 +433,10 @@ class TestGetOrCreate:
 
     @pytest.mark.asyncio
     async def test_get_or_create_uses_lookup_fields(
-        self, repository: TestBaseRepositoryImpl, mock_client: MagicMock
+        self, repository: ConcreteBaseRepositoryImpl, mock_client: MagicMock
     ) -> None:
         """Test that get_or_create uses lookup_fields for filtering."""
-        entity = TestEntity(name="Lookup Test", version=1)
+        entity = SampleEntity(name="Lookup Test", version=1)
         mock_client.get.return_value = [{"id": 5, "name": "Lookup Test", "version": 1}]
 
         result, created = await repository.get_or_create(entity, lookup_fields=["name"])

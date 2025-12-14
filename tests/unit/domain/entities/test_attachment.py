@@ -4,7 +4,7 @@ Implementa los tests para RF-022 a RF-026.
 TODOS LOS TESTS DEBEN FALLAR (ROJO) - NO HAY IMPLEMENTACIÓN AÚN.
 """
 
-from datetime import datetime
+from datetime import UTC, datetime
 
 import pytest
 
@@ -328,7 +328,7 @@ class TestAttachmentEntity:
         attachment = Attachment(name="file.pdf", project=309804, object_id=456789)
 
         # Act
-        now = datetime.utcnow()
+        now = datetime.now(UTC)
         attachment.set_created_date(now)
 
         # Assert
@@ -452,9 +452,9 @@ class TestAttachmentEntity:
         assert attachment.sha1 == "abc123"
 
         # Test modified_date setter
-        from datetime import datetime
+        from datetime import UTC, datetime
 
-        now = datetime.utcnow()
+        now = datetime.now(UTC)
         attachment.modified_date = now
         assert attachment.modified_date == now
 
