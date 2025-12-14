@@ -4,7 +4,7 @@ Implementa los tests para RF-001 a RF-007 y RNF-001, RNF-004.
 TODOS LOS TESTS DEBEN FALLAR (ROJO) - NO HAY IMPLEMENTACIÓN AÚN.
 """
 
-from datetime import datetime
+from datetime import UTC, datetime
 
 import pytest
 
@@ -284,7 +284,7 @@ class TestEpicEntity:
         assert epic.modified_date is None
 
         # Simulate persistence
-        now = datetime.utcnow()
+        now = datetime.now(UTC)
         epic.set_created_date(now)
         epic.set_modified_date(now)
 
@@ -292,7 +292,7 @@ class TestEpicEntity:
         assert epic.modified_date == now
 
         # Update should change modified_date
-        later = datetime.utcnow()
+        later = datetime.now(UTC)
         epic.set_modified_date(later)
         assert epic.modified_date == later
         assert epic.modified_date > epic.created_date
