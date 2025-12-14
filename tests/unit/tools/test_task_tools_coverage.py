@@ -3,9 +3,9 @@ Tests adicionales para cobertura de task_tools.py.
 Cubre herramientas registradas, ValidationError handlers, exception paths y branches.
 """
 
-import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 
+import pytest
 from fastmcp import FastMCP
 from fastmcp.exceptions import ToolError
 

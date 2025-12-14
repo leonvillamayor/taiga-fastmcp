@@ -738,9 +738,8 @@ class TestDirectMethodsExceptionHandlers:
         with patch(
             "src.application.tools.issue_tools.validate_input",
             side_effect=ValidationError("Validation failed"),
-        ):
-            with pytest.raises(ValidationError, match="Validation failed"):
-                await issue_tools_instance.update_issue(issue_id=456, subject="")
+        ), pytest.raises(ValidationError, match="Validation failed"):
+            await issue_tools_instance.update_issue(issue_id=456, subject="")
 
     @pytest.mark.asyncio
     async def test_update_issue_direct_exception(self, issue_tools_instance):
@@ -760,9 +759,8 @@ class TestDirectMethodsExceptionHandlers:
         with patch(
             "src.application.tools.issue_tools.validate_input",
             side_effect=ValidationError("Full validation failed"),
-        ):
-            with pytest.raises(ValidationError, match="Full validation failed"):
-                await issue_tools_instance.update_issue_full(issue_id=456, subject="")
+        ), pytest.raises(ValidationError, match="Full validation failed"):
+            await issue_tools_instance.update_issue_full(issue_id=456, subject="")
 
     @pytest.mark.asyncio
     async def test_update_issue_full_direct_exception(self, issue_tools_instance):

@@ -3,17 +3,18 @@ Tests adicionales para mejorar la cobertura de epic_tools.py.
 Enfocados en: manejo de errores, edge cases, y rutas de código no cubiertas.
 """
 
+from unittest.mock import AsyncMock, MagicMock, patch
+
 import pytest
-from unittest.mock import AsyncMock, patch, MagicMock
 from fastmcp import FastMCP
 from fastmcp.exceptions import ToolError
 
 from src.application.tools.epic_tools import EpicTools
 from src.domain.exceptions import (
     AuthenticationError,
+    ConcurrencyError,
     PermissionDeniedError,
     ResourceNotFoundError,
-    ConcurrencyError,
     ValidationError,
 )
 
@@ -134,7 +135,7 @@ class TestListEpicsErrorHandling:
             with patch.object(AutoPaginator, "paginate", return_value=[
                 {"id": 1, "ref": 1, "subject": "Epic 1", "project": 123, "status": 2, "assigned_to": 456}
             ]) as mock_paginate:
-                result = await epic_tools_instance.list_epics(
+                await epic_tools_instance.list_epics(
                     auth_token="token",
                     project=123,
                     status=2,
@@ -2207,7 +2208,7 @@ class TestMCPToolFunctionsWithOptionalParams:
             mock_client.__aexit__ = AsyncMock(return_value=None)
             mock_cls.return_value = mock_client
 
-            tools = EpicTools(mcp)
+            EpicTools(mcp)
 
             # Mock pagination
             from src.infrastructure.pagination import AutoPaginator
@@ -2245,7 +2246,7 @@ class TestMCPToolFunctionsWithOptionalParams:
             })
             mock_cls.return_value = mock_client
 
-            tools = EpicTools(mcp)
+            EpicTools(mcp)
 
             # Acceder al tool registrado
             tool_func = None
@@ -2281,7 +2282,7 @@ class TestMCPToolFunctionsWithOptionalParams:
             })
             mock_cls.return_value = mock_client
 
-            tools = EpicTools(mcp)
+            EpicTools(mcp)
 
             # Acceder al tool registrado
             tool_func = None
@@ -2317,7 +2318,7 @@ class TestMCPToolFunctionsWithOptionalParams:
             })
             mock_cls.return_value = mock_client
 
-            tools = EpicTools(mcp)
+            EpicTools(mcp)
 
             # Acceder al tool registrado
             tool_func = None

@@ -711,6 +711,7 @@ class TestMembershipToolsExceptionHandlers:
     async def test_create_membership_already_member(self) -> None:
         """Verifica create_membership cuando el usuario ya es miembro."""
         from unittest.mock import AsyncMock, patch
+
         from src.domain.exceptions import TaigaAPIError
 
         mcp = FastMCP("Test")
@@ -727,11 +728,10 @@ class TestMembershipToolsExceptionHandlers:
 
         with patch(
             "src.application.tools.membership_tools.TaigaAPIClient", return_value=mock_client
-        ):
-            with pytest.raises(ToolError, match="already a member"):
-                await membership_tools.create_membership(
-                    auth_token="token", project_id=123, role=5, username="existing_user"
-                )
+        ), pytest.raises(ToolError, match="already a member"):
+            await membership_tools.create_membership(
+                auth_token="token", project_id=123, role=5, username="existing_user"
+            )
 
     @pytest.mark.unit
     @pytest.mark.memberships

@@ -73,11 +73,10 @@ class TestListWebhooksExceptionHandlers:
 
         with patch(
             "src.application.tools.webhook_tools.AutoPaginator", return_value=paginator_mock
-        ):
-            with pytest.raises(ToolError, match="Authentication failed"):
-                await webhook_tools_instance.list_webhooks(
-                    auth_token="invalid_token", project_id=123
-                )
+        ), pytest.raises(ToolError, match="Authentication failed"):
+            await webhook_tools_instance.list_webhooks(
+                auth_token="invalid_token", project_id=123
+            )
 
     @pytest.mark.unit
     @pytest.mark.webhooks
@@ -89,9 +88,8 @@ class TestListWebhooksExceptionHandlers:
 
         with patch(
             "src.application.tools.webhook_tools.AutoPaginator", return_value=paginator_mock
-        ):
-            with pytest.raises(ToolError, match="Failed to list webhooks"):
-                await webhook_tools_instance.list_webhooks(auth_token="token", project_id=123)
+        ), pytest.raises(ToolError, match="Failed to list webhooks"):
+            await webhook_tools_instance.list_webhooks(auth_token="token", project_id=123)
 
     @pytest.mark.unit
     @pytest.mark.webhooks
@@ -103,9 +101,8 @@ class TestListWebhooksExceptionHandlers:
 
         with patch(
             "src.application.tools.webhook_tools.AutoPaginator", return_value=paginator_mock
-        ):
-            with pytest.raises(ToolError, match="Unexpected error"):
-                await webhook_tools_instance.list_webhooks(auth_token="token", project_id=123)
+        ), pytest.raises(ToolError, match="Unexpected error"):
+            await webhook_tools_instance.list_webhooks(auth_token="token", project_id=123)
 
     @pytest.mark.unit
     @pytest.mark.webhooks
@@ -169,15 +166,14 @@ class TestCreateWebhookExceptionHandlers:
         with patch(
             "src.application.tools.webhook_tools.validate_input",
             side_effect=ValidationError("Invalid webhook data"),
-        ):
-            with pytest.raises(ToolError, match="Invalid webhook data"):
-                await webhook_tools_instance.create_webhook(
-                    auth_token="token",
-                    project_id=123,
-                    name="Test",
-                    url="https://example.com/webhook",
-                    key="secret",
-                )
+        ), pytest.raises(ToolError, match="Invalid webhook data"):
+            await webhook_tools_instance.create_webhook(
+                auth_token="token",
+                project_id=123,
+                name="Test",
+                url="https://example.com/webhook",
+                key="secret",
+            )
 
     @pytest.mark.unit
     @pytest.mark.webhooks
@@ -409,11 +405,10 @@ class TestUpdateWebhookExceptionHandlers:
         with patch(
             "src.application.tools.webhook_tools.validate_input",
             side_effect=ValidationError("Invalid URL format"),
-        ):
-            with pytest.raises(ToolError, match="Invalid URL format"):
-                await webhook_tools_instance.update_webhook(
-                    auth_token="token", webhook_id=1, url="not-valid"
-                )
+        ), pytest.raises(ToolError, match="Invalid URL format"):
+            await webhook_tools_instance.update_webhook(
+                auth_token="token", webhook_id=1, url="not-valid"
+            )
 
     @pytest.mark.unit
     @pytest.mark.webhooks

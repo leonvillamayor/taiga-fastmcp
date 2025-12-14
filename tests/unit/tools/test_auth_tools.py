@@ -657,9 +657,8 @@ class TestAuthToolsAdditionalCoverage:
         # Mock config to return None for credentials
         with patch.object(auth_tools.config, "taiga_username", None), patch.object(
             auth_tools.config, "taiga_password", None
-        ):
-            with pytest.raises(ToolError, match="Username and password are required"):
-                await auth_tools.authenticate()
+        ), pytest.raises(ToolError, match="Username and password are required"):
+            await auth_tools.authenticate()
 
     @pytest.mark.unit
     @pytest.mark.auth
@@ -680,7 +679,6 @@ class TestAuthToolsAdditionalCoverage:
     @pytest.mark.asyncio
     async def test_get_current_user_api_error(self, mock_taiga_api) -> None:
         """Test get_current_user with API error."""
-        from src.domain.exceptions import TaigaAPIError
 
         mcp = FastMCP("Test")
         auth_tools = AuthTools(mcp)
@@ -703,7 +701,7 @@ class TestAuthToolsAdditionalCoverage:
         if hasattr(mcp, "context"):
             delattr(mcp, "context")
 
-        auth_tools = AuthTools(mcp)
+        AuthTools(mcp)
         # Context should be initialized
         assert hasattr(mcp, "context")
 
@@ -749,9 +747,8 @@ class TestAuthToolsAdditionalCoverage:
 
         with patch(
             "src.application.tools.auth_tools.TaigaAPIClient", return_value=mock_client
-        ):
-            with pytest.raises(ToolError, match="Unexpected error"):
-                await auth_tools.refresh_token()
+        ), pytest.raises(ToolError, match="Unexpected error"):
+            await auth_tools.refresh_token()
 
     @pytest.mark.unit
     @pytest.mark.auth
@@ -845,8 +842,9 @@ class TestAuthToolsAdditionalCoverage:
     @pytest.mark.asyncio
     async def test_direct_authenticate_missing_credentials_direct(self) -> None:
         """Test direct authenticate method with missing credentials (direct call)."""
-        from fastmcp.exceptions import ToolError as MCPError
         from unittest.mock import patch
+
+        from fastmcp.exceptions import ToolError as MCPError
 
         mcp = FastMCP("Test")
         auth_tools = AuthTools(mcp)
@@ -854,9 +852,8 @@ class TestAuthToolsAdditionalCoverage:
         # Mock config to return None for credentials
         with patch.object(auth_tools.config, "taiga_username", None), patch.object(
             auth_tools.config, "taiga_password", None
-        ):
-            with pytest.raises(MCPError, match="Username and password are required"):
-                await auth_tools.authenticate()
+        ), pytest.raises(MCPError, match="Username and password are required"):
+            await auth_tools.authenticate()
 
     @pytest.mark.unit
     @pytest.mark.auth
@@ -876,9 +873,8 @@ class TestAuthToolsAdditionalCoverage:
 
         with patch(
             "src.application.tools.auth_tools.TaigaAPIClient", return_value=mock_client
-        ):
-            with pytest.raises(ValueError, match="Connection failed"):
-                await auth_tools.authenticate("user", "pass")
+        ), pytest.raises(ValueError, match="Connection failed"):
+            await auth_tools.authenticate("user", "pass")
 
     @pytest.mark.unit
     @pytest.mark.auth
@@ -900,7 +896,7 @@ class TestAuthToolsAdditionalCoverage:
         auth_tools._user_data = {"username": "testuser"}
 
         # Call logout
-        result = await auth_tools.logout()
+        await auth_tools.logout()
 
         # Assert context is cleared
         assert mcp.context.get("auth_token") is None
@@ -912,7 +908,7 @@ class TestAuthToolsAdditionalCoverage:
     @pytest.mark.asyncio
     async def test_logout_exception(self, mock_taiga_api) -> None:
         """Test logout tool with exception during execution."""
-        from unittest.mock import PropertyMock, patch
+        from unittest.mock import patch
 
         mcp = FastMCP("Test")
         auth_tools = AuthTools(mcp)
@@ -923,16 +919,16 @@ class TestAuthToolsAdditionalCoverage:
             def pop(self, key, default=None):
                 raise RuntimeError("Context error")
 
-        with patch.object(mcp, "context", BadContext()):
-            with pytest.raises(ToolError, match="Logout failed"):
-                await auth_tools.logout()
+        with patch.object(mcp, "context", BadContext()), pytest.raises(
+            ToolError, match="Logout failed"
+        ):
+            await auth_tools.logout()
 
     @pytest.mark.unit
     @pytest.mark.auth
     @pytest.mark.asyncio
     async def test_check_auth_exception(self, mock_taiga_api) -> None:
         """Test check_auth tool with exception during execution."""
-        from unittest.mock import patch, PropertyMock
 
         mcp = FastMCP("Test")
         auth_tools = AuthTools(mcp)
