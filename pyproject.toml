@@ -285,6 +285,7 @@ skips = [
     "B105",  # hardcoded_password_string - false positive for password redaction with '***'
     "B110",  # try_except_pass - intentional graceful error handling in shutdown
     "B113",  # request_without_timeout - requests used only in sync fallback
+    "B311",  # random - used for jitter in retry mechanism, not for security
 ]
 
 [dependency-groups]
