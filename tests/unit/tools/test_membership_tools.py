@@ -546,6 +546,355 @@ class TestDeleteMembershipTool:
             await membership_tools.delete_membership(auth_token="valid_token", membership_id=1)
 
 
+class TestMembershipToolsExceptionHandlers:
+    """Tests para cobertura de exception handlers en MembershipTools."""
+
+    @pytest.mark.unit
+    @pytest.mark.memberships
+    def test_set_client(self) -> None:
+        """Verifica set_client."""
+        mcp = FastMCP("Test")
+        tools = MembershipTools(mcp)
+        mock_client = object()
+        tools.set_client(mock_client)
+        assert tools.client is mock_client
+
+    @pytest.mark.unit
+    @pytest.mark.memberships
+    def test_register_tools_legacy(self) -> None:
+        """Verifica _register_tools legacy method."""
+        mcp = FastMCP("Test")
+        tools = MembershipTools(mcp)
+        tools._register_tools()  # Calls register_tools()
+        assert hasattr(tools, "list_memberships")
+
+    @pytest.mark.unit
+    @pytest.mark.memberships
+    @pytest.mark.asyncio
+    async def test_list_memberships_auto_paginate_false(self, mock_taiga_api) -> None:
+        """Verifica list_memberships con auto_paginate=False."""
+        mcp = FastMCP("Test")
+        membership_tools = MembershipTools(mcp)
+        membership_tools.register_tools()
+
+        mock_taiga_api.get(
+            "https://api.taiga.io/api/v1/memberships?project=123&page=1&page_size=100"
+        ).mock(
+            return_value=httpx.Response(
+                200,
+                json=[{"id": 1, "user": 42, "role": 5, "project": 123}],
+            )
+        )
+
+        result = await membership_tools.list_memberships(
+            auth_token="token", project_id=123, auto_paginate=False
+        )
+        assert len(result) == 1
+
+    @pytest.mark.unit
+    @pytest.mark.memberships
+    @pytest.mark.asyncio
+    async def test_list_memberships_non_list_result(self, mock_taiga_api) -> None:
+        """Verifica list_memberships cuando retorna algo que no es lista."""
+        mcp = FastMCP("Test")
+        membership_tools = MembershipTools(mcp)
+        membership_tools.register_tools()
+
+        mock_taiga_api.get(
+            "https://api.taiga.io/api/v1/memberships?project=123&page=1&page_size=100"
+        ).mock(return_value=httpx.Response(200, json={"single": "value"}))
+
+        result = await membership_tools.list_memberships(auth_token="token", project_id=123)
+        assert result == []
+
+    @pytest.mark.unit
+    @pytest.mark.memberships
+    @pytest.mark.asyncio
+    async def test_list_memberships_auth_error(self, mock_taiga_api) -> None:
+        """Verifica list_memberships con error de autenticación."""
+        mcp = FastMCP("Test")
+        membership_tools = MembershipTools(mcp)
+        membership_tools.register_tools()
+
+        mock_taiga_api.get(
+            "https://api.taiga.io/api/v1/memberships?project=123&page=1&page_size=100"
+        ).mock(return_value=httpx.Response(401, json={"detail": "Unauthorized"}))
+
+        with pytest.raises(ToolError, match="Authentication failed"):
+            await membership_tools.list_memberships(auth_token="invalid", project_id=123)
+
+    @pytest.mark.unit
+    @pytest.mark.memberships
+    @pytest.mark.asyncio
+    async def test_list_memberships_api_error(self, mock_taiga_api) -> None:
+        """Verifica list_memberships con error de API."""
+        mcp = FastMCP("Test")
+        membership_tools = MembershipTools(mcp)
+        membership_tools.register_tools()
+
+        mock_taiga_api.get(
+            "https://api.taiga.io/api/v1/memberships?project=123&page=1&page_size=100"
+        ).mock(return_value=httpx.Response(500, json={"detail": "Server error"}))
+
+        with pytest.raises(ToolError, match="Failed to list memberships"):
+            await membership_tools.list_memberships(auth_token="token", project_id=123)
+
+    @pytest.mark.unit
+    @pytest.mark.memberships
+    @pytest.mark.asyncio
+    async def test_create_membership_no_user_identifier(self, mock_taiga_api) -> None:
+        """Verifica create_membership sin username ni email."""
+        mcp = FastMCP("Test")
+        membership_tools = MembershipTools(mcp)
+        membership_tools.register_tools()
+
+        # Validator raises ValidationError with Spanish message
+        with pytest.raises(ToolError, match="Debe proporcionar un nombre de usuario o un email"):
+            await membership_tools.create_membership(
+                auth_token="token", project_id=123, role=5
+            )
+
+    @pytest.mark.unit
+    @pytest.mark.memberships
+    @pytest.mark.asyncio
+    async def test_create_membership_validation_error(self, mock_taiga_api) -> None:
+        """Verifica create_membership con error de validación."""
+        mcp = FastMCP("Test")
+        membership_tools = MembershipTools(mcp)
+        membership_tools.register_tools()
+
+        # Role = 0 should be invalid
+        with pytest.raises(ToolError):
+            await membership_tools.create_membership(
+                auth_token="token", project_id=123, role=0, username="user"
+            )
+
+    @pytest.mark.unit
+    @pytest.mark.memberships
+    @pytest.mark.asyncio
+    async def test_create_membership_permission_denied(self, mock_taiga_api) -> None:
+        """Verifica create_membership con permiso denegado."""
+        mcp = FastMCP("Test")
+        membership_tools = MembershipTools(mcp)
+        membership_tools.register_tools()
+
+        mock_taiga_api.post("https://api.taiga.io/api/v1/memberships").mock(
+            return_value=httpx.Response(403, json={"detail": "Permission denied"})
+        )
+
+        with pytest.raises(ToolError, match="permission"):
+            await membership_tools.create_membership(
+                auth_token="token", project_id=123, role=5, username="user"
+            )
+
+    @pytest.mark.unit
+    @pytest.mark.memberships
+    @pytest.mark.asyncio
+    async def test_create_membership_auth_error(self, mock_taiga_api) -> None:
+        """Verifica create_membership con error de autenticación."""
+        mcp = FastMCP("Test")
+        membership_tools = MembershipTools(mcp)
+        membership_tools.register_tools()
+
+        mock_taiga_api.post("https://api.taiga.io/api/v1/memberships").mock(
+            return_value=httpx.Response(401, json={"detail": "Unauthorized"})
+        )
+
+        with pytest.raises(ToolError, match="Authentication failed"):
+            await membership_tools.create_membership(
+                auth_token="invalid", project_id=123, role=5, username="user"
+            )
+
+    @pytest.mark.unit
+    @pytest.mark.memberships
+    @pytest.mark.asyncio
+    async def test_create_membership_already_member(self) -> None:
+        """Verifica create_membership cuando el usuario ya es miembro."""
+        from unittest.mock import AsyncMock, patch
+        from src.domain.exceptions import TaigaAPIError
+
+        mcp = FastMCP("Test")
+        membership_tools = MembershipTools(mcp)
+        membership_tools.register_tools()
+
+        # Mock to raise TaigaAPIError with "already" and "member" in message
+        mock_client = AsyncMock()
+        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+        mock_client.__aexit__ = AsyncMock(return_value=None)
+        mock_client.post = AsyncMock(
+            side_effect=TaigaAPIError("User is already a member of this project")
+        )
+
+        with patch(
+            "src.application.tools.membership_tools.TaigaAPIClient", return_value=mock_client
+        ):
+            with pytest.raises(ToolError, match="already a member"):
+                await membership_tools.create_membership(
+                    auth_token="token", project_id=123, role=5, username="existing_user"
+                )
+
+    @pytest.mark.unit
+    @pytest.mark.memberships
+    @pytest.mark.asyncio
+    async def test_get_membership_auth_error(self, mock_taiga_api) -> None:
+        """Verifica get_membership con error de autenticación."""
+        mcp = FastMCP("Test")
+        membership_tools = MembershipTools(mcp)
+        membership_tools.register_tools()
+
+        mock_taiga_api.get("https://api.taiga.io/api/v1/memberships/10").mock(
+            return_value=httpx.Response(401, json={"detail": "Unauthorized"})
+        )
+
+        with pytest.raises(ToolError, match="Authentication failed"):
+            await membership_tools.get_membership(auth_token="invalid", membership_id=10)
+
+    @pytest.mark.unit
+    @pytest.mark.memberships
+    @pytest.mark.asyncio
+    async def test_get_membership_api_error(self, mock_taiga_api) -> None:
+        """Verifica get_membership con error de API."""
+        mcp = FastMCP("Test")
+        membership_tools = MembershipTools(mcp)
+        membership_tools.register_tools()
+
+        mock_taiga_api.get("https://api.taiga.io/api/v1/memberships/10").mock(
+            return_value=httpx.Response(500, json={"detail": "Server error"})
+        )
+
+        with pytest.raises(ToolError, match="Failed to get membership"):
+            await membership_tools.get_membership(auth_token="token", membership_id=10)
+
+    @pytest.mark.unit
+    @pytest.mark.memberships
+    @pytest.mark.asyncio
+    async def test_update_membership_no_data(self, mock_taiga_api) -> None:
+        """Verifica update_membership sin datos de actualización."""
+        mcp = FastMCP("Test")
+        membership_tools = MembershipTools(mcp)
+        membership_tools.register_tools()
+
+        with pytest.raises(ToolError, match="No update data provided"):
+            await membership_tools.update_membership(auth_token="token", membership_id=10)
+
+    @pytest.mark.unit
+    @pytest.mark.memberships
+    @pytest.mark.asyncio
+    async def test_update_membership_validation_error(self, mock_taiga_api) -> None:
+        """Verifica update_membership con error de validación."""
+        mcp = FastMCP("Test")
+        membership_tools = MembershipTools(mcp)
+        membership_tools.register_tools()
+
+        # role = 0 should be invalid
+        with pytest.raises(ToolError):
+            await membership_tools.update_membership(
+                auth_token="token", membership_id=10, role=0
+            )
+
+    @pytest.mark.unit
+    @pytest.mark.memberships
+    @pytest.mark.asyncio
+    async def test_update_membership_not_found(self, mock_taiga_api) -> None:
+        """Verifica update_membership con membresía no encontrada."""
+        mcp = FastMCP("Test")
+        membership_tools = MembershipTools(mcp)
+        membership_tools.register_tools()
+
+        mock_taiga_api.patch("https://api.taiga.io/api/v1/memberships/999").mock(
+            return_value=httpx.Response(404, json={"detail": "Not found"})
+        )
+
+        with pytest.raises(ToolError, match="Membership not found"):
+            await membership_tools.update_membership(
+                auth_token="token", membership_id=999, role=5
+            )
+
+    @pytest.mark.unit
+    @pytest.mark.memberships
+    @pytest.mark.asyncio
+    async def test_update_membership_auth_error(self, mock_taiga_api) -> None:
+        """Verifica update_membership con error de autenticación."""
+        mcp = FastMCP("Test")
+        membership_tools = MembershipTools(mcp)
+        membership_tools.register_tools()
+
+        mock_taiga_api.patch("https://api.taiga.io/api/v1/memberships/10").mock(
+            return_value=httpx.Response(401, json={"detail": "Unauthorized"})
+        )
+
+        with pytest.raises(ToolError, match="Authentication failed"):
+            await membership_tools.update_membership(
+                auth_token="invalid", membership_id=10, role=5
+            )
+
+    @pytest.mark.unit
+    @pytest.mark.memberships
+    @pytest.mark.asyncio
+    async def test_update_membership_api_error(self, mock_taiga_api) -> None:
+        """Verifica update_membership con error de API."""
+        mcp = FastMCP("Test")
+        membership_tools = MembershipTools(mcp)
+        membership_tools.register_tools()
+
+        mock_taiga_api.patch("https://api.taiga.io/api/v1/memberships/10").mock(
+            return_value=httpx.Response(500, json={"detail": "Server error"})
+        )
+
+        with pytest.raises(ToolError, match="Failed to update membership"):
+            await membership_tools.update_membership(
+                auth_token="token", membership_id=10, role=5
+            )
+
+    @pytest.mark.unit
+    @pytest.mark.memberships
+    @pytest.mark.asyncio
+    async def test_delete_membership_permission_denied(self, mock_taiga_api) -> None:
+        """Verifica delete_membership con permiso denegado."""
+        mcp = FastMCP("Test")
+        membership_tools = MembershipTools(mcp)
+        membership_tools.register_tools()
+
+        mock_taiga_api.delete("https://api.taiga.io/api/v1/memberships/10").mock(
+            return_value=httpx.Response(403, json={"detail": "Permission denied"})
+        )
+
+        with pytest.raises(ToolError, match="permission"):
+            await membership_tools.delete_membership(auth_token="token", membership_id=10)
+
+    @pytest.mark.unit
+    @pytest.mark.memberships
+    @pytest.mark.asyncio
+    async def test_delete_membership_auth_error(self, mock_taiga_api) -> None:
+        """Verifica delete_membership con error de autenticación."""
+        mcp = FastMCP("Test")
+        membership_tools = MembershipTools(mcp)
+        membership_tools.register_tools()
+
+        mock_taiga_api.delete("https://api.taiga.io/api/v1/memberships/10").mock(
+            return_value=httpx.Response(401, json={"detail": "Unauthorized"})
+        )
+
+        with pytest.raises(ToolError, match="Authentication failed"):
+            await membership_tools.delete_membership(auth_token="invalid", membership_id=10)
+
+    @pytest.mark.unit
+    @pytest.mark.memberships
+    @pytest.mark.asyncio
+    async def test_delete_membership_api_error(self, mock_taiga_api) -> None:
+        """Verifica delete_membership con error de API genérico."""
+        mcp = FastMCP("Test")
+        membership_tools = MembershipTools(mcp)
+        membership_tools.register_tools()
+
+        mock_taiga_api.delete("https://api.taiga.io/api/v1/memberships/10").mock(
+            return_value=httpx.Response(500, json={"detail": "Server error"})
+        )
+
+        with pytest.raises(ToolError, match="Failed to delete membership"):
+            await membership_tools.delete_membership(auth_token="token", membership_id=10)
+
+
 class TestMembershipToolsBestPractices:
     """Tests para verificar buenas prácticas en herramientas de Membresías."""
 
