@@ -38,9 +38,9 @@ class TestRepositoryInterfaces:
         }
 
         abstract_methods = set(BaseRepository.__abstractmethods__)
-        assert expected_methods.issubset(
-            abstract_methods
-        ), f"Missing methods: {expected_methods - abstract_methods}"
+        assert expected_methods.issubset(abstract_methods), (
+            f"Missing methods: {expected_methods - abstract_methods}"
+        )
 
     def test_epic_repository_inherits_from_base(self) -> None:
         """Test 1.4.3: Verify that EpicRepository inherits from BaseRepository."""
@@ -130,9 +130,9 @@ class TestRepositoryInterfaces:
         }
 
         abstract_methods = set(ProjectRepository.__abstractmethods__)
-        assert specific_methods.issubset(
-            abstract_methods
-        ), f"Missing methods: {specific_methods - abstract_methods}"
+        assert specific_methods.issubset(abstract_methods), (
+            f"Missing methods: {specific_methods - abstract_methods}"
+        )
 
     def test_user_story_repository_has_specific_methods(self) -> None:
         """Test that UserStoryRepository has user story-specific methods."""
@@ -148,9 +148,9 @@ class TestRepositoryInterfaces:
         }
 
         abstract_methods = set(UserStoryRepository.__abstractmethods__)
-        assert specific_methods.issubset(
-            abstract_methods
-        ), f"Missing methods: {specific_methods - abstract_methods}"
+        assert specific_methods.issubset(abstract_methods), (
+            f"Missing methods: {specific_methods - abstract_methods}"
+        )
 
     def test_epic_repository_has_specific_methods(self) -> None:
         """Test that EpicRepository has epic-specific methods."""
@@ -167,9 +167,9 @@ class TestRepositoryInterfaces:
         }
 
         abstract_methods = set(EpicRepository.__abstractmethods__)
-        assert specific_methods.issubset(
-            abstract_methods
-        ), f"Missing methods: {specific_methods - abstract_methods}"
+        assert specific_methods.issubset(abstract_methods), (
+            f"Missing methods: {specific_methods - abstract_methods}"
+        )
 
     def test_all_repositories_have_docstrings(self) -> None:
         """Test that all repository interfaces have proper docstrings."""
@@ -206,7 +206,7 @@ class TestRepositoryInterfaces:
         for repo_class in repositories:
             for method_name in repo_class.__abstractmethods__:
                 method = getattr(repo_class, method_name)
-                assert (
-                    method.__doc__ is not None
-                ), f"{repo_class.__name__}.{method_name} has no docstring"
+                assert method.__doc__ is not None, (
+                    f"{repo_class.__name__}.{method_name} has no docstring"
+                )
                 assert len(method.__doc__.strip()) > 0
