@@ -38,9 +38,9 @@ class TestProjectToolsRegistration:
         project_tools = [t for t in tools if "project" in t.name.lower()]
 
         # Should have at least CRUD operations + extras
-        assert len(project_tools) >= 5, (
-            f"Expected at least 5 project tools, got {len(project_tools)}"
-        )
+        assert (
+            len(project_tools) >= 5
+        ), f"Expected at least 5 project tools, got {len(project_tools)}"
 
 
 @pytest.mark.asyncio

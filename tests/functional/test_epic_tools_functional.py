@@ -671,6 +671,6 @@ class TestEpicToolsMCP:
             assert tool.name == tool_name, "Tool name mismatch"
 
             # Verificar que la herramienta tiene un schema de entrada
-            assert hasattr(tool, "input_schema") or hasattr(tool, "fn"), (
-                f"Tool {tool_name} doesn't have input_schema or fn"
-            )
+            assert hasattr(tool, "input_schema") or hasattr(
+                tool, "fn"
+            ), f"Tool {tool_name} doesn't have input_schema or fn"

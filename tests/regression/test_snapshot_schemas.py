@@ -204,6 +204,6 @@ class TestSnapshotSchemas:
             # Verificar que auth_token es requerido en herramientas que lo usan
             params = schema["parameters"]
             if "auth_token" in params:
-                assert params["auth_token"].get("required") is True, (
-                    f"{tool_name}: auth_token debe ser requerido"
-                )
+                assert (
+                    params["auth_token"].get("required") is True
+                ), f"{tool_name}: auth_token debe ser requerido"

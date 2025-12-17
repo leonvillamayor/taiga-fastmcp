@@ -1,5 +1,6 @@
 # Docker Compose for Taiga MCP Server
-# Supports HTTP transport for MCP protocol
+# Version: 0.1.1
+# Supports HTTP transport for MCP protocol with integrated caching
 #
 # Usage:
 #   Development:  docker compose --profile dev up
@@ -7,6 +8,11 @@
 #   Default:      docker compose up
 #
 # Configuration: Copy .env.example to .env and configure your credentials
+#
+# Cache Configuration (v0.1.1):
+#   TAIGA_CACHE_ENABLED: Enable/disable caching (default: true)
+#   TAIGA_CACHE_TTL: Cache time-to-live in seconds (default: 3600)
+#   TAIGA_CACHE_MAX_SIZE: Maximum cache entries (default: 1000)
 
 services:
   # =============================================================================
@@ -33,6 +39,10 @@ services:
       - MCP_PORT=8000
       - PYTHONUNBUFFERED=1
       - PYTHONDONTWRITEBYTECODE=1
+      # Cache configuration (v0.1.1)
+      - TAIGA_CACHE_ENABLED=${TAIGA_CACHE_ENABLED:-true}
+      - TAIGA_CACHE_TTL=${TAIGA_CACHE_TTL:-3600}
+      - TAIGA_CACHE_MAX_SIZE=${TAIGA_CACHE_MAX_SIZE:-1000}
 
     # Port mapping for HTTP transport
     ports:
@@ -68,9 +78,10 @@ services:
 
     # Labels
     labels:
-      - "com.taiga.mcp.description=Taiga MCP Server"
-      - "com.taiga.mcp.version=1.0"
+      - "com.taiga.mcp.description=Taiga MCP Server with cache integration"
+      - "com.taiga.mcp.version=0.1.1"
       - "com.taiga.mcp.transport=http"
+      - "com.taiga.mcp.cache=enabled"
 
     # Network
     networks:
@@ -108,6 +119,10 @@ services:
       - TAIGA_MAX_RETRIES=5
       - PYTHONUNBUFFERED=1
       - PYTHONDONTWRITEBYTECODE=1
+      # Production cache settings (v0.1.1) - optimized for performance
+      - TAIGA_CACHE_ENABLED=true
+      - TAIGA_CACHE_TTL=7200
+      - TAIGA_CACHE_MAX_SIZE=5000
 
     deploy:
       resources:
@@ -148,6 +163,10 @@ services:
       - MCP_PORT=8000
       - MCP_DEBUG=true
       - PYTHONUNBUFFERED=1
+      # Development cache settings (v0.1.1) - shorter TTL for faster iteration
+      - TAIGA_CACHE_ENABLED=true
+      - TAIGA_CACHE_TTL=300
+      - TAIGA_CACHE_MAX_SIZE=100
 
     # Mount source for development
     volumes:

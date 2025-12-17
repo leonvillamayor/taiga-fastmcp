@@ -13,7 +13,6 @@ from unittest.mock import AsyncMock, Mock
 
 import pytest
 
-
 # Performance thresholds
 LATENCY_THRESHOLD_MS = 500  # Maximum acceptable latency in milliseconds
 CONCURRENT_REQUESTS = 10  # Number of concurrent requests to test
@@ -104,12 +103,12 @@ class TestCRUDLatency:
         avg_latency = statistics.mean(latencies)
         p95_latency = sorted(latencies)[int(len(latencies) * 0.95)]
 
-        assert avg_latency < LATENCY_THRESHOLD_MS, (
-            f"Average latency {avg_latency:.2f}ms exceeds threshold {LATENCY_THRESHOLD_MS}ms"
-        )
-        assert p95_latency < LATENCY_THRESHOLD_MS * 1.5, (
-            f"P95 latency {p95_latency:.2f}ms exceeds threshold {LATENCY_THRESHOLD_MS * 1.5}ms"
-        )
+        assert (
+            avg_latency < LATENCY_THRESHOLD_MS
+        ), f"Average latency {avg_latency:.2f}ms exceeds threshold {LATENCY_THRESHOLD_MS}ms"
+        assert (
+            p95_latency < LATENCY_THRESHOLD_MS * 1.5
+        ), f"P95 latency {p95_latency:.2f}ms exceeds threshold {LATENCY_THRESHOLD_MS * 1.5}ms"
 
     async def test_get_project_latency(
         self,
@@ -131,9 +130,9 @@ class TestCRUDLatency:
 
         avg_latency = statistics.mean(latencies)
 
-        assert avg_latency < LATENCY_THRESHOLD_MS, (
-            f"Average latency {avg_latency:.2f}ms exceeds threshold {LATENCY_THRESHOLD_MS}ms"
-        )
+        assert (
+            avg_latency < LATENCY_THRESHOLD_MS
+        ), f"Average latency {avg_latency:.2f}ms exceeds threshold {LATENCY_THRESHOLD_MS}ms"
 
     async def test_create_project_latency(
         self,
@@ -158,9 +157,9 @@ class TestCRUDLatency:
 
         avg_latency = statistics.mean(latencies)
 
-        assert avg_latency < LATENCY_THRESHOLD_MS, (
-            f"Average latency {avg_latency:.2f}ms exceeds threshold {LATENCY_THRESHOLD_MS}ms"
-        )
+        assert (
+            avg_latency < LATENCY_THRESHOLD_MS
+        ), f"Average latency {avg_latency:.2f}ms exceeds threshold {LATENCY_THRESHOLD_MS}ms"
 
     async def test_update_project_latency(
         self,
@@ -185,9 +184,9 @@ class TestCRUDLatency:
 
         avg_latency = statistics.mean(latencies)
 
-        assert avg_latency < LATENCY_THRESHOLD_MS, (
-            f"Average latency {avg_latency:.2f}ms exceeds threshold {LATENCY_THRESHOLD_MS}ms"
-        )
+        assert (
+            avg_latency < LATENCY_THRESHOLD_MS
+        ), f"Average latency {avg_latency:.2f}ms exceeds threshold {LATENCY_THRESHOLD_MS}ms"
 
     async def test_delete_project_latency(
         self,
@@ -207,9 +206,9 @@ class TestCRUDLatency:
 
         avg_latency = statistics.mean(latencies)
 
-        assert avg_latency < LATENCY_THRESHOLD_MS, (
-            f"Average latency {avg_latency:.2f}ms exceeds threshold {LATENCY_THRESHOLD_MS}ms"
-        )
+        assert (
+            avg_latency < LATENCY_THRESHOLD_MS
+        ), f"Average latency {avg_latency:.2f}ms exceeds threshold {LATENCY_THRESHOLD_MS}ms"
 
 
 @pytest.mark.performance
@@ -249,14 +248,14 @@ class TestConcurrentRequests:
         throughput = len(results) / total_time
 
         assert success_rate == 1.0, f"Success rate {success_rate:.2%} is below 100%"
-        assert throughput >= MIN_THROUGHPUT_RPS, (
-            f"Throughput {throughput:.2f} RPS is below minimum {MIN_THROUGHPUT_RPS} RPS"
-        )
+        assert (
+            throughput >= MIN_THROUGHPUT_RPS
+        ), f"Throughput {throughput:.2f} RPS is below minimum {MIN_THROUGHPUT_RPS} RPS"
 
         avg_latency = statistics.mean(latencies)
-        assert avg_latency < LATENCY_THRESHOLD_MS * 2, (
-            f"Average latency under load {avg_latency:.2f}ms exceeds threshold"
-        )
+        assert (
+            avg_latency < LATENCY_THRESHOLD_MS * 2
+        ), f"Average latency under load {avg_latency:.2f}ms exceeds threshold"
 
     async def test_concurrent_mixed_operations(
         self,
@@ -308,9 +307,9 @@ class TestConcurrentRequests:
         assert success_rate >= 0.95, f"Success rate {success_rate:.2%} is below 95%"
 
         throughput = len(results) / total_time
-        assert throughput >= MIN_THROUGHPUT_RPS, (
-            f"Mixed operation throughput {throughput:.2f} RPS below minimum"
-        )
+        assert (
+            throughput >= MIN_THROUGHPUT_RPS
+        ), f"Mixed operation throughput {throughput:.2f} RPS below minimum"
 
     async def test_throughput_under_sustained_load(
         self,
@@ -350,9 +349,9 @@ class TestConcurrentRequests:
             throughput_stddev / avg_throughput if avg_throughput > 0 else float("inf")
         )
 
-        assert coefficient_of_variation < 0.5, (
-            f"Throughput too variable: CV={coefficient_of_variation:.2f}"
-        )
-        assert avg_throughput >= MIN_THROUGHPUT_RPS, (
-            f"Average throughput {avg_throughput:.2f} RPS below minimum"
-        )
+        assert (
+            coefficient_of_variation < 0.5
+        ), f"Throughput too variable: CV={coefficient_of_variation:.2f}"
+        assert (
+            avg_throughput >= MIN_THROUGHPUT_RPS
+        ), f"Average throughput {avg_throughput:.2f} RPS below minimum"

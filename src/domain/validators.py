@@ -16,7 +16,6 @@ from pydantic import BaseModel, field_validator, model_validator
 
 from src.domain.exceptions import ValidationError
 
-
 # =============================================================================
 # Funciones auxiliares de validación
 # =============================================================================

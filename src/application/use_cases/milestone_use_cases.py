@@ -9,7 +9,6 @@ from src.domain.entities.milestone import Milestone
 from src.domain.exceptions import ResourceNotFoundError
 from src.domain.repositories.milestone_repository import MilestoneRepository
 
-
 # DTOs (Data Transfer Objects)
 
 

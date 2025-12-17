@@ -9,7 +9,7 @@ import pytest
 from fastmcp import FastMCP
 from fastmcp.exceptions import ToolError
 
-from src.application.tools.project_tools import ProjectTools, get_taiga_client
+from src.application.tools.project_tools import ProjectTools
 from src.domain.exceptions import (
     AuthenticationError,
     PermissionDeniedError,
@@ -17,6 +17,7 @@ from src.domain.exceptions import (
     TaigaAPIError,
     ValidationError,
 )
+from src.infrastructure.client_factory import get_taiga_client
 
 
 @pytest.fixture
@@ -43,8 +44,8 @@ class TestGetTaigaClientFunction:
     def test_get_taiga_client_without_auth_token(self):
         """Verifica que get_taiga_client funciona sin token."""
         with (
-            patch("src.application.tools.project_tools.TaigaConfig"),
-            patch("src.application.tools.project_tools.TaigaAPIClient") as mock_client,
+            patch("src.infrastructure.client_factory.TaigaConfig"),
+            patch("src.infrastructure.client_factory.TaigaAPIClient") as mock_client,
         ):
             mock_instance = MagicMock(spec=["some_method"])  # No auth_token attribute
             mock_client.return_value = mock_instance
@@ -58,8 +59,8 @@ class TestGetTaigaClientFunction:
     def test_get_taiga_client_with_auth_token(self):
         """Verifica que get_taiga_client establece el token."""
         with (
-            patch("src.application.tools.project_tools.TaigaConfig"),
-            patch("src.application.tools.project_tools.TaigaAPIClient") as mock_client,
+            patch("src.infrastructure.client_factory.TaigaConfig"),
+            patch("src.infrastructure.client_factory.TaigaAPIClient") as mock_client,
         ):
             mock_instance = MagicMock()
             mock_client.return_value = mock_instance

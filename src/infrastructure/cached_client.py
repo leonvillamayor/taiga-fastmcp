@@ -15,7 +15,6 @@ from typing import TYPE_CHECKING, Any, ClassVar, cast
 
 from src.infrastructure.cache import CacheMetrics, MemoryCache
 
-
 if TYPE_CHECKING:
     from src.taiga_client import TaigaAPIClient
 

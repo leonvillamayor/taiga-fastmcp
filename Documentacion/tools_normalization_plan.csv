@@ -4,6 +4,10 @@ taiga_refresh_token,taiga_refresh_token,auth_tools,"dict[str, Any]","dict[str, A
 taiga_get_current_user,taiga_get_current_user,auth_tools,"dict[str, Any]","dict[str, Any]",,DONE
 taiga_logout,taiga_logout,auth_tools,"dict[str, Any]","dict[str, Any]",,DONE
 taiga_check_auth,taiga_check_auth,auth_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_cache_stats,taiga_cache_stats,cache_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_cache_clear,taiga_cache_clear,cache_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_cache_invalidate_project,taiga_cache_invalidate_project,cache_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_cache_invalidate_pattern,taiga_cache_invalidate_pattern,cache_tools,"dict[str, Any]","dict[str, Any]",,DONE
 taiga_list_epics,taiga_list_epics,epic_tools,"list[dict[str, Any]]","list[dict[str, Any]]",Missing description in decorator,LOW
 taiga_create_epic,taiga_create_epic,epic_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
 taiga_get_epic,taiga_get_epic,epic_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
@@ -32,6 +36,7 @@ taiga_delete_epic_attachment,taiga_delete_epic_attachment,epic_tools,"dict[str, 
 taiga_list_epic_custom_attributes,taiga_list_epic_custom_attributes,epic_tools,"list[dict[str, Any]]","list[dict[str, Any]]",Missing description in decorator,LOW
 taiga_create_epic_custom_attribute,taiga_create_epic_custom_attribute,epic_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
 taiga_get_epic_custom_attribute_values,taiga_get_epic_custom_attribute_values,epic_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
+taiga_bulk_link_userstories_to_epic,taiga_bulk_link_userstories_to_epic,epic_tools,"dict[str, Any]","dict[str, Any]",,DONE
 taiga_list_issues,taiga_list_issues,issue_tools,"list[dict[str, Any]]","list[dict[str, Any]]",Missing description in decorator,LOW
 taiga_create_issue,taiga_create_issue,issue_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
 taiga_get_issue,taiga_get_issue,issue_tools,"dict[str, Any]","dict[str, Any]",Missing description in decorator,LOW
@@ -128,6 +133,7 @@ taiga_update_task_custom_attribute,taiga_update_task_custom_attribute,task_tools
 taiga_delete_task_custom_attribute,taiga_delete_task_custom_attribute,task_tools,"dict[str, str]","dict[str, str]",,DONE
 taiga_get_user_stats,taiga_get_user_stats,user_tools,"dict[str, Any]","dict[str, Any]",,DONE
 taiga_list_users,taiga_list_users,user_tools,"list[dict[str, Any]]","list[dict[str, Any]]",,DONE
+taiga_get_user,taiga_get_user,user_tools,"dict[str, Any]","dict[str, Any]",,DONE
 taiga_list_userstories,taiga_list_userstories,userstory_tools,"list[dict[str, Any]]","list[dict[str, Any]]",,DONE
 taiga_create_userstory,taiga_create_userstory,userstory_tools,"dict[str, Any]","dict[str, Any]",Inconsistent naming: 'userstory' should be 'user_story',MEDIUM
 taiga_get_userstory,taiga_get_userstory,userstory_tools,"dict[str, Any]","dict[str, Any]",Inconsistent naming: 'userstory' should be 'user_story',MEDIUM
@@ -143,6 +149,7 @@ taiga_unwatch_userstory,taiga_unwatch_userstory,userstory_tools,"dict[str, Any]"
 taiga_upvote_userstory,taiga_upvote_userstory,userstory_tools,"dict[str, Any]","dict[str, Any]",Inconsistent naming: 'userstory' should be 'user_story',MEDIUM
 taiga_downvote_userstory,taiga_downvote_userstory,userstory_tools,"dict[str, Any]","dict[str, Any]",Inconsistent naming: 'userstory' should be 'user_story',MEDIUM
 taiga_get_userstory_voters,taiga_get_userstory_voters,userstory_tools,"list[dict[str, Any]]","list[dict[str, Any]]",Inconsistent naming: 'userstory' should be 'user_story',MEDIUM
+taiga_get_userstory_filters,taiga_get_userstory_filters,userstory_tools,"dict[str, Any]","dict[str, Any]",Inconsistent naming: 'userstory' should be 'user_story',MEDIUM
 taiga_list_webhooks,taiga_list_webhooks,webhook_tools,"list[dict[str, Any]]","list[dict[str, Any]]",,DONE
 taiga_create_webhook,taiga_create_webhook,webhook_tools,"dict[str, Any]","dict[str, Any]",,DONE
 taiga_get_webhook,taiga_get_webhook,webhook_tools,"dict[str, Any]","dict[str, Any]",,DONE
