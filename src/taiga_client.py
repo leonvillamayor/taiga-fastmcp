@@ -25,7 +25,6 @@ from src.domain.exceptions import (
 from src.infrastructure.logging import get_logger
 from src.infrastructure.retry import RetryConfig, calculate_delay
 
-
 if TYPE_CHECKING:
     from src.infrastructure.http_session_pool import HTTPSessionPool
 

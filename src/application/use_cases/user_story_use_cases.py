@@ -8,7 +8,6 @@ from src.domain.entities.user_story import UserStory
 from src.domain.exceptions import ResourceNotFoundError
 from src.domain.repositories.user_story_repository import UserStoryRepository
 
-
 # DTOs (Data Transfer Objects)
 
 

@@ -12,7 +12,6 @@ from .task_repository import TaskRepository
 from .user_story_repository import UserStoryRepository
 from .wiki_repository import WikiRepository
 
-
 __all__ = [
     "BaseRepository",
     "EpicRepository",
