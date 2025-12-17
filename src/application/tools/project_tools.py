@@ -28,18 +28,10 @@ from src.domain.validators import (
     ProjectUpdateValidator,
     validate_input,
 )
+from src.infrastructure.client_factory import get_taiga_client
 from src.infrastructure.logging import get_logger
 from src.infrastructure.pagination import AutoPaginator, PaginationConfig
 from src.taiga_client import TaigaAPIClient
-
-
-def get_taiga_client(auth_token: str | None = None) -> TaigaAPIClient:
-    """Get or create a Taiga API client - module level for patching."""
-    config = TaigaConfig()
-    client = TaigaAPIClient(config)
-    if auth_token:
-        client.auth_token = auth_token
-    return client
 
 
 class ProjectTools:
@@ -98,7 +90,12 @@ class ProjectTools:
         """Register project tools with the MCP server."""
 
         # List projects
-        @self.mcp.tool(name="taiga_list_projects", description="List all projects")
+        @self.mcp.tool(
+            name="taiga_list_projects",
+            description="List all projects accessible to the authenticated user",
+            tags={"projects", "read", "list"},
+            annotations={"readOnlyHint": True, "openWorldHint": True},
+        )
         async def list_projects(
             auth_token: str,
             member_id: int | None = None,
@@ -220,7 +217,12 @@ class ProjectTools:
             self.list_projects = list_projects
 
         # Create project
-        @self.mcp.tool(name="taiga_create_project", description="Create a new project")
+        @self.mcp.tool(
+            name="taiga_create_project",
+            description="Create a new Taiga project with specified settings",
+            tags={"projects", "write", "create"},
+            annotations={"readOnlyHint": False, "openWorldHint": True},
+        )
         async def create_project(
             auth_token: str,
             name: str,
@@ -375,7 +377,12 @@ class ProjectTools:
             self.create_project = create_project
 
         # Get project
-        @self.mcp.tool(name="taiga_get_project", description="Get project details")
+        @self.mcp.tool(
+            name="taiga_get_project",
+            description="Get detailed information about a specific project",
+            tags={"projects", "read", "get"},
+            annotations={"readOnlyHint": True, "openWorldHint": True},
+        )
         async def get_project(
             auth_token: str, project_id: int | None = None, slug: str | None = None
         ) -> dict[str, Any]:
@@ -486,7 +493,12 @@ class ProjectTools:
             self.get_project = get_project
 
         # Update project
-        @self.mcp.tool(name="taiga_update_project", description="Update project details")
+        @self.mcp.tool(
+            name="taiga_update_project",
+            description="Update an existing project's settings and metadata",
+            tags={"projects", "write", "update"},
+            annotations={"readOnlyHint": False, "openWorldHint": True},
+        )
         async def update_project(
             auth_token: str,
             project_id: int,
@@ -641,7 +653,12 @@ class ProjectTools:
             self.update_project = update_project
 
         # Delete project
-        @self.mcp.tool(name="taiga_delete_project", description="Delete a project")
+        @self.mcp.tool(
+            name="taiga_delete_project",
+            description="Permanently delete a project and all its data",
+            tags={"projects", "delete"},
+            annotations={"destructiveHint": True, "openWorldHint": True, "title": "Delete Project"},
+        )
         async def delete_project(auth_token: str, project_id: int) -> bool:
             """
             Delete a project.
@@ -707,7 +724,12 @@ class ProjectTools:
             self.delete_project = delete_project
 
         # Get project stats
-        @self.mcp.tool(name="taiga_get_project_stats", description="Get project statistics")
+        @self.mcp.tool(
+            name="taiga_get_project_stats",
+            description="Get comprehensive statistics for a project",
+            tags={"projects", "read", "stats"},
+            annotations={"readOnlyHint": True, "openWorldHint": True},
+        )
         async def get_project_stats(auth_token: str, project_id: int) -> dict[str, Any]:
             """
             Get project statistics.
@@ -800,7 +822,12 @@ class ProjectTools:
             self.get_project_stats = get_project_stats
 
         # Duplicate project
-        @self.mcp.tool(name="taiga_duplicate_project", description="Duplicate an existing project")
+        @self.mcp.tool(
+            name="taiga_duplicate_project",
+            description="Create a copy of an existing project with optional settings",
+            tags={"projects", "write", "create"},
+            annotations={"readOnlyHint": False, "openWorldHint": True},
+        )
         async def duplicate_project(
             auth_token: str,
             project_id: int,
@@ -914,7 +941,12 @@ class ProjectTools:
             self.duplicate_project = duplicate_project
 
         # Like project
-        @self.mcp.tool(name="taiga_like_project", description="Like a project")
+        @self.mcp.tool(
+            name="taiga_like_project",
+            description="Add a like to a project",
+            tags={"projects", "write", "social"},
+            annotations={"readOnlyHint": False, "idempotentHint": True, "openWorldHint": True},
+        )
         async def like_project(auth_token: str, project_id: int) -> dict[str, Any]:
             """
             Like a project.
@@ -989,7 +1021,12 @@ class ProjectTools:
             self.like_project = like_project
 
         # Unlike project
-        @self.mcp.tool(name="taiga_unlike_project", description="Unlike a project")
+        @self.mcp.tool(
+            name="taiga_unlike_project",
+            description="Remove a like from a project",
+            tags={"projects", "write", "social"},
+            annotations={"readOnlyHint": False, "idempotentHint": True, "openWorldHint": True},
+        )
         async def unlike_project(auth_token: str, project_id: int) -> dict[str, Any]:
             """
             Unlike a project.
@@ -1064,7 +1101,12 @@ class ProjectTools:
             self.unlike_project = unlike_project
 
         # Watch project
-        @self.mcp.tool(name="taiga_watch_project", description="Watch a project for notifications")
+        @self.mcp.tool(
+            name="taiga_watch_project",
+            description="Start watching a project to receive notifications",
+            tags={"projects", "write", "notifications"},
+            annotations={"readOnlyHint": False, "idempotentHint": True, "openWorldHint": True},
+        )
         async def watch_project(auth_token: str, project_id: int) -> dict[str, Any]:
             """
             Watch a project.
@@ -1139,7 +1181,12 @@ class ProjectTools:
             self.watch_project = watch_project
 
         # Unwatch project
-        @self.mcp.tool(name="taiga_unwatch_project", description="Stop watching a project")
+        @self.mcp.tool(
+            name="taiga_unwatch_project",
+            description="Stop watching a project and receiving notifications",
+            tags={"projects", "write", "notifications"},
+            annotations={"readOnlyHint": False, "idempotentHint": True, "openWorldHint": True},
+        )
         async def unwatch_project(auth_token: str, project_id: int) -> dict[str, Any]:
             """
             Unwatch a project.
@@ -1430,7 +1477,12 @@ class ProjectTools:
             self.update_project_modules = update_project_modules
 
         # Get project by slug
-        @self.mcp.tool(name="taiga_get_project_by_slug", description="Get project details by slug")
+        @self.mcp.tool(
+            name="taiga_get_project_by_slug",
+            description="Get project details using its unique slug identifier",
+            tags={"projects", "read", "get"},
+            annotations={"readOnlyHint": True, "openWorldHint": True},
+        )
         async def get_project_by_slug(auth_token: str, slug: str) -> dict[str, Any]:
             """
             Get project details by slug.
@@ -1595,7 +1647,12 @@ class ProjectTools:
         )
 
         # Get project tags
-        @self.mcp.tool(name="taiga_get_project_tags", description="Get all tags in a project")
+        @self.mcp.tool(
+            name="taiga_get_project_tags",
+            description="Get all available tags defined in a project",
+            tags={"projects", "read", "tags"},
+            annotations={"readOnlyHint": True, "openWorldHint": True},
+        )
         async def get_project_tags(auth_token: str, project_id: int) -> list[list[str]]:
             """
             Get all tags in a project.
@@ -1668,7 +1725,12 @@ class ProjectTools:
         )
 
         # Create project tag
-        @self.mcp.tool(name="taiga_create_project_tag", description="Create a new tag in a project")
+        @self.mcp.tool(
+            name="taiga_create_project_tag",
+            description="Create a new tag in a project with optional color",
+            tags={"projects", "write", "tags"},
+            annotations={"readOnlyHint": False, "openWorldHint": True},
+        )
         async def create_project_tag(
             auth_token: str, project_id: int, tag: str, color: str | None = None
         ) -> list[str]:
@@ -1849,7 +1911,16 @@ class ProjectTools:
         )
 
         # Delete project tag
-        @self.mcp.tool(name="taiga_delete_project_tag", description="Delete a tag from a project")
+        @self.mcp.tool(
+            name="taiga_delete_project_tag",
+            description="Permanently delete a tag from a project",
+            tags={"projects", "delete", "tags"},
+            annotations={
+                "destructiveHint": True,
+                "openWorldHint": True,
+                "title": "Delete Project Tag",
+            },
+        )
         async def delete_project_tag(auth_token: str, project_id: int, tag: str) -> bool:
             """
             Delete a tag from a project.
@@ -2005,7 +2076,12 @@ class ProjectTools:
         )
 
         # Export project
-        @self.mcp.tool(name="taiga_export_project", description="Export project data")
+        @self.mcp.tool(
+            name="taiga_export_project",
+            description="Export all project data for backup or migration",
+            tags={"projects", "read", "export"},
+            annotations={"readOnlyHint": True, "openWorldHint": True},
+        )
         async def export_project(auth_token: str, project_id: int) -> bytes:
             """
             Export project data.

@@ -1,0 +1,210 @@
+# Análisis de Tests Duplicados - Taiga FastMCP v0.1.1
+
+## Resumen Ejecutivo
+
+Se han identificado **múltiples archivos de test que cubren la misma funcionalidad** con estrategias de mocking diferentes. Esto genera:
+- Mantenimiento duplicado
+- Confusión sobre cuál es el enfoque "oficial"
+- Mayor tiempo de ejecución de tests
+- Inconsistencias en cobertura
+
+---
+
+## Duplicados Identificados
+
+### 1. User Stories Tests (ALTA PRIORIDAD)
+
+| Archivo | Líneas | Estrategia de Mocking | Marcadores |
+|---------|--------|----------------------|------------|
+| `tests/unit/tools/test_userstories.py` | ~1000 | `mock_taiga_api` (respx/httpx) | `@pytest.mark.unit`, `@pytest.mark.userstories` |
+| `tests/unit/tools/test_userstory_tools.py` | ~1100 | `patch` + `AsyncMock` de TaigaAPIClient | Sin marcadores específicos |
+
+**Funcionalidad duplicada:**
+- `test_list_userstories_*` - ambos archivos
+- `test_create_userstory_*` - ambos archivos
+- `test_get_userstory_*` - ambos archivos
+- `test_update_userstory_*` - ambos archivos
+- `test_delete_userstory_*` - ambos archivos
+- `test_bulk_*_userstories_*` - ambos archivos
+
+**Recomendación:** ELIMINAR `test_userstory_tools.py` y MANTENER `test_userstories.py`
+- Razón: `test_userstories.py` tiene mejor documentación con referencias RF-XXX
+- Usa marcadores pytest para organización
+- Incluye fixture `mock_taiga_api` más realista
+
+---
+
+### 2. Project Tests (ALTA PRIORIDAD)
+
+| Archivo | Líneas | Estrategia de Mocking |
+|---------|--------|----------------------|
+| `tests/unit/tools/test_project_tools.py` | ~200 | `mock_taiga_api` (respx/httpx) |
+| `tests/unit/tools/test_projects.py` | ~400 | `patch` + `AsyncMock` de TaigaAPIClient |
+
+**Funcionalidad duplicada:**
+- `test_list_projects_*` - ambos archivos
+- `test_create_project_*` - ambos archivos
+- `test_get_project_*` - ambos archivos
+- Manejo de errores - ambos archivos
+
+**Recomendación:** CONSOLIDAR en un solo archivo
+- Mantener la estructura de `test_project_tools.py` (más moderna)
+- Integrar tests adicionales de `test_projects.py` si aportan cobertura
+
+---
+
+### 3. Auth Tests (PRIORIDAD MEDIA)
+
+| Archivo | Ubicación |
+|---------|-----------|
+| `tests/unit/tools/test_auth.py` | Único archivo de auth unitario |
+
+**Estado:** Sin duplicados directos, pero hay overlap con:
+- `tests/integration/test_auth_integration.py`
+- `tests/integration/tools/test_auth_tools_integration.py`
+
+**Recomendación:** MANTENER - separación unit/integration es correcta
+
+---
+
+### 4. Tests de Cobertura Adicionales
+
+**Archivos potencialmente redundantes:**
+- `tests/unit/test_additional_coverage.py`
+- `tests/unit/test_config_coverage.py`
+- `tests/unit/test_server_coverage.py`
+
+**Análisis:**
+- Estos archivos fueron creados para aumentar cobertura
+- Pueden contener tests que ya existen en otros archivos
+- Deberían integrarse en los tests principales
+
+**Recomendación:** REVISAR y CONSOLIDAR con tests principales
+
+---
+
+## Comparación de Estrategias de Mocking
+
+### Estrategia A: respx/httpx (mock_taiga_api)
+```python
+@pytest.fixture
+def mock_taiga_api():
+    with respx.mock:
+        yield respx.mock
+
+async def test_list_userstories(mock_taiga_api):
+    mock_taiga_api.get("https://api.taiga.io/api/v1/userstories").mock(
+        return_value=httpx.Response(200, json=[...])
+    )
+```
+
+**Pros:**
+- Más cercano a tests de integración real
+- Testea serialización/deserialización HTTP completa
+- Detecta problemas de formato en requests
+
+**Contras:**
+- Más verboso
+- Requiere conocer URLs exactas de API
+- Más frágil ante cambios de implementación
+
+---
+
+### Estrategia B: patch + AsyncMock
+```python
+async def test_list_userstories(userstory_tools):
+    with patch("src.application.tools.userstory_tools.TaigaAPIClient") as mock:
+        mock_client = AsyncMock()
+        mock_client.get = AsyncMock(return_value=[...])
+        ...
+```
+
+**Pros:**
+- Más simple y directo
+- No requiere conocer detalles de HTTP
+- Más estable ante cambios de implementación
+
+**Contras:**
+- No testea la capa HTTP real
+- Puede enmascarar problemas de integración
+
+---
+
+## Estrategia Recomendada
+
+### Enfoque Híbrido:
+1. **Tests unitarios:** Usar `patch` + `AsyncMock` para rapidez
+2. **Tests de integración:** Usar `respx/httpx` para realismo
+3. **Evitar duplicación:** Un solo archivo por módulo en cada nivel
+
+---
+
+## Archivos a Eliminar/Consolidar
+
+### Eliminar (después de verificar cobertura):
+1. `tests/unit/tools/test_userstory_tools.py` → Consolidar en `test_userstories.py`
+2. `tests/unit/tools/test_projects.py` → Consolidar en `test_project_tools.py`
+
+### Revisar y posiblemente consolidar:
+1. `tests/unit/test_additional_coverage.py`
+2. `tests/unit/test_config_coverage.py`
+3. `tests/unit/test_server_coverage.py`
+
+---
+
+## Tests Necesarios (SIN duplicados)
+
+### Nivel Unit (tests/unit/)
+- `test_auth.py` - AuthTools
+- `test_project_tools.py` - ProjectTools (consolidado)
+- `test_userstories.py` - UserStoryTools (consolidado)
+- `test_task_tools.py` - TaskTools
+- `test_epic_tools.py` - EpicTools
+- `test_user_tools.py` - UserTools
+- Domain entities tests (mantener)
+- Infrastructure tests (mantener)
+
+### Nivel Integration (tests/integration/)
+- Mantener todos - prueban integración real
+
+### Nivel E2E (tests/e2e/)
+- Mantener todos - prueban flujos completos
+
+---
+
+## Estimación de Reducción
+
+| Métrica | Actual | Después de consolidación |
+|---------|--------|-------------------------|
+| Archivos de test unit/tools | 12+ | 8-9 |
+| Líneas de código de test | ~5000 | ~3500 |
+| Tiempo de ejecución | ~30s | ~20s (estimado) |
+| Mantenimiento | Alto | Medio |
+
+---
+
+## Plan de Acción
+
+### Fase 1: Análisis de cobertura
+```bash
+uv run pytest --cov=src --cov-report=html tests/unit/tools/test_userstories.py
+uv run pytest --cov=src --cov-report=html tests/unit/tools/test_userstory_tools.py
+# Comparar reportes
+```
+
+### Fase 2: Consolidación
+1. Identificar tests únicos en archivo a eliminar
+2. Migrar tests únicos al archivo principal
+3. Verificar cobertura >= 80%
+4. Eliminar archivo duplicado
+
+### Fase 3: Verificación
+```bash
+uv run pytest tests/ -v
+uv run pytest --cov=src --cov-fail-under=80
+```
+
+---
+
+**Fecha de análisis:** 2025-12-17
+**Versión analizada:** 0.1.1

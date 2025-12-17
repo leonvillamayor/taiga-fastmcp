@@ -59,7 +59,6 @@ from .wiki_use_cases import (
     WikiUseCases,
 )
 
-
 __all__ = [
     "BaseUseCase",
     "BulkCreateEpicsRequest",

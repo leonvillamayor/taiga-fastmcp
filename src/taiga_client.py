@@ -25,7 +25,6 @@ from src.domain.exceptions import (
 from src.infrastructure.logging import get_logger
 from src.infrastructure.retry import RetryConfig, calculate_delay
 
-
 if TYPE_CHECKING:
     from src.infrastructure.http_session_pool import HTTPSessionPool
 
@@ -876,6 +875,21 @@ class TaigaAPIClient:
     async def delete_userstory(self, userstory_id: int) -> bool:
         """Delete user story."""
         return await self.delete(f"/userstories/{userstory_id}")
+
+    async def get_userstory_filters(self, project: int) -> dict[str, Any]:
+        """Get available filters for user stories in a project.
+
+        Args:
+            project: Project ID
+
+        Returns:
+            Dict with available filters including statuses, tags,
+            assigned_to, owners, milestones, and epics.
+        """
+        return cast(
+            "dict[str, Any]",
+            await self.get("/userstories/filters_data", params={"project": project}),
+        )
 
     # Milestone endpoints
     async def list_milestones(

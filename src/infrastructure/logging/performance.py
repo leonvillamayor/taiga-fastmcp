@@ -58,9 +58,9 @@ class APIMetrics:
             "total_calls": self.total_calls,
             "total_duration_ms": round(self.total_duration_ms, 2),
             "avg_duration_ms": round(self.avg_duration_ms, 2),
-            "min_duration_ms": round(self.min_duration_ms, 2)
-            if self.min_duration_ms != float("inf")
-            else 0.0,
+            "min_duration_ms": (
+                round(self.min_duration_ms, 2) if self.min_duration_ms != float("inf") else 0.0
+            ),
             "max_duration_ms": round(self.max_duration_ms, 2),
             "success_count": self.success_count,
             "error_count": self.error_count,

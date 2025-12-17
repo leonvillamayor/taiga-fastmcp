@@ -80,9 +80,9 @@ class TestBatchExecutorConcurrency:
         items = list(range(10))
         await executor.execute(items, track)
 
-        assert max_observed <= max_conc, (
-            f"Con max_concurrency={max_conc}, se observó {max_observed}"
-        )
+        assert (
+            max_observed <= max_conc
+        ), f"Con max_concurrency={max_conc}, se observó {max_observed}"
 
 
 class TestBatchExecutorOrder:

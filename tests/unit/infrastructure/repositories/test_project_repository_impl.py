@@ -5,7 +5,9 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 
 from src.domain.entities.project import Project
-from src.infrastructure.repositories.project_repository_impl import ProjectRepositoryImpl
+from src.infrastructure.repositories.project_repository_impl import (
+    ProjectRepositoryImpl,
+)
 from src.taiga_client import TaigaAPIClient
 
 

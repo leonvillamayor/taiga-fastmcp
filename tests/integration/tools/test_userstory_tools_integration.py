@@ -38,9 +38,9 @@ class TestUserStoryToolsRegistration:
         userstory_tools = [t for t in tools if "userstor" in t.name.lower()]
 
         # Should have CRUD + bulk + voting/watching operations
-        assert len(userstory_tools) >= 5, (
-            f"Expected at least 5 userstory tools, got {len(userstory_tools)}"
-        )
+        assert (
+            len(userstory_tools) >= 5
+        ), f"Expected at least 5 userstory tools, got {len(userstory_tools)}"
 
 
 @pytest.mark.asyncio

@@ -1,19 +1,20 @@
 {
-  "total_tools": 164,
-  "tools_with_prefix": 164,
+  "total_tools": 171,
+  "tools_with_prefix": 171,
   "tools_without_prefix": 0,
   "tools_without_description": 56,
-  "tools_with_issues": 66,
+  "tools_with_issues": 67,
   "modules_stats": {
     "auth_tools": 5,
-    "epic_tools": 28,
+    "cache_tools": 4,
+    "epic_tools": 29,
     "issue_tools": 28,
     "membership_tools": 5,
     "milestone_tools": 10,
     "project_tools": 22,
     "task_tools": 29,
-    "user_tools": 2,
-    "userstory_tools": 15,
+    "user_tools": 3,
+    "userstory_tools": 16,
     "webhook_tools": 6,
     "wiki_tools": 14
   },
@@ -22,9 +23,9 @@
       "name": "taiga_authenticate",
       "file": "src/application/tools/auth_tools.py",
       "function_name": "authenticate",
-      "line_number": 90,
+      "line_number": 92,
       "has_prefix": true,
-      "description": "Authenticate with Taiga using username and password",
+      "description": "Authenticate with Taiga API using username and password credentials",
       "parameters": [
         {
           "name": "username",
@@ -44,9 +45,9 @@
       "name": "taiga_refresh_token",
       "file": "src/application/tools/auth_tools.py",
       "function_name": "refresh_token",
-      "line_number": 203,
+      "line_number": 210,
       "has_prefix": true,
-      "description": "Refresh the authentication token",
+      "description": "Refresh an expired authentication token using a refresh token",
       "parameters": [
         {
           "name": "refresh_token",
@@ -61,7 +62,7 @@
       "name": "taiga_get_current_user",
       "file": "src/application/tools/auth_tools.py",
       "function_name": "get_current_user",
-      "line_number": 290,
+      "line_number": 297,
       "has_prefix": true,
       "description": "Get information about the currently authenticated user",
       "parameters": [
@@ -78,9 +79,9 @@
       "name": "taiga_logout",
       "file": "src/application/tools/auth_tools.py",
       "function_name": "logout",
-      "line_number": 389,
+      "line_number": 401,
       "has_prefix": true,
-      "description": "Clear authentication tokens and logout",
+      "description": "Clear all stored authentication tokens and logout from Taiga",
       "parameters": [],
       "return_type": "dict[str, Any]",
       "issues": []
@@ -89,10 +90,64 @@
       "name": "taiga_check_auth",
       "file": "src/application/tools/auth_tools.py",
       "function_name": "check_auth",
-      "line_number": 445,
+      "line_number": 462,
       "has_prefix": true,
-      "description": "Check current authentication status",
+      "description": "Verify current authentication status and token validity",
       "parameters": [],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_cache_stats",
+      "file": "src/application/tools/cache_tools.py",
+      "function_name": "taiga_cache_stats",
+      "line_number": 54,
+      "has_prefix": true,
+      "description": "Get cache statistics including hit rate, miss rate, size, and performance metrics",
+      "parameters": [],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_cache_clear",
+      "file": "src/application/tools/cache_tools.py",
+      "function_name": "taiga_cache_clear",
+      "line_number": 77,
+      "has_prefix": true,
+      "description": "Clear all cache entries. Use with caution as this will reset all cached data.",
+      "parameters": [],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_cache_invalidate_project",
+      "file": "src/application/tools/cache_tools.py",
+      "function_name": "taiga_cache_invalidate_project",
+      "line_number": 104,
+      "has_prefix": true,
+      "description": "Invalidate all cached data for a specific project. Use after bulk operations or when project data ma...",
+      "parameters": [
+        {
+          "name": "project_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
+      "name": "taiga_cache_invalidate_pattern",
+      "file": "src/application/tools/cache_tools.py",
+      "function_name": "taiga_cache_invalidate_pattern",
+      "line_number": 136,
+      "has_prefix": true,
+      "description": "Invalidate cache entries matching a pattern. Pattern matches as substring in cache keys.",
+      "parameters": [
+        {
+          "name": "pattern",
+          "type": "str"
+        }
+      ],
       "return_type": "dict[str, Any]",
       "issues": []
     },
@@ -100,7 +155,7 @@
       "name": "taiga_list_epics",
       "file": "src/application/tools/epic_tools.py",
       "function_name": "list_epics_tool",
-      "line_number": 50,
+      "line_number": 54,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -138,7 +193,7 @@
       "name": "taiga_create_epic",
       "file": "src/application/tools/epic_tools.py",
       "function_name": "create_epic_tool",
-      "line_number": 120,
+      "line_number": 124,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -189,7 +244,7 @@
       "name": "taiga_get_epic",
       "file": "src/application/tools/epic_tools.py",
       "function_name": "get_epic_tool",
-      "line_number": 195,
+      "line_number": 199,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -211,7 +266,7 @@
       "name": "taiga_get_epic_by_ref",
       "file": "src/application/tools/epic_tools.py",
       "function_name": "get_epic_by_ref_tool",
-      "line_number": 249,
+      "line_number": 253,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -237,7 +292,7 @@
       "name": "taiga_update_epic_full",
       "file": "src/application/tools/epic_tools.py",
       "function_name": "update_epic_full_tool",
-      "line_number": 299,
+      "line_number": 303,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -288,7 +343,7 @@
       "name": "taiga_update_epic_partial",
       "file": "src/application/tools/epic_tools.py",
       "function_name": "update_epic_partial_tool",
-      "line_number": 373,
+      "line_number": 377,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -340,7 +395,7 @@
       "name": "taiga_delete_epic",
       "file": "src/application/tools/epic_tools.py",
       "function_name": "delete_epic_tool",
-      "line_number": 448,
+      "line_number": 452,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -362,7 +417,7 @@
       "name": "taiga_list_epic_related_userstories",
       "file": "src/application/tools/epic_tools.py",
       "function_name": "list_epic_related_userstories_tool",
-      "line_number": 484,
+      "line_number": 488,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -384,7 +439,7 @@
       "name": "taiga_create_epic_related_userstory",
       "file": "src/application/tools/epic_tools.py",
       "function_name": "create_epic_related_userstory_tool",
-      "line_number": 535,
+      "line_number": 539,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -416,7 +471,7 @@
       "name": "taiga_get_epic_related_userstory",
       "file": "src/application/tools/epic_tools.py",
       "function_name": "get_epic_related_userstory_tool",
-      "line_number": 586,
+      "line_number": 590,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -443,7 +498,7 @@
       "name": "taiga_update_epic_related_userstory",
       "file": "src/application/tools/epic_tools.py",
       "function_name": "update_epic_related_userstory_tool",
-      "line_number": 632,
+      "line_number": 636,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -490,7 +545,7 @@
       "name": "taiga_delete_epic_related_userstory",
       "file": "src/application/tools/epic_tools.py",
       "function_name": "delete_epic_related_userstory_tool",
-      "line_number": 699,
+      "line_number": 703,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -517,7 +572,7 @@
       "name": "taiga_bulk_create_epics",
       "file": "src/application/tools/epic_tools.py",
       "function_name": "bulk_create_epics_tool",
-      "line_number": 741,
+      "line_number": 745,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -543,7 +598,7 @@
       "name": "taiga_get_epic_filters",
       "file": "src/application/tools/epic_tools.py",
       "function_name": "get_epic_filters_tool",
-      "line_number": 789,
+      "line_number": 793,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -565,7 +620,7 @@
       "name": "taiga_upvote_epic",
       "file": "src/application/tools/epic_tools.py",
       "function_name": "upvote_epic_tool",
-      "line_number": 832,
+      "line_number": 836,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -587,7 +642,7 @@
       "name": "taiga_downvote_epic",
       "file": "src/application/tools/epic_tools.py",
       "function_name": "downvote_epic_tool",
-      "line_number": 867,
+      "line_number": 871,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -609,7 +664,7 @@
       "name": "taiga_get_epic_voters",
       "file": "src/application/tools/epic_tools.py",
       "function_name": "get_epic_voters_tool",
-      "line_number": 902,
+      "line_number": 906,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -631,7 +686,7 @@
       "name": "taiga_watch_epic",
       "file": "src/application/tools/epic_tools.py",
       "function_name": "watch_epic_tool",
-      "line_number": 943,
+      "line_number": 947,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -653,7 +708,7 @@
       "name": "taiga_unwatch_epic",
       "file": "src/application/tools/epic_tools.py",
       "function_name": "unwatch_epic_tool",
-      "line_number": 978,
+      "line_number": 982,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -675,7 +730,7 @@
       "name": "taiga_get_epic_watchers",
       "file": "src/application/tools/epic_tools.py",
       "function_name": "get_epic_watchers_tool",
-      "line_number": 1013,
+      "line_number": 1017,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -697,7 +752,7 @@
       "name": "taiga_list_epic_attachments",
       "file": "src/application/tools/epic_tools.py",
       "function_name": "list_epic_attachments_tool",
-      "line_number": 1059,
+      "line_number": 1063,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -719,7 +774,7 @@
       "name": "taiga_create_epic_attachment",
       "file": "src/application/tools/epic_tools.py",
       "function_name": "create_epic_attachment_tool",
-      "line_number": 1104,
+      "line_number": 1108,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -750,7 +805,7 @@
       "name": "taiga_get_epic_attachment",
       "file": "src/application/tools/epic_tools.py",
       "function_name": "get_epic_attachment_tool",
-      "line_number": 1155,
+      "line_number": 1159,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -772,7 +827,7 @@
       "name": "taiga_update_epic_attachment",
       "file": "src/application/tools/epic_tools.py",
       "function_name": "update_epic_attachment_tool",
-      "line_number": 1203,
+      "line_number": 1207,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -799,7 +854,7 @@
       "name": "taiga_delete_epic_attachment",
       "file": "src/application/tools/epic_tools.py",
       "function_name": "delete_epic_attachment_tool",
-      "line_number": 1255,
+      "line_number": 1259,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -821,7 +876,7 @@
       "name": "taiga_list_epic_custom_attributes",
       "file": "src/application/tools/epic_tools.py",
       "function_name": "list_epic_custom_attributes_tool",
-      "line_number": 1295,
+      "line_number": 1299,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -843,7 +898,7 @@
       "name": "taiga_create_epic_custom_attribute",
       "file": "src/application/tools/epic_tools.py",
       "function_name": "create_epic_custom_attribute_tool",
-      "line_number": 1352,
+      "line_number": 1356,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -879,7 +934,7 @@
       "name": "taiga_get_epic_custom_attribute_values",
       "file": "src/application/tools/epic_tools.py",
       "function_name": "get_epic_custom_attribute_values_tool",
-      "line_number": 1416,
+      "line_number": 1420,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -898,10 +953,34 @@
       ]
     },
     {
+      "name": "taiga_bulk_link_userstories_to_epic",
+      "file": "src/application/tools/epic_tools.py",
+      "function_name": "bulk_link_userstories_to_epic_tool",
+      "line_number": 1471,
+      "has_prefix": true,
+      "description": "Link multiple user stories to an epic at once",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "epic_id",
+          "type": "int"
+        },
+        {
+          "name": "userstory_ids",
+          "type": "list[int]"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
       "name": "taiga_list_issues",
       "file": "src/application/tools/issue_tools.py",
       "function_name": "list_issues",
-      "line_number": 38,
+      "line_number": 42,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -994,7 +1073,7 @@
       "name": "taiga_create_issue",
       "file": "src/application/tools/issue_tools.py",
       "function_name": "create_issue",
-      "line_number": 124,
+      "line_number": 128,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -1087,7 +1166,7 @@
       "name": "taiga_get_issue",
       "file": "src/application/tools/issue_tools.py",
       "function_name": "get_issue",
-      "line_number": 241,
+      "line_number": 245,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -1109,7 +1188,7 @@
       "name": "taiga_get_issue_by_ref",
       "file": "src/application/tools/issue_tools.py",
       "function_name": "get_issue_by_ref",
-      "line_number": 284,
+      "line_number": 288,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -1135,7 +1214,7 @@
       "name": "taiga_update_issue",
       "file": "src/application/tools/issue_tools.py",
       "function_name": "update_issue",
-      "line_number": 328,
+      "line_number": 332,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -1227,7 +1306,7 @@
       "name": "taiga_delete_issue",
       "file": "src/application/tools/issue_tools.py",
       "function_name": "delete_issue",
-      "line_number": 426,
+      "line_number": 430,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -1249,7 +1328,7 @@
       "name": "taiga_bulk_create_issues",
       "file": "src/application/tools/issue_tools.py",
       "function_name": "bulk_create_issues",
-      "line_number": 458,
+      "line_number": 462,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -1275,7 +1354,7 @@
       "name": "taiga_get_issue_filters",
       "file": "src/application/tools/issue_tools.py",
       "function_name": "get_issue_filters",
-      "line_number": 537,
+      "line_number": 541,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -1297,7 +1376,7 @@
       "name": "taiga_upvote_issue",
       "file": "src/application/tools/issue_tools.py",
       "function_name": "upvote_issue",
-      "line_number": 577,
+      "line_number": 581,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -1319,7 +1398,7 @@
       "name": "taiga_downvote_issue",
       "file": "src/application/tools/issue_tools.py",
       "function_name": "downvote_issue",
-      "line_number": 611,
+      "line_number": 615,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -1341,7 +1420,7 @@
       "name": "taiga_get_issue_voters",
       "file": "src/application/tools/issue_tools.py",
       "function_name": "get_issue_voters",
-      "line_number": 644,
+      "line_number": 648,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -1363,7 +1442,7 @@
       "name": "taiga_watch_issue",
       "file": "src/application/tools/issue_tools.py",
       "function_name": "watch_issue",
-      "line_number": 680,
+      "line_number": 684,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -1385,7 +1464,7 @@
       "name": "taiga_unwatch_issue",
       "file": "src/application/tools/issue_tools.py",
       "function_name": "unwatch_issue",
-      "line_number": 714,
+      "line_number": 718,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -1407,7 +1486,7 @@
       "name": "taiga_get_issue_watchers",
       "file": "src/application/tools/issue_tools.py",
       "function_name": "get_issue_watchers",
-      "line_number": 747,
+      "line_number": 751,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -1429,7 +1508,7 @@
       "name": "taiga_get_issue_attachments",
       "file": "src/application/tools/issue_tools.py",
       "function_name": "get_issue_attachments",
-      "line_number": 784,
+      "line_number": 788,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -1451,7 +1530,7 @@
       "name": "taiga_create_issue_attachment",
       "file": "src/application/tools/issue_tools.py",
       "function_name": "create_issue_attachment",
-      "line_number": 822,
+      "line_number": 826,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -1486,7 +1565,7 @@
       "name": "taiga_get_issue_attachment",
       "file": "src/application/tools/issue_tools.py",
       "function_name": "get_issue_attachment",
-      "line_number": 875,
+      "line_number": 879,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -1508,7 +1587,7 @@
       "name": "taiga_update_issue_attachment",
       "file": "src/application/tools/issue_tools.py",
       "function_name": "update_issue_attachment",
-      "line_number": 914,
+      "line_number": 918,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -1545,7 +1624,7 @@
       "name": "taiga_delete_issue_attachment",
       "file": "src/application/tools/issue_tools.py",
       "function_name": "delete_issue_attachment",
-      "line_number": 966,
+      "line_number": 970,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -1567,7 +1646,7 @@
       "name": "taiga_get_issue_history",
       "file": "src/application/tools/issue_tools.py",
       "function_name": "get_issue_history",
-      "line_number": 998,
+      "line_number": 1002,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -1589,7 +1668,7 @@
       "name": "taiga_get_issue_comment_versions",
       "file": "src/application/tools/issue_tools.py",
       "function_name": "get_issue_comment_versions",
-      "line_number": 1036,
+      "line_number": 1040,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -1615,7 +1694,7 @@
       "name": "taiga_edit_issue_comment",
       "file": "src/application/tools/issue_tools.py",
       "function_name": "edit_issue_comment",
-      "line_number": 1075,
+      "line_number": 1079,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -1645,7 +1724,7 @@
       "name": "taiga_delete_issue_comment",
       "file": "src/application/tools/issue_tools.py",
       "function_name": "delete_issue_comment",
-      "line_number": 1118,
+      "line_number": 1122,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -1671,7 +1750,7 @@
       "name": "taiga_undelete_issue_comment",
       "file": "src/application/tools/issue_tools.py",
       "function_name": "undelete_issue_comment",
-      "line_number": 1151,
+      "line_number": 1155,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -1697,7 +1776,7 @@
       "name": "taiga_get_issue_custom_attributes",
       "file": "src/application/tools/issue_tools.py",
       "function_name": "get_issue_custom_attributes",
-      "line_number": 1191,
+      "line_number": 1195,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -1719,7 +1798,7 @@
       "name": "taiga_create_issue_custom_attribute",
       "file": "src/application/tools/issue_tools.py",
       "function_name": "create_issue_custom_attribute",
-      "line_number": 1234,
+      "line_number": 1238,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -1760,7 +1839,7 @@
       "name": "taiga_update_issue_custom_attribute",
       "file": "src/application/tools/issue_tools.py",
       "function_name": "update_issue_custom_attribute",
-      "line_number": 1298,
+      "line_number": 1302,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -1797,7 +1876,7 @@
       "name": "taiga_delete_issue_custom_attribute",
       "file": "src/application/tools/issue_tools.py",
       "function_name": "delete_issue_custom_attribute",
-      "line_number": 1353,
+      "line_number": 1357,
       "has_prefix": true,
       "description": "",
       "parameters": [
@@ -2242,9 +2321,9 @@
       "name": "taiga_list_projects",
       "file": "src/application/tools/project_tools.py",
       "function_name": "list_projects",
-      "line_number": 102,
+      "line_number": 99,
       "has_prefix": true,
-      "description": "List all projects",
+      "description": "List all projects accessible to the authenticated user",
       "parameters": [
         {
           "name": "auth_token",
@@ -2293,9 +2372,9 @@
       "name": "taiga_create_project",
       "file": "src/application/tools/project_tools.py",
       "function_name": "create_project",
-      "line_number": 224,
+      "line_number": 226,
       "has_prefix": true,
-      "description": "Create a new project",
+      "description": "Create a new Taiga project with specified settings",
       "parameters": [
         {
           "name": "auth_token",
@@ -2373,9 +2452,9 @@
       "name": "taiga_get_project",
       "file": "src/application/tools/project_tools.py",
       "function_name": "get_project",
-      "line_number": 379,
+      "line_number": 386,
       "has_prefix": true,
-      "description": "Get project details",
+      "description": "Get detailed information about a specific project",
       "parameters": [
         {
           "name": "auth_token",
@@ -2399,9 +2478,9 @@
       "name": "taiga_update_project",
       "file": "src/application/tools/project_tools.py",
       "function_name": "update_project",
-      "line_number": 490,
+      "line_number": 502,
       "has_prefix": true,
-      "description": "Update project details",
+      "description": "Update an existing project's settings and metadata",
       "parameters": [
         {
           "name": "auth_token",
@@ -2464,9 +2543,9 @@
       "name": "taiga_delete_project",
       "file": "src/application/tools/project_tools.py",
       "function_name": "delete_project",
-      "line_number": 645,
+      "line_number": 662,
       "has_prefix": true,
-      "description": "Delete a project",
+      "description": "Permanently delete a project and all its data",
       "parameters": [
         {
           "name": "auth_token",
@@ -2484,9 +2563,9 @@
       "name": "taiga_get_project_stats",
       "file": "src/application/tools/project_tools.py",
       "function_name": "get_project_stats",
-      "line_number": 711,
+      "line_number": 733,
       "has_prefix": true,
-      "description": "Get project statistics",
+      "description": "Get comprehensive statistics for a project",
       "parameters": [
         {
           "name": "auth_token",
@@ -2504,9 +2583,9 @@
       "name": "taiga_duplicate_project",
       "file": "src/application/tools/project_tools.py",
       "function_name": "duplicate_project",
-      "line_number": 804,
+      "line_number": 831,
       "has_prefix": true,
-      "description": "Duplicate an existing project",
+      "description": "Create a copy of an existing project with optional settings",
       "parameters": [
         {
           "name": "auth_token",
@@ -2543,9 +2622,9 @@
       "name": "taiga_like_project",
       "file": "src/application/tools/project_tools.py",
       "function_name": "like_project",
-      "line_number": 918,
+      "line_number": 950,
       "has_prefix": true,
-      "description": "Like a project",
+      "description": "Add a like to a project",
       "parameters": [
         {
           "name": "auth_token",
@@ -2563,9 +2642,9 @@
       "name": "taiga_unlike_project",
       "file": "src/application/tools/project_tools.py",
       "function_name": "unlike_project",
-      "line_number": 993,
+      "line_number": 1030,
       "has_prefix": true,
-      "description": "Unlike a project",
+      "description": "Remove a like from a project",
       "parameters": [
         {
           "name": "auth_token",
@@ -2583,9 +2662,9 @@
       "name": "taiga_watch_project",
       "file": "src/application/tools/project_tools.py",
       "function_name": "watch_project",
-      "line_number": 1068,
+      "line_number": 1110,
       "has_prefix": true,
-      "description": "Watch a project for notifications",
+      "description": "Start watching a project to receive notifications",
       "parameters": [
         {
           "name": "auth_token",
@@ -2603,9 +2682,9 @@
       "name": "taiga_unwatch_project",
       "file": "src/application/tools/project_tools.py",
       "function_name": "unwatch_project",
-      "line_number": 1143,
+      "line_number": 1190,
       "has_prefix": true,
-      "description": "Stop watching a project",
+      "description": "Stop watching a project and receiving notifications",
       "parameters": [
         {
           "name": "auth_token",
@@ -2623,7 +2702,7 @@
       "name": "taiga_get_project_modules",
       "file": "src/application/tools/project_tools.py",
       "function_name": "get_project_modules",
-      "line_number": 1220,
+      "line_number": 1267,
       "has_prefix": true,
       "description": "Get project modules configuration",
       "parameters": [
@@ -2643,7 +2722,7 @@
       "name": "taiga_update_project_modules",
       "file": "src/application/tools/project_tools.py",
       "function_name": "update_project_modules",
-      "line_number": 1304,
+      "line_number": 1351,
       "has_prefix": true,
       "description": "Update project modules configuration",
       "parameters": [
@@ -2693,9 +2772,9 @@
       "name": "taiga_get_project_by_slug",
       "file": "src/application/tools/project_tools.py",
       "function_name": "get_project_by_slug",
-      "line_number": 1434,
+      "line_number": 1486,
       "has_prefix": true,
-      "description": "Get project details by slug",
+      "description": "Get project details using its unique slug identifier",
       "parameters": [
         {
           "name": "auth_token",
@@ -2713,7 +2792,7 @@
       "name": "taiga_get_project_issues_stats",
       "file": "src/application/tools/project_tools.py",
       "function_name": "get_project_issues_stats",
-      "line_number": 1511,
+      "line_number": 1563,
       "has_prefix": true,
       "description": "Get issues statistics for a project",
       "parameters": [
@@ -2733,9 +2812,9 @@
       "name": "taiga_get_project_tags",
       "file": "src/application/tools/project_tools.py",
       "function_name": "get_project_tags",
-      "line_number": 1599,
+      "line_number": 1656,
       "has_prefix": true,
-      "description": "Get all tags in a project",
+      "description": "Get all available tags defined in a project",
       "parameters": [
         {
           "name": "auth_token",
@@ -2753,9 +2832,9 @@
       "name": "taiga_create_project_tag",
       "file": "src/application/tools/project_tools.py",
       "function_name": "create_project_tag",
-      "line_number": 1672,
+      "line_number": 1734,
       "has_prefix": true,
-      "description": "Create a new tag in a project",
+      "description": "Create a new tag in a project with optional color",
       "parameters": [
         {
           "name": "auth_token",
@@ -2782,7 +2861,7 @@
       "name": "taiga_edit_project_tag",
       "file": "src/application/tools/project_tools.py",
       "function_name": "edit_project_tag",
-      "line_number": 1763,
+      "line_number": 1825,
       "has_prefix": true,
       "description": "Edit an existing tag in a project",
       "parameters": [
@@ -2815,9 +2894,9 @@
       "name": "taiga_delete_project_tag",
       "file": "src/application/tools/project_tools.py",
       "function_name": "delete_project_tag",
-      "line_number": 1853,
+      "line_number": 1924,
       "has_prefix": true,
-      "description": "Delete a tag from a project",
+      "description": "Permanently delete a tag from a project",
       "parameters": [
         {
           "name": "auth_token",
@@ -2839,7 +2918,7 @@
       "name": "taiga_mix_project_tags",
       "file": "src/application/tools/project_tools.py",
       "function_name": "mix_project_tags",
-      "line_number": 1926,
+      "line_number": 1997,
       "has_prefix": true,
       "description": "Mix multiple tags into one in a project",
       "parameters": [
@@ -2867,9 +2946,9 @@
       "name": "taiga_export_project",
       "file": "src/application/tools/project_tools.py",
       "function_name": "export_project",
-      "line_number": 2009,
+      "line_number": 2085,
       "has_prefix": true,
-      "description": "Export project data",
+      "description": "Export all project data for backup or migration",
       "parameters": [
         {
           "name": "auth_token",
@@ -2887,7 +2966,7 @@
       "name": "taiga_bulk_update_projects_order",
       "file": "src/application/tools/project_tools.py",
       "function_name": "bulk_update_projects_order",
-      "line_number": 2077,
+      "line_number": 2153,
       "has_prefix": true,
       "description": "Update the order of multiple projects",
       "parameters": [
@@ -2907,7 +2986,7 @@
       "name": "taiga_list_tasks",
       "file": "src/application/tools/task_tools.py",
       "function_name": "list_tasks_tool",
-      "line_number": 81,
+      "line_number": 85,
       "has_prefix": true,
       "description": "List all tasks in a Taiga project with optional filters",
       "parameters": [
@@ -2978,7 +3057,7 @@
       "name": "taiga_create_task",
       "file": "src/application/tools/task_tools.py",
       "function_name": "create_task_tool",
-      "line_number": 159,
+      "line_number": 163,
       "has_prefix": true,
       "description": "Create a new task in a Taiga project",
       "parameters": [
@@ -3042,7 +3121,7 @@
       "name": "taiga_get_task",
       "file": "src/application/tools/task_tools.py",
       "function_name": "get_task_tool",
-      "line_number": 250,
+      "line_number": 254,
       "has_prefix": true,
       "description": "Get a specific task by its ID",
       "parameters": [
@@ -3062,7 +3141,7 @@
       "name": "taiga_get_task_by_ref",
       "file": "src/application/tools/task_tools.py",
       "function_name": "get_task_by_ref_tool",
-      "line_number": 301,
+      "line_number": 305,
       "has_prefix": true,
       "description": "Get a specific task by its reference and project",
       "parameters": [
@@ -3086,7 +3165,7 @@
       "name": "taiga_update_task_full",
       "file": "src/application/tools/task_tools.py",
       "function_name": "update_task_full_tool",
-      "line_number": 348,
+      "line_number": 352,
       "has_prefix": true,
       "description": "Update a task (full replacement)",
       "parameters": [
@@ -3154,7 +3233,7 @@
       "name": "taiga_update_task",
       "file": "src/application/tools/task_tools.py",
       "function_name": "update_task_partial_tool",
-      "line_number": 443,
+      "line_number": 447,
       "has_prefix": true,
       "description": "Update specific fields of a task (partial update)",
       "parameters": [
@@ -3219,7 +3298,7 @@
       "name": "taiga_delete_task",
       "file": "src/application/tools/task_tools.py",
       "function_name": "delete_task_tool",
-      "line_number": 533,
+      "line_number": 537,
       "has_prefix": true,
       "description": "Delete a task",
       "parameters": [
@@ -3239,7 +3318,7 @@
       "name": "taiga_bulk_create_tasks",
       "file": "src/application/tools/task_tools.py",
       "function_name": "bulk_create_tasks_tool",
-      "line_number": 566,
+      "line_number": 570,
       "has_prefix": true,
       "description": "Create multiple tasks at once",
       "parameters": [
@@ -3263,7 +3342,7 @@
       "name": "taiga_get_task_filters",
       "file": "src/application/tools/task_tools.py",
       "function_name": "get_task_filters_tool",
-      "line_number": 609,
+      "line_number": 613,
       "has_prefix": true,
       "description": "Get available filters for tasks",
       "parameters": [
@@ -3283,7 +3362,7 @@
       "name": "taiga_upvote_task",
       "file": "src/application/tools/task_tools.py",
       "function_name": "upvote_task_tool",
-      "line_number": 645,
+      "line_number": 649,
       "has_prefix": true,
       "description": "Add a positive vote to a task",
       "parameters": [
@@ -3303,7 +3382,7 @@
       "name": "taiga_downvote_task",
       "file": "src/application/tools/task_tools.py",
       "function_name": "downvote_task_tool",
-      "line_number": 678,
+      "line_number": 682,
       "has_prefix": true,
       "description": "Remove vote from a task",
       "parameters": [
@@ -3323,7 +3402,7 @@
       "name": "taiga_get_task_voters",
       "file": "src/application/tools/task_tools.py",
       "function_name": "get_task_voters_tool",
-      "line_number": 713,
+      "line_number": 717,
       "has_prefix": true,
       "description": "Get list of users who voted on a task",
       "parameters": [
@@ -3343,7 +3422,7 @@
       "name": "taiga_watch_task",
       "file": "src/application/tools/task_tools.py",
       "function_name": "watch_task_tool",
-      "line_number": 749,
+      "line_number": 753,
       "has_prefix": true,
       "description": "Start watching a task for updates",
       "parameters": [
@@ -3363,7 +3442,7 @@
       "name": "taiga_unwatch_task",
       "file": "src/application/tools/task_tools.py",
       "function_name": "unwatch_task_tool",
-      "line_number": 782,
+      "line_number": 786,
       "has_prefix": true,
       "description": "Stop watching a task",
       "parameters": [
@@ -3383,7 +3462,7 @@
       "name": "taiga_get_task_watchers",
       "file": "src/application/tools/task_tools.py",
       "function_name": "get_task_watchers_tool",
-      "line_number": 816,
+      "line_number": 820,
       "has_prefix": true,
       "description": "Get list of users watching a task",
       "parameters": [
@@ -3403,7 +3482,7 @@
       "name": "taiga_list_task_attachments",
       "file": "src/application/tools/task_tools.py",
       "function_name": "list_task_attachments_tool",
-      "line_number": 854,
+      "line_number": 858,
       "has_prefix": true,
       "description": "List all attachments of a task",
       "parameters": [
@@ -3427,7 +3506,7 @@
       "name": "taiga_create_task_attachment",
       "file": "src/application/tools/task_tools.py",
       "function_name": "create_task_attachment_tool",
-      "line_number": 904,
+      "line_number": 908,
       "has_prefix": true,
       "description": "Create a new attachment for a task",
       "parameters": [
@@ -3465,7 +3544,7 @@
       "name": "taiga_get_task_attachment",
       "file": "src/application/tools/task_tools.py",
       "function_name": "get_task_attachment_tool",
-      "line_number": 965,
+      "line_number": 969,
       "has_prefix": true,
       "description": "Get a specific task attachment",
       "parameters": [
@@ -3485,7 +3564,7 @@
       "name": "taiga_update_task_attachment",
       "file": "src/application/tools/task_tools.py",
       "function_name": "update_task_attachment_tool",
-      "line_number": 1006,
+      "line_number": 1010,
       "has_prefix": true,
       "description": "Update a task attachment",
       "parameters": [
@@ -3515,7 +3594,7 @@
       "name": "taiga_delete_task_attachment",
       "file": "src/application/tools/task_tools.py",
       "function_name": "delete_task_attachment_tool",
-      "line_number": 1053,
+      "line_number": 1057,
       "has_prefix": true,
       "description": "Delete a task attachment",
       "parameters": [
@@ -3535,7 +3614,7 @@
       "name": "taiga_get_task_history",
       "file": "src/application/tools/task_tools.py",
       "function_name": "get_task_history_tool",
-      "line_number": 1091,
+      "line_number": 1095,
       "has_prefix": true,
       "description": "Get the history of changes for a task",
       "parameters": [
@@ -3555,7 +3634,7 @@
       "name": "taiga_get_task_comment_versions",
       "file": "src/application/tools/task_tools.py",
       "function_name": "get_task_comment_versions_tool",
-      "line_number": 1131,
+      "line_number": 1135,
       "has_prefix": true,
       "description": "Get all versions of a task comment",
       "parameters": [
@@ -3579,7 +3658,7 @@
       "name": "taiga_edit_task_comment",
       "file": "src/application/tools/task_tools.py",
       "function_name": "edit_task_comment_tool",
-      "line_number": 1172,
+      "line_number": 1176,
       "has_prefix": true,
       "description": "Edit a task comment",
       "parameters": [
@@ -3607,7 +3686,7 @@
       "name": "taiga_delete_task_comment",
       "file": "src/application/tools/task_tools.py",
       "function_name": "delete_task_comment_tool",
-      "line_number": 1213,
+      "line_number": 1217,
       "has_prefix": true,
       "description": "Delete a task comment",
       "parameters": [
@@ -3631,7 +3710,7 @@
       "name": "taiga_undelete_task_comment",
       "file": "src/application/tools/task_tools.py",
       "function_name": "undelete_task_comment_tool",
-      "line_number": 1255,
+      "line_number": 1259,
       "has_prefix": true,
       "description": "Undelete a previously deleted task comment",
       "parameters": [
@@ -3655,7 +3734,7 @@
       "name": "taiga_list_task_custom_attributes",
       "file": "src/application/tools/task_tools.py",
       "function_name": "list_task_custom_attributes_tool",
-      "line_number": 1299,
+      "line_number": 1303,
       "has_prefix": true,
       "description": "List custom attributes for tasks in a project",
       "parameters": [
@@ -3675,7 +3754,7 @@
       "name": "taiga_create_task_custom_attribute",
       "file": "src/application/tools/task_tools.py",
       "function_name": "create_task_custom_attribute_tool",
-      "line_number": 1341,
+      "line_number": 1345,
       "has_prefix": true,
       "description": "Create a new custom attribute for tasks",
       "parameters": [
@@ -3709,7 +3788,7 @@
       "name": "taiga_update_task_custom_attribute",
       "file": "src/application/tools/task_tools.py",
       "function_name": "update_task_custom_attribute_tool",
-      "line_number": 1400,
+      "line_number": 1404,
       "has_prefix": true,
       "description": "Update a custom attribute for tasks",
       "parameters": [
@@ -3739,7 +3818,7 @@
       "name": "taiga_delete_task_custom_attribute",
       "file": "src/application/tools/task_tools.py",
       "function_name": "delete_task_custom_attribute_tool",
-      "line_number": 1448,
+      "line_number": 1452,
       "has_prefix": true,
       "description": "Delete a custom attribute for tasks",
       "parameters": [
@@ -3802,12 +3881,32 @@
       "issues": []
     },
     {
+      "name": "taiga_get_user",
+      "file": "src/application/tools/user_tools.py",
+      "function_name": "get_user",
+      "line_number": 215,
+      "has_prefix": true,
+      "description": "Get a user by their ID",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "user_id",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
+      "issues": []
+    },
+    {
       "name": "taiga_list_userstories",
       "file": "src/application/tools/userstory_tools.py",
       "function_name": "list_userstories",
-      "line_number": 96,
+      "line_number": 91,
       "has_prefix": true,
-      "description": "List user stories with optional filtering",
+      "description": "List user stories with optional filtering by project, milestone, status, and more",
       "parameters": [
         {
           "name": "auth_token",
@@ -3853,7 +3952,7 @@
       "function_name": "create_userstory",
       "line_number": 247,
       "has_prefix": true,
-      "description": "Create a new user story",
+      "description": "Create a new user story in a Taiga project",
       "parameters": [
         {
           "name": "auth_token",
@@ -3932,7 +4031,7 @@
       "name": "taiga_get_userstory",
       "file": "src/application/tools/userstory_tools.py",
       "function_name": "get_userstory",
-      "line_number": 415,
+      "line_number": 417,
       "has_prefix": true,
       "description": "Get detailed information about a specific user story",
       "parameters": [
@@ -3965,9 +4064,9 @@
       "name": "taiga_update_userstory",
       "file": "src/application/tools/userstory_tools.py",
       "function_name": "update_userstory",
-      "line_number": 569,
+      "line_number": 576,
       "has_prefix": true,
-      "description": "Update an existing user story",
+      "description": "Update an existing user story's properties",
       "parameters": [
         {
           "name": "auth_token",
@@ -4057,9 +4156,9 @@
       "name": "taiga_delete_userstory",
       "file": "src/application/tools/userstory_tools.py",
       "function_name": "delete_userstory",
-      "line_number": 763,
+      "line_number": 779,
       "has_prefix": true,
-      "description": "Delete a user story",
+      "description": "Permanently delete a user story from the project",
       "parameters": [
         {
           "name": "auth_token",
@@ -4079,9 +4178,9 @@
       "name": "taiga_bulk_create_userstories",
       "file": "src/application/tools/userstory_tools.py",
       "function_name": "bulk_create_userstories",
-      "line_number": 836,
+      "line_number": 855,
       "has_prefix": true,
-      "description": "Create multiple user stories at once",
+      "description": "Create multiple user stories at once in a project",
       "parameters": [
         {
           "name": "auth_token",
@@ -4113,9 +4212,9 @@
       "name": "taiga_bulk_update_userstories",
       "file": "src/application/tools/userstory_tools.py",
       "function_name": "bulk_update_userstories",
-      "line_number": 953,
+      "line_number": 975,
       "has_prefix": true,
-      "description": "Update multiple user stories at once",
+      "description": "Update multiple user stories at once with bulk changes",
       "parameters": [
         {
           "name": "auth_token",
@@ -4148,9 +4247,9 @@
       "name": "taiga_bulk_delete_userstories",
       "file": "src/application/tools/userstory_tools.py",
       "function_name": "bulk_delete_userstories",
-      "line_number": 1064,
+      "line_number": 1093,
       "has_prefix": true,
-      "description": "Delete multiple user stories at once",
+      "description": "Permanently delete multiple user stories at once",
       "parameters": [
         {
           "name": "auth_token",
@@ -4168,7 +4267,7 @@
       "name": "taiga_move_to_milestone",
       "file": "src/application/tools/userstory_tools.py",
       "function_name": "move_to_milestone",
-      "line_number": 1130,
+      "line_number": 1161,
       "has_prefix": true,
       "description": "Move user story to a different milestone/sprint",
       "parameters": [
@@ -4192,9 +4291,9 @@
       "name": "taiga_get_userstory_history",
       "file": "src/application/tools/userstory_tools.py",
       "function_name": "get_userstory_history",
-      "line_number": 1226,
+      "line_number": 1260,
       "has_prefix": true,
-      "description": "Get change history for a user story",
+      "description": "Get full change history for a user story",
       "parameters": [
         {
           "name": "auth_token",
@@ -4214,9 +4313,9 @@
       "name": "taiga_watch_userstory",
       "file": "src/application/tools/userstory_tools.py",
       "function_name": "watch_userstory",
-      "line_number": 1327,
+      "line_number": 1364,
       "has_prefix": true,
-      "description": "Watch a user story for notifications",
+      "description": "Start watching a user story for change notifications",
       "parameters": [
         {
           "name": "auth_token",
@@ -4236,9 +4335,9 @@
       "name": "taiga_unwatch_userstory",
       "file": "src/application/tools/userstory_tools.py",
       "function_name": "unwatch_userstory",
-      "line_number": 1400,
+      "line_number": 1442,
       "has_prefix": true,
-      "description": "Stop watching a user story",
+      "description": "Stop watching a user story for notifications",
       "parameters": [
         {
           "name": "auth_token",
@@ -4258,9 +4357,9 @@
       "name": "taiga_upvote_userstory",
       "file": "src/application/tools/userstory_tools.py",
       "function_name": "upvote_userstory",
-      "line_number": 1473,
+      "line_number": 1520,
       "has_prefix": true,
-      "description": "Upvote a user story",
+      "description": "Add an upvote to a user story",
       "parameters": [
         {
           "name": "auth_token",
@@ -4280,9 +4379,9 @@
       "name": "taiga_downvote_userstory",
       "file": "src/application/tools/userstory_tools.py",
       "function_name": "downvote_userstory",
-      "line_number": 1548,
+      "line_number": 1598,
       "has_prefix": true,
-      "description": "Remove upvote from a user story",
+      "description": "Remove your upvote from a user story",
       "parameters": [
         {
           "name": "auth_token",
@@ -4302,7 +4401,7 @@
       "name": "taiga_get_userstory_voters",
       "file": "src/application/tools/userstory_tools.py",
       "function_name": "get_userstory_voters",
-      "line_number": 1625,
+      "line_number": 1677,
       "has_prefix": true,
       "description": "Get list of users who voted for a user story",
       "parameters": [
@@ -4316,6 +4415,28 @@
         }
       ],
       "return_type": "list[dict[str, Any]]",
+      "issues": [
+        "Inconsistent naming: 'userstory' should be 'user_story'"
+      ]
+    },
+    {
+      "name": "taiga_get_userstory_filters",
+      "file": "src/application/tools/userstory_tools.py",
+      "function_name": "get_userstory_filters",
+      "line_number": 1774,
+      "has_prefix": true,
+      "description": "Get available filter options for user stories in a project",
+      "parameters": [
+        {
+          "name": "auth_token",
+          "type": "str"
+        },
+        {
+          "name": "project",
+          "type": "int"
+        }
+      ],
+      "return_type": "dict[str, Any]",
       "issues": [
         "Inconsistent naming: 'userstory' should be 'user_story'"
       ]

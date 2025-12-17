@@ -16,7 +16,6 @@ import pytest
 import pytest_asyncio
 from faker import Faker
 
-
 if TYPE_CHECKING:
     from collections.abc import AsyncGenerator, Callable
 

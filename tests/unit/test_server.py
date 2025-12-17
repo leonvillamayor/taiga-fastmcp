@@ -265,9 +265,9 @@ class TestServerBestPractices:
             if not name.startswith("_"):  # Métodos públicos
                 sig = inspect.signature(method)
                 # Debe tener anotación de retorno
-                assert sig.return_annotation != inspect.Signature.empty, (
-                    f"Method {name} missing return type hint"
-                )
+                assert (
+                    sig.return_annotation != inspect.Signature.empty
+                ), f"Method {name} missing return type hint"
 
     @pytest.mark.unit
     @pytest.mark.mcp

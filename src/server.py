@@ -17,7 +17,6 @@ from src.domain.exceptions import AuthenticationError
 from src.infrastructure.container import ApplicationContainer
 from src.taiga_client import TaigaAPIClient
 
-
 # Alias for backward compatibility with tests
 TaigaClient = TaigaAPIClient
 
@@ -88,6 +87,7 @@ class TaigaMCPServer:
 
         # Get tool instances from container
         self._auth_tools = self.container.auth_tools()
+        self._cache_tools = self.container.cache_tools()
         self._project_tools = self.container.project_tools()
         self._userstory_tools = self.container.userstory_tools()
         self.issue_tools = self.container.issue_tools()
