@@ -20,18 +20,10 @@ from src.domain.validators import (
     UserStoryUpdateValidator,
     validate_input,
 )
+from src.infrastructure.client_factory import get_taiga_client
 from src.infrastructure.logging import get_logger
 from src.infrastructure.pagination import AutoPaginator, PaginationConfig
 from src.taiga_client import TaigaAPIClient
-
-
-def get_taiga_client(auth_token: str | None = None) -> TaigaAPIClient:
-    """Get or create a Taiga API client - module level for patching."""
-    config = TaigaConfig()
-    client = TaigaAPIClient(config)
-    if auth_token:
-        client.auth_token = auth_token
-    return client
 
 
 class UserStoryTools:
@@ -91,7 +83,10 @@ class UserStoryTools:
 
         # List user stories
         @self.mcp.tool(
-            name="taiga_list_userstories", description="List user stories with optional filtering"
+            name="taiga_list_userstories",
+            description="List user stories with optional filtering by project, milestone, status, and more",
+            tags={"userstories", "read", "list"},
+            annotations={"readOnlyHint": True, "openWorldHint": True},
         )
         async def list_userstories(
             auth_token: str,
@@ -243,7 +238,12 @@ class UserStoryTools:
         )
 
         # Create user story
-        @self.mcp.tool(name="taiga_create_userstory", description="Create a new user story")
+        @self.mcp.tool(
+            name="taiga_create_userstory",
+            description="Create a new user story in a Taiga project",
+            tags={"userstories", "write", "create"},
+            annotations={"readOnlyHint": False, "openWorldHint": True},
+        )
         async def create_userstory(
             auth_token: str,
             subject: str,
@@ -411,6 +411,8 @@ class UserStoryTools:
         @self.mcp.tool(
             name="taiga_get_userstory",
             description="Get detailed information about a specific user story",
+            tags={"userstories", "read", "get"},
+            annotations={"readOnlyHint": True, "openWorldHint": True},
         )
         async def get_userstory(
             auth_token: str,
@@ -565,7 +567,12 @@ class UserStoryTools:
         self.get_userstory = get_userstory.fn if hasattr(get_userstory, "fn") else get_userstory
 
         # Update user story
-        @self.mcp.tool(name="taiga_update_userstory", description="Update an existing user story")
+        @self.mcp.tool(
+            name="taiga_update_userstory",
+            description="Update an existing user story's properties",
+            tags={"userstories", "write", "update"},
+            annotations={"readOnlyHint": False, "openWorldHint": True},
+        )
         async def update_userstory(
             auth_token: str,
             userstory_id: int,
@@ -759,7 +766,16 @@ class UserStoryTools:
         )
 
         # Delete user story
-        @self.mcp.tool(name="taiga_delete_userstory", description="Delete a user story")
+        @self.mcp.tool(
+            name="taiga_delete_userstory",
+            description="Permanently delete a user story from the project",
+            tags={"userstories", "delete"},
+            annotations={
+                "destructiveHint": True,
+                "openWorldHint": True,
+                "title": "Delete User Story",
+            },
+        )
         async def delete_userstory(auth_token: str, userstory_id: int) -> bool:
             """
             Delete a user story.
@@ -831,7 +847,10 @@ class UserStoryTools:
 
         # Bulk create user stories
         @self.mcp.tool(
-            name="taiga_bulk_create_userstories", description="Create multiple user stories at once"
+            name="taiga_bulk_create_userstories",
+            description="Create multiple user stories at once in a project",
+            tags={"userstories", "write", "bulk", "create"},
+            annotations={"readOnlyHint": False, "openWorldHint": True},
         )
         async def bulk_create_userstories(
             auth_token: str,
@@ -948,7 +967,10 @@ class UserStoryTools:
 
         # Bulk update user stories
         @self.mcp.tool(
-            name="taiga_bulk_update_userstories", description="Update multiple user stories at once"
+            name="taiga_bulk_update_userstories",
+            description="Update multiple user stories at once with bulk changes",
+            tags={"userstories", "write", "bulk", "update"},
+            annotations={"readOnlyHint": False, "openWorldHint": True},
         )
         async def bulk_update_userstories(
             auth_token: str,
@@ -1059,7 +1081,14 @@ class UserStoryTools:
 
         # Bulk delete user stories
         @self.mcp.tool(
-            name="taiga_bulk_delete_userstories", description="Delete multiple user stories at once"
+            name="taiga_bulk_delete_userstories",
+            description="Permanently delete multiple user stories at once",
+            tags={"userstories", "delete", "bulk"},
+            annotations={
+                "destructiveHint": True,
+                "openWorldHint": True,
+                "title": "Bulk Delete User Stories",
+            },
         )
         async def bulk_delete_userstories(auth_token: str, story_ids: list[int]) -> bool:
             """
@@ -1126,6 +1155,8 @@ class UserStoryTools:
         @self.mcp.tool(
             name="taiga_move_to_milestone",
             description="Move user story to a different milestone/sprint",
+            tags={"userstories", "write", "milestones"},
+            annotations={"readOnlyHint": False, "openWorldHint": True},
         )
         async def move_to_milestone(
             auth_token: str, userstory_id: int, milestone_id: int
@@ -1221,7 +1252,10 @@ class UserStoryTools:
 
         # Get user story history
         @self.mcp.tool(
-            name="taiga_get_userstory_history", description="Get change history for a user story"
+            name="taiga_get_userstory_history",
+            description="Get full change history for a user story",
+            tags={"userstories", "read", "history"},
+            annotations={"readOnlyHint": True, "openWorldHint": True},
         )
         async def get_userstory_history(auth_token: str, userstory_id: int) -> list[dict[str, Any]]:
             """
@@ -1322,7 +1356,10 @@ class UserStoryTools:
 
         # Watch user story
         @self.mcp.tool(
-            name="taiga_watch_userstory", description="Watch a user story for notifications"
+            name="taiga_watch_userstory",
+            description="Start watching a user story for change notifications",
+            tags={"userstories", "write", "notifications"},
+            annotations={"readOnlyHint": False, "idempotentHint": True, "openWorldHint": True},
         )
         async def watch_userstory(auth_token: str, userstory_id: int) -> dict[str, Any]:
             """
@@ -1396,7 +1433,12 @@ class UserStoryTools:
         )
 
         # Unwatch user story
-        @self.mcp.tool(name="taiga_unwatch_userstory", description="Stop watching a user story")
+        @self.mcp.tool(
+            name="taiga_unwatch_userstory",
+            description="Stop watching a user story for notifications",
+            tags={"userstories", "write", "notifications"},
+            annotations={"readOnlyHint": False, "idempotentHint": True, "openWorldHint": True},
+        )
         async def unwatch_userstory(auth_token: str, userstory_id: int) -> dict[str, Any]:
             """
             Stop watching a user story.
@@ -1469,7 +1511,12 @@ class UserStoryTools:
         )
 
         # Upvote user story
-        @self.mcp.tool(name="taiga_upvote_userstory", description="Upvote a user story")
+        @self.mcp.tool(
+            name="taiga_upvote_userstory",
+            description="Add an upvote to a user story",
+            tags={"userstories", "write", "social"},
+            annotations={"readOnlyHint": False, "idempotentHint": True, "openWorldHint": True},
+        )
         async def upvote_userstory(auth_token: str, userstory_id: int) -> dict[str, Any]:
             """
             Upvote a user story.
@@ -1543,7 +1590,10 @@ class UserStoryTools:
 
         # Downvote user story
         @self.mcp.tool(
-            name="taiga_downvote_userstory", description="Remove upvote from a user story"
+            name="taiga_downvote_userstory",
+            description="Remove your upvote from a user story",
+            tags={"userstories", "write", "social"},
+            annotations={"readOnlyHint": False, "idempotentHint": True, "openWorldHint": True},
         )
         async def downvote_userstory(auth_token: str, userstory_id: int) -> dict[str, Any]:
             """
@@ -1621,6 +1671,8 @@ class UserStoryTools:
         @self.mcp.tool(
             name="taiga_get_userstory_voters",
             description="Get list of users who voted for a user story",
+            tags={"userstories", "read", "social"},
+            annotations={"readOnlyHint": True, "openWorldHint": True},
         )
         async def get_userstory_voters(auth_token: str, userstory_id: int) -> list[dict[str, Any]]:
             """
@@ -1710,6 +1762,79 @@ class UserStoryTools:
         # Store reference for direct test access
         self.get_userstory_voters = (
             get_userstory_voters.fn if hasattr(get_userstory_voters, "fn") else get_userstory_voters
+        )
+
+        # Get user story filters
+        @self.mcp.tool(
+            name="taiga_get_userstory_filters",
+            description="Get available filter options for user stories in a project",
+            tags={"userstories", "read", "filters"},
+            annotations={"readOnlyHint": True, "openWorldHint": True},
+        )
+        async def get_userstory_filters(
+            auth_token: str,
+            project: int,
+        ) -> dict[str, Any]:
+            """
+            Get available filter options for user stories in a project.
+
+            Returns statuses, tags, assigned users, and other filter options
+            that can be used when listing or filtering user stories.
+
+            Args:
+                auth_token: Authentication token
+                project: Project ID to get filters for
+
+            Returns:
+                Dictionary with available filter options including:
+                - statuses: Available status options
+                - tags: Available tags
+                - assigned_to: Users that can be assigned
+                - owners: Available owners
+                - epics: Related epics
+
+            Example:
+                >>> filters = await taiga_get_userstory_filters(
+                ...     auth_token="your-token",
+                ...     project=123
+                ... )
+                >>> print(filters["statuses"])
+            """
+            self._logger.info(f"[get_userstory_filters] Starting | project={project}")
+            try:
+                # Support mock client injection for testing
+                if self.client is not None and hasattr(self.client, "get_userstory_filters"):
+                    result = self.client.get_userstory_filters(project=project)
+                    if hasattr(result, "__await__"):
+                        result = await result
+                    self._logger.info(f"[get_userstory_filters] Success | project={project}")
+                    return result
+
+                async with TaigaAPIClient(self.config) as client:
+                    client.auth_token = auth_token
+                    result = await client.get_userstory_filters(project=project)
+                    self._logger.info(f"[get_userstory_filters] Success | project={project}")
+                    return result
+            except ResourceNotFoundError:
+                self._logger.warning(
+                    f"[get_userstory_filters] Project not found | project={project}"
+                )
+                raise MCPError(f"Project {project} not found") from None
+            except AuthenticationError:
+                self._logger.warning("[get_userstory_filters] Authentication failed")
+                raise MCPError("Authentication failed") from None
+            except TaigaAPIError as e:
+                self._logger.error(f"[get_userstory_filters] API error | error={e!s}")
+                raise MCPError(f"API error: {e!s}") from e
+            except Exception as e:
+                self._logger.error(f"[get_userstory_filters] Unexpected error | error={e!s}")
+                raise MCPError(f"Unexpected error: {e!s}") from e
+
+        # Store reference for direct test access
+        self.get_userstory_filters = (
+            get_userstory_filters.fn
+            if hasattr(get_userstory_filters, "fn")
+            else get_userstory_filters
         )
 
     # Métodos adicionales para facilitar testing

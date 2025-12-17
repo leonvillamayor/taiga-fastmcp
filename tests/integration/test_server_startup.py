@@ -108,7 +108,9 @@ class TestDependencyInjection:
 
     def test_epic_repository_receives_taiga_client(self) -> None:
         """EpicRepository debe recibir el cliente Taiga correctamente."""
-        from src.infrastructure.repositories.epic_repository_impl import EpicRepositoryImpl
+        from src.infrastructure.repositories.epic_repository_impl import (
+            EpicRepositoryImpl,
+        )
 
         container = ApplicationContainer()
         repository = container.epic_repository()
@@ -119,7 +121,9 @@ class TestDependencyInjection:
 
     def test_epic_repository_is_singleton(self) -> None:
         """EpicRepository debe ser singleton."""
-        from src.infrastructure.repositories.epic_repository_impl import EpicRepositoryImpl
+        from src.infrastructure.repositories.epic_repository_impl import (
+            EpicRepositoryImpl,
+        )
 
         container = ApplicationContainer()
         repo1 = container.epic_repository()
