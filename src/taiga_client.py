@@ -877,6 +877,21 @@ class TaigaAPIClient:
         """Delete user story."""
         return await self.delete(f"/userstories/{userstory_id}")
 
+    async def get_userstory_filters(self, project: int) -> dict[str, Any]:
+        """Get available filters for user stories in a project.
+
+        Args:
+            project: Project ID
+
+        Returns:
+            Dict with available filters including statuses, tags,
+            assigned_to, owners, milestones, and epics.
+        """
+        return cast(
+            "dict[str, Any]",
+            await self.get("/userstories/filters_data", params={"project": project}),
+        )
+
     # Milestone endpoints
     async def list_milestones(
         self, project: int | None = None, closed: bool | None = None

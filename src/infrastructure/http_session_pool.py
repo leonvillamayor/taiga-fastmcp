@@ -12,7 +12,10 @@ from typing import Any
 
 import httpx
 
-from src.infrastructure.logging.performance import PerformanceLogger, get_performance_logger
+from src.infrastructure.logging.performance import (
+    PerformanceLogger,
+    get_performance_logger,
+)
 
 
 class HTTPSessionPool:

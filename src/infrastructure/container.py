@@ -10,6 +10,7 @@ from dependency_injector import containers, providers
 from fastmcp import FastMCP
 
 from src.application.tools.auth_tools import AuthTools
+from src.application.tools.cache_tools import CacheTools
 from src.application.tools.epic_tools import EpicTools
 from src.application.tools.issue_tools import IssueTools
 from src.application.tools.membership_tools import MembershipTools
@@ -38,10 +39,16 @@ from src.infrastructure.metrics import MetricsCollector
 from src.infrastructure.repositories.epic_repository_impl import EpicRepositoryImpl
 from src.infrastructure.repositories.issue_repository_impl import IssueRepositoryImpl
 from src.infrastructure.repositories.member_repository_impl import MemberRepositoryImpl
-from src.infrastructure.repositories.milestone_repository_impl import MilestoneRepositoryImpl
-from src.infrastructure.repositories.project_repository_impl import ProjectRepositoryImpl
+from src.infrastructure.repositories.milestone_repository_impl import (
+    MilestoneRepositoryImpl,
+)
+from src.infrastructure.repositories.project_repository_impl import (
+    ProjectRepositoryImpl,
+)
 from src.infrastructure.repositories.task_repository_impl import TaskRepositoryImpl
-from src.infrastructure.repositories.user_story_repository_impl import UserStoryRepositoryImpl
+from src.infrastructure.repositories.user_story_repository_impl import (
+    UserStoryRepositoryImpl,
+)
 from src.infrastructure.repositories.wiki_repository_impl import WikiRepositoryImpl
 from src.taiga_client import TaigaAPIClient
 
@@ -120,6 +127,8 @@ class _Container(containers.DeclarativeContainer):
     # Tools (Singleton)
     auth_tools = providers.Singleton(AuthTools, mcp=mcp)
 
+    cache_tools = providers.Singleton(CacheTools, mcp=mcp)
+
     epic_tools = providers.Singleton(EpicTools, mcp=mcp)
 
     project_tools = providers.Singleton(ProjectTools, mcp=mcp)
@@ -196,6 +205,7 @@ class ApplicationContainer:
     def register_all_tools(self) -> None:
         """Registra todas las herramientas en el servidor MCP."""
         self._container.auth_tools().register_tools()
+        self._container.cache_tools().register_tools()
         self._container.epic_tools().register_tools()
         self._container.project_tools().register_tools()
         self._container.userstory_tools().register_tools()

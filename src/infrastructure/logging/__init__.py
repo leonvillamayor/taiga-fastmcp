@@ -7,7 +7,10 @@ automatic operation logging and error tracing.
 """
 
 from src.infrastructure.logging.config import LoggingConfig, LogLevel
-from src.infrastructure.logging.correlation import CorrelationIdManager, correlation_id_var
+from src.infrastructure.logging.correlation import (
+    CorrelationIdManager,
+    correlation_id_var,
+)
 from src.infrastructure.logging.decorators import log_api_call, log_operation
 from src.infrastructure.logging.logger import (
     TaigaLogFormatter,

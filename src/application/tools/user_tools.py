@@ -210,6 +210,69 @@ class UserTools:
         # Store reference for direct test access
         self.list_users = list_users.fn if hasattr(list_users, "fn") else list_users
 
+        # Get user by ID
+        @self.mcp.tool(name="taiga_get_user", description="Get a user by their ID")
+        async def get_user(auth_token: str, user_id: int) -> dict[str, Any]:
+            """
+            Get a user by their ID.
+
+            Esta herramienta obtiene los detalles de un usuario específico de Taiga
+            por su ID, incluyendo información de perfil y configuración.
+
+            Args:
+                auth_token: Token de autenticación obtenido de taiga_authenticate
+                user_id: ID del usuario a obtener
+
+            Returns:
+                Dict con información del usuario:
+                - id: ID del usuario
+                - username: Nombre de usuario
+                - full_name: Nombre completo
+                - full_name_display: Nombre para mostrar
+                - email: Email del usuario
+                - bio: Biografía
+                - photo: URL de la foto de perfil
+                - big_photo: URL de la foto grande
+                - is_active: Si el usuario está activo
+                - lang: Idioma preferido
+                - theme: Tema visual preferido
+                - timezone: Zona horaria
+                - date_joined: Fecha de registro
+                - max_private_projects: Límite de proyectos privados
+                - max_public_projects: Límite de proyectos públicos
+                - max_memberships_private_projects: Límite de membresías privadas
+                - max_memberships_public_projects: Límite de membresías públicas
+
+            Raises:
+                MCPError: Si el usuario no existe, no hay permisos, o falla la API
+
+            Example:
+                >>> user = await taiga_get_user(
+                ...     auth_token="eyJ0eXAiOi...",
+                ...     user_id=42
+                ... )
+                >>> print(user["username"])
+                "johndoe"
+            """
+            try:
+                async with TaigaAPIClient(self.config) as client:
+                    client.auth_token = auth_token
+                    return await client.get(f"/users/{user_id}")
+
+            except ResourceNotFoundError:
+                raise MCPError(f"User {user_id} not found") from None
+            except PermissionDeniedError:
+                raise MCPError(f"No permission to access user {user_id}") from None
+            except AuthenticationError:
+                raise MCPError("Authentication failed. Please authenticate first") from None
+            except TaigaAPIError as e:
+                raise MCPError(f"API error: {e!s}") from e
+            except Exception as e:
+                raise MCPError(f"Unexpected error: {e!s}") from e
+
+        # Store reference for direct test access
+        self.get_user = get_user.fn if hasattr(get_user, "fn") else get_user
+
     # Legacy methods for backward compatibility
     def _register_tools(self) -> None:
         """Legacy registration method."""

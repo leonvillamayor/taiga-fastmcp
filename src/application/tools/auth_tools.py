@@ -85,7 +85,9 @@ class AuthTools:
 
         @self.mcp.tool(
             name="taiga_authenticate",
-            description="Authenticate with Taiga using username and password",
+            description="Authenticate with Taiga API using username and password credentials",
+            tags={"auth", "write"},
+            annotations={"readOnlyHint": False, "openWorldHint": True, "title": "Authenticate"},
         )
         async def authenticate(
             username: str | None = None, password: str | None = None
@@ -199,7 +201,12 @@ class AuthTools:
         else:
             self.authenticate = authenticate
 
-        @self.mcp.tool(name="taiga_refresh_token", description="Refresh the authentication token")
+        @self.mcp.tool(
+            name="taiga_refresh_token",
+            description="Refresh an expired authentication token using a refresh token",
+            tags={"auth", "write"},
+            annotations={"readOnlyHint": False, "openWorldHint": True},
+        )
         async def refresh_token(refresh_token: str | None = None) -> dict[str, Any]:
             """
             Refresh authentication token.
@@ -385,7 +392,12 @@ class AuthTools:
         else:
             self.get_current_user = get_current_user
 
-        @self.mcp.tool(name="taiga_logout", description="Clear authentication tokens and logout")
+        @self.mcp.tool(
+            name="taiga_logout",
+            description="Clear all stored authentication tokens and logout from Taiga",
+            tags={"auth", "write"},
+            annotations={"readOnlyHint": False, "openWorldHint": True},
+        )
         async def logout() -> dict[str, Any]:
             """
             Clear authentication tokens.
@@ -441,7 +453,12 @@ class AuthTools:
         else:
             self.logout = logout
 
-        @self.mcp.tool(name="taiga_check_auth", description="Check current authentication status")
+        @self.mcp.tool(
+            name="taiga_check_auth",
+            description="Verify current authentication status and token validity",
+            tags={"auth", "read"},
+            annotations={"readOnlyHint": True, "openWorldHint": True},
+        )
         async def check_auth() -> dict[str, Any]:
             """
             Check authentication status.

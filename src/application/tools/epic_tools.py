@@ -22,7 +22,11 @@ from src.application.responses.epic_responses import (
 )
 from src.config import TaigaConfig
 from src.domain.exceptions import ValidationError
-from src.domain.validators import EpicCreateValidator, EpicUpdateValidator, validate_input
+from src.domain.validators import (
+    EpicCreateValidator,
+    EpicUpdateValidator,
+    validate_input,
+)
 from src.infrastructure.logging import get_logger
 from src.infrastructure.pagination import AutoPaginator, PaginationConfig
 from src.taiga_client import TaigaAPIClient
@@ -1457,6 +1461,48 @@ class EpicTools:
             """
             return await self.get_epic_custom_attribute_values(
                 auth_token=auth_token, epic_id=epic_id
+            )
+
+        # EPIC-015: Bulk link user stories to epic
+        @self.mcp.tool(
+            name="taiga_bulk_link_userstories_to_epic",
+            description="Link multiple user stories to an epic at once",
+        )
+        async def bulk_link_userstories_to_epic_tool(
+            auth_token: str,
+            epic_id: int,
+            userstory_ids: list[int],
+        ) -> dict[str, Any]:
+            """
+            Link multiple user stories to an epic in bulk.
+
+            Esta herramienta vincula múltiples historias de usuario a una épica
+            de forma masiva. Es más eficiente que vincular una por una cuando
+            se necesitan organizar varias historias bajo una misma épica.
+
+            Args:
+                auth_token: Token de autenticación obtenido de taiga_authenticate
+                epic_id: ID de la épica a la que vincular las historias
+                userstory_ids: Lista de IDs de las historias de usuario a vincular
+
+            Returns:
+                Dict con información de las relaciones creadas
+
+            Raises:
+                ToolError: Si la épica no existe, alguna historia no existe,
+                    no hay permisos, o la autenticación falla
+
+            Example:
+                >>> result = await taiga_bulk_link_userstories_to_epic(
+                ...     auth_token="eyJ0eXAiOi...",
+                ...     epic_id=456,
+                ...     userstory_ids=[101, 102, 103]
+                ... )
+            """
+            return await self.bulk_create_related_userstories(
+                auth_token=auth_token,
+                epic_id=epic_id,
+                userstory_ids=userstory_ids,
             )
 
     # Implementation methods
