@@ -8,7 +8,6 @@ from src.domain.entities.wiki_page import WikiPage
 from src.domain.exceptions import ResourceNotFoundError
 from src.domain.repositories.wiki_repository import WikiRepository
 
-
 # DTOs (Data Transfer Objects)
 
 

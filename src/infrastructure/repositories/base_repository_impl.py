@@ -13,7 +13,6 @@ from src.domain.exceptions import ConcurrencyError, ResourceNotFoundError
 from src.domain.repositories.base_repository import BaseRepository
 from src.taiga_client import TaigaAPIClient
 
-
 T = TypeVar("T", bound=BaseEntity)
 
 

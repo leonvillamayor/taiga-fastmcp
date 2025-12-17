@@ -12,7 +12,6 @@ import httpx
 import pytest
 from dotenv import load_dotenv
 
-
 # Cargar variables de entorno
 load_dotenv()
 
