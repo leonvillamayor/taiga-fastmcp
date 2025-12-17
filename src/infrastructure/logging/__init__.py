@@ -25,6 +25,7 @@ from src.infrastructure.logging.performance import (
     reset_performance_logger,
 )
 
+
 __all__ = [
     "APIMetrics",
     "CorrelationIdManager",

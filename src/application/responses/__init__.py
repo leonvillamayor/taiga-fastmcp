@@ -23,6 +23,7 @@ from src.application.responses.project_responses import (
     ProjectStatsResponse,
 )
 
+
 __all__ = [
     # Base
     "BaseResponse",

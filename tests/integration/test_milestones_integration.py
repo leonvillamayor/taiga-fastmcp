@@ -9,6 +9,7 @@ from datetime import date, timedelta
 import pytest
 from dotenv import load_dotenv
 
+
 # Load environment variables
 load_dotenv()
 
