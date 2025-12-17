@@ -11,7 +11,6 @@ Features:
 - Funciones de invalidacion para operaciones de escritura
 """
 
-
 from src.config import TaigaConfig
 from src.infrastructure.cache import MemoryCache
 from src.infrastructure.cached_client import CachedTaigaClient
