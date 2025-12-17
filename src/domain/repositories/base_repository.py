@@ -5,6 +5,7 @@ from typing import Any, Generic, TypeVar
 
 from src.domain.entities.base import BaseEntity
 
+
 T = TypeVar("T", bound=BaseEntity)
 
 

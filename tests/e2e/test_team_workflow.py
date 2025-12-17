@@ -16,6 +16,7 @@ from typing import TYPE_CHECKING, Any
 
 import pytest
 
+
 if TYPE_CHECKING:
     from unittest.mock import MagicMock
 

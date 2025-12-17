@@ -257,8 +257,7 @@ class UserTools:
             try:
                 async with TaigaAPIClient(self.config) as client:
                     client.auth_token = auth_token
-                    user = await client.get(f"/users/{user_id}")
-                    return user
+                    return await client.get(f"/users/{user_id}")
 
             except ResourceNotFoundError:
                 raise MCPError(f"User {user_id} not found") from None

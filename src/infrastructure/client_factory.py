@@ -11,15 +11,12 @@ Features:
 - Funciones de invalidacion para operaciones de escritura
 """
 
-from typing import TYPE_CHECKING
 
 from src.config import TaigaConfig
 from src.infrastructure.cache import MemoryCache
 from src.infrastructure.cached_client import CachedTaigaClient
 from src.taiga_client import TaigaAPIClient
 
-if TYPE_CHECKING:
-    pass
 
 # Cache global compartido - singleton
 _global_cache: MemoryCache | None = None

@@ -9,6 +9,7 @@ from src.domain.exceptions import ResourceNotFoundError
 from src.domain.repositories.member_repository import MemberRepository
 from src.domain.value_objects.email import Email
 
+
 # DTOs (Data Transfer Objects)
 
 

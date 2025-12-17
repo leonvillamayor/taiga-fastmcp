@@ -10,6 +10,7 @@ from collections.abc import Generator
 from contextlib import contextmanager
 from contextvars import ContextVar
 
+
 # Context variable for storing correlation ID
 correlation_id_var: ContextVar[str] = ContextVar("correlation_id", default="")
 
