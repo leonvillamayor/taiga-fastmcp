@@ -2669,6 +2669,7 @@ class TestMCPToolWrappersWithOptionalParams:
         result = await tool.fn(
             auth_token="token",
             epic_id=1,
+            project_id=123,
             subject="Updated",
             description="New desc",
             color="#FF0000",
