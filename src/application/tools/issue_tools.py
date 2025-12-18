@@ -1876,7 +1876,7 @@ class IssueTools:
             async with TaigaAPIClient(self.config) as client:
                 if auth_token:
                     client.auth_token = auth_token
-                result = await client.get_issue_custom_attributes(project=project)
+                result = await client.list_issue_custom_attributes(project=project)
             count = len(result) if isinstance(result, list) else 0
             self._logger.info(
                 f"[get_issue_custom_attributes] Success | project={project}, count={count}"
@@ -1943,12 +1943,7 @@ class IssueTools:
             async with TaigaAPIClient(self.config) as client:
                 if auth_token:
                     client.auth_token = auth_token
-                # Check if client has list_issue_custom_attributes method (for tests)
-                if hasattr(client, "list_issue_custom_attributes"):
-                    result = await client.list_issue_custom_attributes(project=project)
-                else:
-                    # Fallback to get_issue_custom_attributes (production)
-                    result = await client.get_issue_custom_attributes(project=project)
+                result = await client.list_issue_custom_attributes(project=project)
             count = len(result) if isinstance(result, list) else 0
             self._logger.info(
                 f"[list_issue_custom_attributes] Success | project={project}, count={count}"

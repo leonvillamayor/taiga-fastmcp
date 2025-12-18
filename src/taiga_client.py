@@ -528,6 +528,8 @@ class TaigaAPIClient:
             JSON response data
         """
         response = await self._make_request("PUT", endpoint, data=data, params=params)
+        if response.status_code == 204:
+            return {}
         return cast("dict[str, Any] | list[Any]", response.json())
 
     async def patch(
@@ -548,6 +550,8 @@ class TaigaAPIClient:
             JSON response data
         """
         response = await self._make_request("PATCH", endpoint, data=data, params=params)
+        if response.status_code == 204:
+            return {}
         return cast("dict[str, Any] | list[Any]", response.json())
 
     async def get_raw(self, endpoint: str, params: dict[str, Any] | None = None) -> bytes:
@@ -890,6 +894,20 @@ class TaigaAPIClient:
         return cast(
             "dict[str, Any]",
             await self.get("/userstories/filters_data", params={"project": project}),
+        )
+
+    async def list_userstory_custom_attributes(self, project: int) -> list[dict[str, Any]]:
+        """List custom attributes defined for user stories in a project.
+
+        Args:
+            project: ID of the project
+
+        Returns:
+            List of custom attribute definitions
+        """
+        return cast(
+            "list[dict[str, Any]]",
+            await self.get(f"/userstory-custom-attributes?project={project}"),
         )
 
     # Milestone endpoints
@@ -1384,6 +1402,10 @@ class TaigaAPIClient:
             "list[dict[str, Any]]", await self.get(f"/issues/attachments?object_id={issue_id}")
         )
 
+    async def get_issue_attachments(self, issue_id: int) -> list[dict[str, Any]]:
+        """Get issue attachments (alias for list_issue_attachments)."""
+        return await self.list_issue_attachments(issue_id)
+
     async def create_issue_attachment(
         self,
         object_id: int,
@@ -1460,6 +1482,20 @@ class TaigaAPIClient:
         """Create issue comment."""
         data = {"comment": comment, "version": version}
         return cast("dict[str, Any]", await self.post(f"/issues/{issue_id}/comments", data=data))
+
+    async def list_issue_custom_attributes(self, project: int) -> list[dict[str, Any]]:
+        """List custom attributes defined for issues in a project.
+
+        Args:
+            project: ID of the project
+
+        Returns:
+            List of custom attribute definitions
+        """
+        return cast(
+            "list[dict[str, Any]]",
+            await self.get(f"/issue-custom-attributes?project={project}"),
+        )
 
     async def get_issue_custom_attributes(self, issue_id: int) -> dict[str, Any]:
         """Get issue custom attributes."""
@@ -1656,9 +1692,19 @@ class TaigaAPIClient:
         data = {"project_id": project_id, "bulk_tasks": bulk_tasks}
         return cast("list[dict[str, Any]]", await self.post("/tasks/bulk_create", data=data))
 
-    async def get_task_filters(self) -> dict[str, Any]:
-        """Get task filters."""
-        return cast("dict[str, Any]", await self.get("/tasks/filters_data"))
+    async def get_task_filters(self, project: int) -> dict[str, Any]:
+        """Get available filters for tasks in a project.
+
+        Args:
+            project: Project ID
+
+        Returns:
+            Dict with available filters including statuses, assigned_to,
+            owners, and tags.
+        """
+        return cast(
+            "dict[str, Any]", await self.get("/tasks/filters_data", params={"project": project})
+        )
 
     async def upvote_task(self, task_id: int) -> dict[str, Any]:
         """Upvote task."""
@@ -1755,6 +1801,20 @@ class TaigaAPIClient:
         """Create task comment."""
         data = {"comment": comment, "version": version}
         return cast("dict[str, Any]", await self.post(f"/tasks/{task_id}/comments", data=data))
+
+    async def list_task_custom_attributes(self, project: int) -> list[dict[str, Any]]:
+        """List custom attributes defined for tasks in a project.
+
+        Args:
+            project: ID of the project
+
+        Returns:
+            List of custom attribute definitions
+        """
+        return cast(
+            "list[dict[str, Any]]",
+            await self.get(f"/task-custom-attributes?project={project}"),
+        )
 
     async def get_task_custom_attributes(self, task_id: int) -> dict[str, Any]:
         """Get task custom attributes."""
@@ -2261,6 +2321,31 @@ class TaigaAPIClient:
     async def delete_epic(self, epic_id: int) -> bool:
         """Delete epic."""
         return await self.delete(f"/epics/{epic_id}")
+
+    async def bulk_create_epics(
+        self,
+        project_id: int,
+        bulk_epics: str,
+        status_id: int | None = None,
+    ) -> list[dict[str, Any]]:
+        """
+        Create multiple epics at once.
+
+        Args:
+            project_id: Project ID to create epics in
+            bulk_epics: Newline-separated list of epic subjects
+            status_id: Optional status ID for all created epics
+
+        Returns:
+            List of created epic data
+        """
+        data: dict[str, Any] = {
+            "project_id": project_id,
+            "bulk_epics": bulk_epics,
+        }
+        if status_id is not None:
+            data["status_id"] = status_id
+        return cast("list[dict[str, Any]]", await self.post("/epics/bulk_create", data=data))
 
     async def get_epic_by_ref(self, project_id: int, ref: int) -> dict[str, Any]:
         """Get epic by reference number."""

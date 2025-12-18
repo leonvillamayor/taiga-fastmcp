@@ -1017,7 +1017,7 @@ class TestCustomAttributesMethodsExceptionHandlers:
     @pytest.mark.asyncio
     async def test_get_issue_custom_attributes_direct_exception(self, issue_tools_instance):
         """Verifica manejo de excepción en get_issue_custom_attributes directo."""
-        issue_tools_instance._mock_client.get_issue_custom_attributes = AsyncMock(
+        issue_tools_instance._mock_client.list_issue_custom_attributes = AsyncMock(
             side_effect=RuntimeError("Custom attrs failed")
         )
 
@@ -1059,10 +1059,9 @@ class TestCustomAttributesMethodsExceptionHandlers:
             await issue_tools_instance.list_issue_custom_attributes(auth_token="token", project=123)
 
     @pytest.mark.asyncio
-    async def test_list_issue_custom_attributes_fallback(self, issue_tools_instance):
-        """Verifica que list_issue_custom_attributes usa fallback."""
-        del issue_tools_instance._mock_client.list_issue_custom_attributes
-        issue_tools_instance._mock_client.get_issue_custom_attributes = AsyncMock(
+    async def test_list_issue_custom_attributes_success(self, issue_tools_instance):
+        """Verifica que list_issue_custom_attributes funciona correctamente."""
+        issue_tools_instance._mock_client.list_issue_custom_attributes = AsyncMock(
             return_value=[{"id": 1, "name": "Attr"}]
         )
 

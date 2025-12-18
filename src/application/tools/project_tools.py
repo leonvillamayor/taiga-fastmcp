@@ -1689,13 +1689,15 @@ class ProjectTools:
                 self._logger.debug(f"[get_project_tags] Starting | project_id={project_id}")
                 async with TaigaAPIClient(self.config) as client:
                     client.auth_token = auth_token
-                    tags = await client.get(f"/projects/{project_id}/tags")
+                    # Get project details which includes tags_colors
+                    project = await client.get(f"/projects/{project_id}")
 
-                    # Return as list of [tag, color] pairs
-                    if isinstance(tags, list):
-                        result = tags
-                    elif isinstance(tags, dict):
-                        result = [[tag, color] for tag, color in tags.items()]
+                    # Extract tags from project's tags_colors field
+                    tags_colors = project.get("tags_colors", {})
+                    if isinstance(tags_colors, dict):
+                        result = [[tag, color] for tag, color in tags_colors.items()]
+                    elif isinstance(tags_colors, list):
+                        result = tags_colors
                     else:
                         result = []
                     self._logger.info(

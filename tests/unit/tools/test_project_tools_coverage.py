@@ -1701,9 +1701,13 @@ class TestGetProjectTagsResponseTypes:
     @pytest.mark.projects
     @pytest.mark.asyncio
     async def test_get_project_tags_dict_response(self, project_tools_instance):
-        """Verifica manejo cuando la API devuelve un dict."""
+        """Verifica manejo cuando la API devuelve tags_colors como dict."""
         project_tools_instance._mock_client.get = AsyncMock(
-            return_value={"bug": "#FF0000", "feature": "#00FF00"}
+            return_value={
+                "id": 123,
+                "name": "Test Project",
+                "tags_colors": {"bug": "#FF0000", "feature": "#00FF00"},
+            }
         )
 
         tools = await project_tools_instance.mcp.get_tools()
@@ -1717,9 +1721,11 @@ class TestGetProjectTagsResponseTypes:
     @pytest.mark.unit
     @pytest.mark.projects
     @pytest.mark.asyncio
-    async def test_get_project_tags_other_response(self, project_tools_instance):
-        """Verifica manejo cuando la API devuelve otro tipo."""
-        project_tools_instance._mock_client.get = AsyncMock(return_value="unexpected")
+    async def test_get_project_tags_no_tags(self, project_tools_instance):
+        """Verifica manejo cuando el proyecto no tiene tags."""
+        project_tools_instance._mock_client.get = AsyncMock(
+            return_value={"id": 123, "name": "Test Project"}
+        )
 
         tools = await project_tools_instance.mcp.get_tools()
         tool = tools["taiga_get_project_tags"]

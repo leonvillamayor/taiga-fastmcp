@@ -1252,9 +1252,19 @@ class TestProjectTagsTools:
         project_tools = ProjectTools(mcp)
         project_tools.register_tools()
 
-        mock_taiga_api.get("https://api.taiga.io/api/v1/projects/123/tags").mock(
+        # Mock getting project which includes tags_colors
+        mock_taiga_api.get("https://api.taiga.io/api/v1/projects/123").mock(
             return_value=httpx.Response(
-                200, json=[["backend", "#FF0000"], ["frontend", "#00FF00"], ["bug", "#0000FF"]]
+                200,
+                json={
+                    "id": 123,
+                    "name": "Test Project",
+                    "tags_colors": {
+                        "backend": "#FF0000",
+                        "frontend": "#00FF00",
+                        "bug": "#0000FF",
+                    },
+                },
             )
         )
 
@@ -1263,8 +1273,11 @@ class TestProjectTagsTools:
 
         # Assert
         assert len(result) == 3
-        assert result[0][0] == "backend"
-        assert result[0][1] == "#FF0000"
+        # Check that tags are present (order may vary with dict)
+        tag_names = [tag[0] for tag in result]
+        assert "backend" in tag_names
+        assert "frontend" in tag_names
+        assert "bug" in tag_names
 
     @pytest.mark.unit
     @pytest.mark.projects
