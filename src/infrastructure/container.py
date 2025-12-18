@@ -24,36 +24,32 @@ from src.application.tools.task_tools import TaskTools
 from src.application.tools.userstory_tools import UserStoryTools
 from src.application.tools.webhook_tools import WebhookTools
 from src.application.tools.wiki_tools import WikiTools
-from src.application.use_cases import (
-    EpicUseCases,
-    IssueUseCases,
-    MemberUseCases,
-    MilestoneUseCases,
-    ProjectUseCases,
-    TaskUseCases,
-    UserStoryUseCases,
-    WikiUseCases,
-)
+from src.application.use_cases import (EpicUseCases, IssueUseCases,
+                                       MemberUseCases, MilestoneUseCases,
+                                       ProjectUseCases, TaskUseCases,
+                                       UserStoryUseCases, WikiUseCases)
 from src.config import ServerConfig, TaigaConfig
 from src.infrastructure.cache import MemoryCache
 from src.infrastructure.cached_client import CachedTaigaClient
 from src.infrastructure.http_session_pool import HTTPSessionPool
 from src.infrastructure.logging import LoggingConfig, setup_logging
 from src.infrastructure.metrics import MetricsCollector
-from src.infrastructure.repositories.epic_repository_impl import EpicRepositoryImpl
-from src.infrastructure.repositories.issue_repository_impl import IssueRepositoryImpl
-from src.infrastructure.repositories.member_repository_impl import MemberRepositoryImpl
-from src.infrastructure.repositories.milestone_repository_impl import (
-    MilestoneRepositoryImpl,
-)
-from src.infrastructure.repositories.project_repository_impl import (
-    ProjectRepositoryImpl,
-)
-from src.infrastructure.repositories.task_repository_impl import TaskRepositoryImpl
-from src.infrastructure.repositories.user_story_repository_impl import (
-    UserStoryRepositoryImpl,
-)
-from src.infrastructure.repositories.wiki_repository_impl import WikiRepositoryImpl
+from src.infrastructure.repositories.epic_repository_impl import \
+    EpicRepositoryImpl
+from src.infrastructure.repositories.issue_repository_impl import \
+    IssueRepositoryImpl
+from src.infrastructure.repositories.member_repository_impl import \
+    MemberRepositoryImpl
+from src.infrastructure.repositories.milestone_repository_impl import \
+    MilestoneRepositoryImpl
+from src.infrastructure.repositories.project_repository_impl import \
+    ProjectRepositoryImpl
+from src.infrastructure.repositories.task_repository_impl import \
+    TaskRepositoryImpl
+from src.infrastructure.repositories.user_story_repository_impl import \
+    UserStoryRepositoryImpl
+from src.infrastructure.repositories.wiki_repository_impl import \
+    WikiRepositoryImpl
 from src.taiga_client import TaigaAPIClient
 
 

@@ -8,18 +8,11 @@ from fastmcp import FastMCP
 from fastmcp.exceptions import ToolError as MCPError
 
 from src.config import TaigaConfig
-from src.domain.exceptions import (
-    AuthenticationError,
-    PermissionDeniedError,
-    ResourceNotFoundError,
-    TaigaAPIError,
-    ValidationError,
-)
-from src.domain.validators import (
-    UserStoryCreateValidator,
-    UserStoryUpdateValidator,
-    validate_input,
-)
+from src.domain.exceptions import (AuthenticationError, PermissionDeniedError,
+                                   ResourceNotFoundError, TaigaAPIError,
+                                   ValidationError)
+from src.domain.validators import (UserStoryCreateValidator,
+                                   UserStoryUpdateValidator, validate_input)
 from src.infrastructure.client_factory import get_taiga_client
 from src.infrastructure.logging import get_logger
 from src.infrastructure.pagination import AutoPaginator, PaginationConfig
@@ -695,7 +688,8 @@ class UserStoryTools:
                 if custom_attributes is not None:
                     update_data["custom_attributes"] = custom_attributes
                     # Call the instance method (not the tool) for custom attributes validation
-                    from src.application.tools.userstory_tools import UserStoryTools
+                    from src.application.tools.userstory_tools import \
+                        UserStoryTools
 
                     tools_instance = UserStoryTools(self.mcp)
                     tools_instance.client = getattr(self, "client", None)

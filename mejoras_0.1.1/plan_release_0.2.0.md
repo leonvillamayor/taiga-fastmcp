@@ -621,5 +621,4 @@ CMD ["uv", "run", "python", "-m", "src.server"]
 
 ---
 
-**Documento preparado por:** Claude Code Analysis
 **Fecha:** 2025-12-17

@@ -8,18 +8,11 @@ from fastmcp import FastMCP
 from fastmcp.exceptions import ToolError as MCPError
 
 from src.config import TaigaConfig
-from src.domain.exceptions import (
-    AuthenticationError,
-    PermissionDeniedError,
-    ResourceNotFoundError,
-    TaigaAPIError,
-    ValidationError,
-)
-from src.domain.validators import (
-    WikiPageCreateValidator,
-    WikiPageUpdateValidator,
-    validate_input,
-)
+from src.domain.exceptions import (AuthenticationError, PermissionDeniedError,
+                                   ResourceNotFoundError, TaigaAPIError,
+                                   ValidationError)
+from src.domain.validators import (WikiPageCreateValidator,
+                                   WikiPageUpdateValidator, validate_input)
 from src.infrastructure.logging import get_logger
 from src.infrastructure.pagination import AutoPaginator, PaginationConfig
 from src.taiga_client import TaigaAPIClient

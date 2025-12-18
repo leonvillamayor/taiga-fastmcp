@@ -161,6 +161,7 @@ Document 2-3 key goals for this sprint:
             """
             self._logger.debug(f"[prompt:backlog_refinement] Generating for {project_name}")
 
+            # nosec B608 - template string for prompts, not SQL
             return f"""# Backlog Refinement Session
 Project: {project_name}
 Stories to Review: {stories_to_review}
@@ -458,6 +459,7 @@ Link duplicates in comments.
                 f"[prompt:daily_standup] Generating for {project_name}/{sprint_name}"
             )
 
+            # nosec B608 - template string for prompts, not SQL
             return f"""# Daily Standup
 Project: {project_name}
 Sprint: {sprint_name}
