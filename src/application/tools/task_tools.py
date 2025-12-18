@@ -461,6 +461,7 @@ class TaskTools:
             tags: list[str] | None = None,
             is_blocked: bool | None = None,
             blocked_note: str | None = None,
+            version: int | None = None,
         ) -> dict[str, Any]:
             """
             Update specific fields of a task (partial update - PATCH).
@@ -481,6 +482,7 @@ class TaskTools:
                 tags: Nueva lista de etiquetas (opcional)
                 is_blocked: Nuevo estado de bloqueo (opcional)
                 blocked_note: Nueva razón de bloqueo (opcional)
+                version: Versión actual para control de concurrencia optimista (opcional)
 
             Returns:
                 Dict con los datos actualizados de la tarea conteniendo:
@@ -532,6 +534,7 @@ class TaskTools:
                     tags=tags,
                     is_blocked=is_blocked,
                     blocked_note=blocked_note,
+                    version=version,
                 )
             except ValidationError as e:
                 self._logger.warning(f"[update_task_partial_tool] Validation error | error={e!s}")
