@@ -900,7 +900,7 @@ class UserStoryTools:
                     f"[bulk_create_userstories] Starting | project_id={project_id}, count={len(stories)}"
                 )
 
-                bulk_data = {"project_id": project_id, "bulk_userstories": "\n".join(stories)}
+                bulk_data = {"project_id": project_id, "bulk_stories": "\n".join(stories)}
 
                 if status is not None:
                     bulk_data["status_id"] = status

@@ -176,7 +176,7 @@ taiga_get_task_comment_versions,taiga_get_task_comment_versions,task_tools,"list
 taiga_edit_task_comment,taiga_edit_task_comment,task_tools,"dict[str, Any]","dict[str, Any]",,DONE
 taiga_delete_task_comment,taiga_delete_task_comment,task_tools,"dict[str, Any]","dict[str, Any]",,DONE
 taiga_undelete_task_comment,taiga_undelete_task_comment,task_tools,"dict[str, Any]","dict[str, Any]",,DONE
-taiga_list_task_custom_attributes,taiga_list_task_custom_attributes,task_tools,"dict[str, Any]","dict[str, Any]",,DONE
+taiga_list_task_custom_attributes,taiga_list_task_custom_attributes,task_tools,"list[dict[str, Any]]","list[dict[str, Any]]",,DONE
 taiga_create_task_custom_attribute,taiga_create_task_custom_attribute,task_tools,"dict[str, Any]","dict[str, Any]",,DONE
 taiga_update_task_custom_attribute,taiga_update_task_custom_attribute,task_tools,"dict[str, Any]","dict[str, Any]",,DONE
 taiga_delete_task_custom_attribute,taiga_delete_task_custom_attribute,task_tools,"dict[str, Any]","dict[str, Any]",,DONE

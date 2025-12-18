@@ -506,7 +506,7 @@ class TaigaAPIClient:
             JSON response data
         """
         response = await self._make_request("POST", endpoint, data=data, params=params)
-        if response.status_code == 204:
+        if response.status_code == 204 or not response.content:
             return {}
         return cast("dict[str, Any] | list[Any]", response.json())
 
@@ -528,7 +528,7 @@ class TaigaAPIClient:
             JSON response data
         """
         response = await self._make_request("PUT", endpoint, data=data, params=params)
-        if response.status_code == 204:
+        if response.status_code == 204 or not response.content:
             return {}
         return cast("dict[str, Any] | list[Any]", response.json())
 
@@ -550,7 +550,7 @@ class TaigaAPIClient:
             JSON response data
         """
         response = await self._make_request("PATCH", endpoint, data=data, params=params)
-        if response.status_code == 204:
+        if response.status_code == 204 or not response.content:
             return {}
         return cast("dict[str, Any] | list[Any]", response.json())
 
@@ -1686,9 +1686,20 @@ class TaigaAPIClient:
         return await self.delete(f"/tasks/{task_id}")
 
     async def bulk_create_tasks(
-        self, project_id: int, bulk_tasks: list[dict[str, Any]]
+        self, project_id: int, bulk_tasks: str
     ) -> list[dict[str, Any]]:
-        """Bulk create tasks."""
+        """Bulk create tasks from a text block.
+
+        Args:
+            project_id: ID of the project where tasks will be created
+            bulk_tasks: Text block with one task subject per line, separated by newlines
+
+        Returns:
+            List of created tasks
+
+        Example:
+            >>> await client.bulk_create_tasks(123, "Task 1\\nTask 2\\nTask 3")
+        """
         data = {"project_id": project_id, "bulk_tasks": bulk_tasks}
         return cast("list[dict[str, Any]]", await self.post("/tasks/bulk_create", data=data))
 
@@ -1746,11 +1757,29 @@ class TaigaAPIClient:
         """Get task watchers."""
         return cast("list[dict[str, Any]]", await self.get(f"/tasks/{task_id}/watchers"))
 
-    async def list_task_attachments(self, task_id: int) -> list[dict[str, Any]]:
-        """List task attachments."""
-        return cast(
-            "list[dict[str, Any]]", await self.get(f"/tasks/attachments?object_id={task_id}")
-        )
+    async def list_task_attachments(
+        self, task_id: int | None = None, project: int | None = None, object_id: int | None = None
+    ) -> list[dict[str, Any]]:
+        """List task attachments.
+
+        Args:
+            task_id: ID of the task (alias for object_id)
+            project: ID of the project to filter attachments
+            object_id: ID of the task (alternative to task_id)
+
+        Returns:
+            List of task attachments
+        """
+        # Support task_id as alias for object_id
+        effective_object_id = object_id or task_id
+        params = []
+        if effective_object_id:
+            params.append(f"object_id={effective_object_id}")
+        if project:
+            params.append(f"project={project}")
+        query_string = "&".join(params) if params else ""
+        url = f"/tasks/attachments?{query_string}" if query_string else "/tasks/attachments"
+        return cast("list[dict[str, Any]]", await self.get(url))
 
     async def create_task_attachment(
         self, task_id: int, attached_file: bytes, name: str = "attachment.txt"
