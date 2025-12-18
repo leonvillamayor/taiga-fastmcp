@@ -76,6 +76,7 @@ class TaskTools:
         # TASK-001: Listar tareas
         @self.mcp.tool(
             name="taiga_list_tasks",
+            annotations={"readOnlyHint": True},
             description="List all tasks in a Taiga project with optional filters",
         )
         async def list_tasks_tool(
@@ -246,7 +247,11 @@ class TaskTools:
                 raise MCPError(str(e)) from e
 
         # TASK-003: Obtener tarea por ID
-        @self.mcp.tool(name="taiga_get_task", description="Get a specific task by its ID")
+        @self.mcp.tool(
+            name="taiga_get_task",
+            annotations={"readOnlyHint": True},
+            description="Get a specific task by its ID",
+        )
         async def get_task_tool(auth_token: str, task_id: int) -> dict[str, Any]:
             """
             Get a specific task by its ID.
@@ -296,6 +301,7 @@ class TaskTools:
         # TASK-004: Obtener tarea por referencia
         @self.mcp.tool(
             name="taiga_get_task_by_ref",
+            annotations={"readOnlyHint": True},
             description="Get a specific task by its reference and project",
         )
         async def get_task_by_ref_tool(
@@ -343,7 +349,9 @@ class TaskTools:
 
         # TASK-005: Actualizar tarea (completo)
         @self.mcp.tool(
-            name="taiga_update_task_full", description="Update a task (full replacement)"
+            name="taiga_update_task_full",
+            annotations={"idempotentHint": True},
+            description="Update a task (full replacement)",
         )
         async def update_task_full_tool(
             auth_token: str,
@@ -438,6 +446,7 @@ class TaskTools:
         # TASK-006: Actualizar tarea (parcial)
         @self.mcp.tool(
             name="taiga_update_task",
+            annotations={"idempotentHint": True},
             description="Update specific fields of a task (partial update)",
         )
         async def update_task_partial_tool(
@@ -529,8 +538,12 @@ class TaskTools:
                 raise MCPError(str(e)) from e
 
         # TASK-007: Eliminar tarea
-        @self.mcp.tool(name="taiga_delete_task", description="Delete a task")
-        async def delete_task_tool(auth_token: str, task_id: int) -> dict[str, str]:
+        @self.mcp.tool(
+            name="taiga_delete_task",
+            annotations={"destructiveHint": True},
+            description="Delete a task",
+        )
+        async def delete_task_tool(auth_token: str, task_id: int) -> dict[str, Any]:
             """
             Delete a task from a project.
 
@@ -605,7 +618,11 @@ class TaskTools:
             )
 
         # TASK-009: Obtener filtros
-        @self.mcp.tool(name="taiga_get_task_filters", description="Get available filters for tasks")
+        @self.mcp.tool(
+            name="taiga_get_task_filters",
+            annotations={"readOnlyHint": True},
+            description="Get available filters for tasks",
+        )
         async def get_task_filters_tool(auth_token: str, project_id: int) -> dict[str, Any]:
             """
             Get available filters for tasks in a project.
@@ -641,7 +658,11 @@ class TaskTools:
             return await self.get_task_filters(auth_token=auth_token, project=project_id)
 
         # TASK-010: Votar positivo
-        @self.mcp.tool(name="taiga_upvote_task", description="Add a positive vote to a task")
+        @self.mcp.tool(
+            name="taiga_upvote_task",
+            annotations={"idempotentHint": True},
+            description="Add a positive vote to a task",
+        )
         async def upvote_task_tool(auth_token: str, task_id: int) -> dict[str, Any]:
             """
             Add a positive vote to a task.
@@ -674,7 +695,11 @@ class TaskTools:
             return await self.upvote_task(auth_token=auth_token, task_id=task_id)
 
         # TASK-011: Votar negativo
-        @self.mcp.tool(name="taiga_downvote_task", description="Remove vote from a task")
+        @self.mcp.tool(
+            name="taiga_downvote_task",
+            annotations={"idempotentHint": True},
+            description="Remove vote from a task",
+        )
         async def downvote_task_tool(auth_token: str, task_id: int) -> dict[str, Any]:
             """
             Remove vote from a task.
@@ -708,7 +733,9 @@ class TaskTools:
 
         # TASK-012: Obtener votantes
         @self.mcp.tool(
-            name="taiga_get_task_voters", description="Get list of users who voted on a task"
+            name="taiga_get_task_voters",
+            annotations={"readOnlyHint": True},
+            description="Get list of users who voted on a task",
         )
         async def get_task_voters_tool(auth_token: str, task_id: int) -> list[dict[str, Any]]:
             """
@@ -745,7 +772,11 @@ class TaskTools:
             return await self.get_task_voters(auth_token=auth_token, task_id=task_id)
 
         # TASK-013: Seguir tarea
-        @self.mcp.tool(name="taiga_watch_task", description="Start watching a task for updates")
+        @self.mcp.tool(
+            name="taiga_watch_task",
+            annotations={"idempotentHint": True},
+            description="Start watching a task for updates",
+        )
         async def watch_task_tool(auth_token: str, task_id: int) -> dict[str, Any]:
             """
             Start watching a task for updates.
@@ -778,7 +809,11 @@ class TaskTools:
             return await self.watch_task(auth_token=auth_token, task_id=task_id)
 
         # TASK-014: Dejar de seguir
-        @self.mcp.tool(name="taiga_unwatch_task", description="Stop watching a task")
+        @self.mcp.tool(
+            name="taiga_unwatch_task",
+            annotations={"idempotentHint": True},
+            description="Stop watching a task",
+        )
         async def unwatch_task_tool(auth_token: str, task_id: int) -> dict[str, Any]:
             """
             Stop watching a task.
@@ -811,7 +846,9 @@ class TaskTools:
 
         # TASK-015: Obtener observadores
         @self.mcp.tool(
-            name="taiga_get_task_watchers", description="Get list of users watching a task"
+            name="taiga_get_task_watchers",
+            annotations={"readOnlyHint": True},
+            description="Get list of users watching a task",
         )
         async def get_task_watchers_tool(auth_token: str, task_id: int) -> list[dict[str, Any]]:
             """
@@ -849,7 +886,9 @@ class TaskTools:
 
         # TASK-016: Listar adjuntos
         @self.mcp.tool(
-            name="taiga_list_task_attachments", description="List all attachments of a task"
+            name="taiga_list_task_attachments",
+            annotations={"readOnlyHint": True},
+            description="List all attachments of a task",
         )
         async def list_task_attachments_tool(
             auth_token: str, project_id: int, task_id: int
@@ -960,7 +999,9 @@ class TaskTools:
 
         # TASK-018: Obtener adjunto
         @self.mcp.tool(
-            name="taiga_get_task_attachment", description="Get a specific task attachment"
+            name="taiga_get_task_attachment",
+            annotations={"readOnlyHint": True},
+            description="Get a specific task attachment",
         )
         async def get_task_attachment_tool(auth_token: str, attachment_id: int) -> dict[str, Any]:
             """
@@ -1002,7 +1043,11 @@ class TaskTools:
             )
 
         # TASK-019: Actualizar adjunto
-        @self.mcp.tool(name="taiga_update_task_attachment", description="Update a task attachment")
+        @self.mcp.tool(
+            name="taiga_update_task_attachment",
+            annotations={"idempotentHint": True},
+            description="Update a task attachment",
+        )
         async def update_task_attachment_tool(
             auth_token: str,
             attachment_id: int,
@@ -1049,10 +1094,14 @@ class TaskTools:
             )
 
         # TASK-020: Eliminar adjunto
-        @self.mcp.tool(name="taiga_delete_task_attachment", description="Delete a task attachment")
+        @self.mcp.tool(
+            name="taiga_delete_task_attachment",
+            annotations={"destructiveHint": True},
+            description="Delete a task attachment",
+        )
         async def delete_task_attachment_tool(
             auth_token: str, attachment_id: int
-        ) -> dict[str, str]:
+        ) -> dict[str, Any]:
             """
             Delete a task attachment.
 
@@ -1086,7 +1135,9 @@ class TaskTools:
 
         # TASK-021: Obtener historial
         @self.mcp.tool(
-            name="taiga_get_task_history", description="Get the history of changes for a task"
+            name="taiga_get_task_history",
+            annotations={"readOnlyHint": True},
+            description="Get the history of changes for a task",
         )
         async def get_task_history_tool(auth_token: str, task_id: int) -> list[dict[str, Any]]:
             """
@@ -1126,7 +1177,9 @@ class TaskTools:
 
         # TASK-022: Obtener versiones de comentario
         @self.mcp.tool(
-            name="taiga_get_task_comment_versions", description="Get all versions of a task comment"
+            name="taiga_get_task_comment_versions",
+            annotations={"readOnlyHint": True},
+            description="Get all versions of a task comment",
         )
         async def get_task_comment_versions_tool(
             auth_token: str, task_id: int, comment_id: str
@@ -1209,10 +1262,14 @@ class TaskTools:
             )
 
         # TASK-024: Eliminar comentario
-        @self.mcp.tool(name="taiga_delete_task_comment", description="Delete a task comment")
+        @self.mcp.tool(
+            name="taiga_delete_task_comment",
+            annotations={"destructiveHint": True},
+            description="Delete a task comment",
+        )
         async def delete_task_comment_tool(
             auth_token: str, task_id: int, comment_id: str
-        ) -> dict[str, str]:
+        ) -> dict[str, Any]:
             """
             Delete a task comment.
 
@@ -1294,6 +1351,7 @@ class TaskTools:
         # TASK-026: Listar atributos personalizados
         @self.mcp.tool(
             name="taiga_list_task_custom_attributes",
+            annotations={"readOnlyHint": True},
             description="List custom attributes for tasks in a project",
         )
         async def list_task_custom_attributes_tool(
@@ -1395,6 +1453,7 @@ class TaskTools:
         # TASK-028: Actualizar atributo personalizado
         @self.mcp.tool(
             name="taiga_update_task_custom_attribute",
+            annotations={"idempotentHint": True},
             description="Update a custom attribute for tasks",
         )
         async def update_task_custom_attribute_tool(
@@ -1443,11 +1502,12 @@ class TaskTools:
         # TASK-029: Eliminar atributo personalizado
         @self.mcp.tool(
             name="taiga_delete_task_custom_attribute",
+            annotations={"destructiveHint": True},
             description="Delete a custom attribute for tasks",
         )
         async def delete_task_custom_attribute_tool(
             auth_token: str, attribute_id: int
-        ) -> dict[str, str]:
+        ) -> dict[str, Any]:
             """
             Delete a custom attribute for tasks.
 
@@ -1598,7 +1658,7 @@ class TaskTools:
         """Alias para update_task_partial."""
         return await self.update_task_partial(auth_token, task_id, **kwargs)
 
-    async def delete_task(self, auth_token: str, task_id: int) -> dict[str, str]:
+    async def delete_task(self, auth_token: str, task_id: int) -> dict[str, Any]:
         """Elimina una tarea."""
         self._logger.debug(f"[delete_task] Starting | task_id={task_id}")
         try:
@@ -1804,7 +1864,7 @@ class TaskTools:
             )
             raise
 
-    async def delete_task_attachment(self, auth_token: str, attachment_id: int) -> dict[str, str]:
+    async def delete_task_attachment(self, auth_token: str, attachment_id: int) -> dict[str, Any]:
         """Elimina un adjunto de tarea."""
         self._logger.debug(f"[delete_task_attachment] Starting | attachment_id={attachment_id}")
         try:
@@ -1882,7 +1942,7 @@ class TaskTools:
 
     async def delete_task_comment(
         self, auth_token: str, task_id: int, comment_id: str
-    ) -> dict[str, str]:
+    ) -> dict[str, Any]:
         """Elimina un comentario de tarea."""
         self._logger.debug(
             f"[delete_task_comment] Starting | task_id={task_id}, comment_id={comment_id}"
@@ -1984,7 +2044,7 @@ class TaskTools:
 
     async def delete_task_custom_attribute(
         self, auth_token: str, attribute_id: int
-    ) -> dict[str, str]:
+    ) -> dict[str, Any]:
         """Elimina un atributo personalizado."""
         self._logger.debug(f"[delete_task_custom_attribute] Starting | attribute_id={attribute_id}")
         try:

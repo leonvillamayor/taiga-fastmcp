@@ -52,7 +52,11 @@ class MembershipTools:
         """Register membership tools with the MCP server."""
 
         # List memberships
-        @self.mcp.tool(name="taiga_list_memberships", description="List project memberships")
+        @self.mcp.tool(
+            name="taiga_list_memberships",
+            annotations={"readOnlyHint": True},
+            description="List project memberships",
+        )
         async def list_memberships(
             auth_token: str,
             project_id: int,
@@ -301,7 +305,11 @@ class MembershipTools:
         )
 
         # Get membership
-        @self.mcp.tool(name="taiga_get_membership", description="Get membership details")
+        @self.mcp.tool(
+            name="taiga_get_membership",
+            annotations={"readOnlyHint": True},
+            description="Get membership details",
+        )
         async def get_membership(auth_token: str, membership_id: int) -> dict[str, Any]:
             """
             Get membership details.
@@ -392,7 +400,11 @@ class MembershipTools:
         self.get_membership = get_membership.fn if hasattr(get_membership, "fn") else get_membership
 
         # Update membership
-        @self.mcp.tool(name="taiga_update_membership", description="Update membership role")
+        @self.mcp.tool(
+            name="taiga_update_membership",
+            annotations={"idempotentHint": True},
+            description="Update membership role",
+        )
         async def update_membership(
             auth_token: str,
             membership_id: int,
@@ -515,7 +527,11 @@ class MembershipTools:
         )
 
         # Delete membership
-        @self.mcp.tool(name="taiga_delete_membership", description="Remove a member from project")
+        @self.mcp.tool(
+            name="taiga_delete_membership",
+            annotations={"destructiveHint": True},
+            description="Remove a member from project",
+        )
         async def delete_membership(auth_token: str, membership_id: int) -> bool:
             """
             Delete (remove) a membership from project.

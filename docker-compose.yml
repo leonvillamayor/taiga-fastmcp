@@ -1,12 +1,12 @@
 # Docker Compose for Taiga MCP Server
-# Version: 0.2.0
-# Supports HTTP transport for MCP protocol with integrated caching
+# Version: 0.3.0
+# Supports HTTP transport for MCP protocol with integrated caching and middleware
 #
-# New in v0.2.0:
-#   - 53 new tools (Settings, Bulk Operations, Search)
-#   - 6 MCP Resources (project stats, modules, timeline, members, user info)
-#   - 6 MCP Prompts (sprint planning, retrospective, health analysis, etc.)
-#   - 3034+ tests with 88%+ coverage
+# New in v0.3.0:
+#   - Middleware stack (rate limiting, error handling, timing, structured logging)
+#   - Tool annotations (readOnlyHint, destructiveHint, idempotentHint)
+#   - Authentication token caching with auto-refresh
+#   - 3100+ tests with 88%+ coverage
 #
 # Usage:
 #   Development:  docker compose --profile dev up
@@ -19,6 +19,11 @@
 #   TAIGA_CACHE_ENABLED: Enable/disable caching (default: true)
 #   TAIGA_CACHE_TTL: Cache time-to-live in seconds (default: 3600)
 #   TAIGA_CACHE_MAX_SIZE: Maximum cache entries (default: 1000)
+#
+# Middleware Configuration (v0.3.0):
+#   TAIGA_ENABLE_MIDDLEWARE: Enable/disable middleware stack (default: true)
+#   TAIGA_RATE_LIMIT_RPS: Rate limit requests per second (default: 50)
+#   TAIGA_ENV: Environment name for error masking (default: production)
 
 services:
   # =============================================================================
@@ -49,6 +54,10 @@ services:
       - TAIGA_CACHE_ENABLED=${TAIGA_CACHE_ENABLED:-true}
       - TAIGA_CACHE_TTL=${TAIGA_CACHE_TTL:-3600}
       - TAIGA_CACHE_MAX_SIZE=${TAIGA_CACHE_MAX_SIZE:-1000}
+      # Middleware configuration (v0.3.0)
+      - TAIGA_ENABLE_MIDDLEWARE=${TAIGA_ENABLE_MIDDLEWARE:-true}
+      - TAIGA_RATE_LIMIT_RPS=${TAIGA_RATE_LIMIT_RPS:-50}
+      - TAIGA_ENV=${TAIGA_ENV:-production}
 
     # Port mapping for HTTP transport
     ports:
@@ -84,10 +93,11 @@ services:
 
     # Labels
     labels:
-      - "com.taiga.mcp.description=Taiga MCP Server with complete API coverage"
-      - "com.taiga.mcp.version=0.2.0"
+      - "com.taiga.mcp.description=Taiga MCP Server with complete API coverage, middleware, resources, and prompts"
+      - "com.taiga.mcp.version=0.3.0"
       - "com.taiga.mcp.transport=http"
       - "com.taiga.mcp.cache=enabled"
+      - "com.taiga.mcp.middleware=enabled"
 
     # Network
     networks:
@@ -129,6 +139,10 @@ services:
       - TAIGA_CACHE_ENABLED=true
       - TAIGA_CACHE_TTL=7200
       - TAIGA_CACHE_MAX_SIZE=5000
+      # Production middleware settings
+      - TAIGA_ENABLE_MIDDLEWARE=true
+      - TAIGA_RATE_LIMIT_RPS=100
+      - TAIGA_ENV=production
 
     deploy:
       resources:
@@ -173,6 +187,10 @@ services:
       - TAIGA_CACHE_ENABLED=true
       - TAIGA_CACHE_TTL=300
       - TAIGA_CACHE_MAX_SIZE=100
+      # Development middleware settings - verbose logging, no error masking
+      - TAIGA_ENABLE_MIDDLEWARE=true
+      - TAIGA_RATE_LIMIT_RPS=200
+      - TAIGA_ENV=development
 
     # Mount source for development
     volumes:

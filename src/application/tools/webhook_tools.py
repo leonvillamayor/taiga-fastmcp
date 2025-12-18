@@ -48,7 +48,11 @@ class WebhookTools:
         """Register webhook tools with the MCP server."""
 
         # List webhooks
-        @self.mcp.tool(name="taiga_list_webhooks", description="List project webhooks")
+        @self.mcp.tool(
+            name="taiga_list_webhooks",
+            annotations={"readOnlyHint": True},
+            description="List project webhooks",
+        )
         async def list_webhooks(
             auth_token: str,
             project_id: int,
@@ -281,7 +285,11 @@ class WebhookTools:
         self.create_webhook = create_webhook.fn if hasattr(create_webhook, "fn") else create_webhook
 
         # Get webhook
-        @self.mcp.tool(name="taiga_get_webhook", description="Get webhook details")
+        @self.mcp.tool(
+            name="taiga_get_webhook",
+            annotations={"readOnlyHint": True},
+            description="Get webhook details",
+        )
         async def get_webhook(auth_token: str, webhook_id: int) -> dict[str, Any]:
             """
             Get webhook details.
@@ -370,7 +378,11 @@ class WebhookTools:
         self.get_webhook = get_webhook.fn if hasattr(get_webhook, "fn") else get_webhook
 
         # Update webhook
-        @self.mcp.tool(name="taiga_update_webhook", description="Update webhook configuration")
+        @self.mcp.tool(
+            name="taiga_update_webhook",
+            annotations={"idempotentHint": True},
+            description="Update webhook configuration",
+        )
         async def update_webhook(
             auth_token: str,
             webhook_id: int,
@@ -502,7 +514,11 @@ class WebhookTools:
         self.update_webhook = update_webhook.fn if hasattr(update_webhook, "fn") else update_webhook
 
         # Delete webhook
-        @self.mcp.tool(name="taiga_delete_webhook", description="Delete a webhook")
+        @self.mcp.tool(
+            name="taiga_delete_webhook",
+            annotations={"destructiveHint": True},
+            description="Delete a webhook",
+        )
         async def delete_webhook(auth_token: str, webhook_id: int) -> bool:
             """
             Delete a webhook.
