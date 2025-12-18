@@ -2,33 +2,43 @@
 
 > Servidor Model Context Protocol (MCP) para Taiga Project Management Platform
 
-[![Python Version](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![Version](https://img.shields.io/badge/version-0.3.2-blue.svg)](https://github.com/leonvillamayor/taiga-fastmcp/releases)
+[![Python Version](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
 [![Tests](https://github.com/leonvillamayor/taiga-fastmcp/actions/workflows/tests.yml/badge.svg)](https://github.com/leonvillamayor/taiga-fastmcp/actions/workflows/tests.yml)
 [![codecov](https://codecov.io/gh/leonvillamayor/taiga-fastmcp/graph/badge.svg)](https://codecov.io/gh/leonvillamayor/taiga-fastmcp)
 [![FastMCP](https://img.shields.io/badge/fastmcp-latest-brightgreen.svg)](https://github.com/jlowin/fastmcp)
 
 ## Descripcion
 
-**Taiga MCP Server** es un servidor Model Context Protocol que proporciona acceso programatico completo a la API de Taiga. Implementado con FastMCP, expone +150 herramientas MCP para gestionar proyectos, epicas, user stories, issues, tareas, sprints, wikis y mas.
+**Taiga MCP Server** es un servidor Model Context Protocol que proporciona acceso programatico completo a la API de Taiga. Implementado con FastMCP, expone **+200 herramientas MCP** para gestionar proyectos, epicas, user stories, issues, tareas, sprints, wikis y mas.
+
+### Novedades en v0.3.x
+
+- **Middleware Stack**: Rate limiting, error handling, timing y structured logging
+- **Tool Annotations**: `readOnlyHint`, `destructiveHint`, `idempotentHint` para cada herramienta
+- **Cache Inteligente**: Cache de tokens de autenticacion con auto-refresh
+- **+3100 tests** con **88%+ de cobertura**
 
 ### Herramientas MCP Disponibles
 
 | Modulo | Herramientas | Descripcion |
 |--------|--------------|-------------|
-| **Auth** | 4 | Login, logout, refresh token, estado |
-| **Projects** | 6 | CRUD, estadisticas, modulos |
-| **User Stories** | 37 | CRUD, bulk ops, filtros, attachments |
-| **Epics** | 28 | Gestion de epicas y relaciones |
-| **Issues** | 35 | CRUD, filtros, comentarios, votos |
-| **Tasks** | 8 | Gestion de tareas |
-| **Milestones** | 10 | Sprints, estadisticas |
-| **Wiki** | 10 | Paginas wiki |
-| **Webhooks** | 7 | Configuracion de webhooks |
-| **Memberships** | 6 | Miembros del proyecto |
+| **Auth** | 5 | Login, logout, refresh token, estado, verificacion |
+| **Cache** | 4 | Estadisticas, limpieza, invalidacion |
+| **Projects** | 22 | CRUD, estadisticas, modulos, tags, likes, watchers |
+| **User Stories** | 20 | CRUD, bulk ops, filtros, votos, watchers |
+| **Epics** | 35 | Gestion completa de epicas y relaciones con US |
+| **Issues** | 31 | CRUD, filtros, comentarios, votos, attachments |
+| **Tasks** | 25 | Gestion de tareas, attachments, comentarios |
+| **Milestones** | 11 | Sprints, estadisticas, watchers |
+| **Wiki** | 12 | Paginas wiki, links, attachments |
+| **Webhooks** | 6 | Configuracion y testing de webhooks |
+| **Memberships** | 5 | Miembros del proyecto |
+| **Settings** | 40+ | Puntos, estados, prioridades, severidades, tipos, roles |
 
 ## Requisitos
 
-- Python 3.11+
+- Python 3.13+
 - [uv](https://github.com/astral-sh/uv) (gestor de paquetes)
 - Docker y Docker Compose (para transporte HTTP)
 - Cuenta en Taiga con credenciales de acceso
@@ -73,6 +83,16 @@ MCP_DEBUG=false
 # Request settings
 TAIGA_TIMEOUT=30
 TAIGA_MAX_RETRIES=3
+
+# Cache (v0.3.0+)
+TAIGA_CACHE_ENABLED=true
+TAIGA_CACHE_TTL=3600
+TAIGA_CACHE_MAX_SIZE=1000
+
+# Middleware (v0.3.0+)
+TAIGA_ENABLE_MIDDLEWARE=true
+TAIGA_RATE_LIMIT_RPS=50
+TAIGA_ENV=production
 ```
 
 ---
@@ -134,8 +154,8 @@ El servidor estara disponible en `http://localhost:8000`
 | Comando | Perfil | Descripcion |
 |---------|--------|-------------|
 | `docker compose up` | Default | 512MB RAM, 1 CPU |
-| `docker compose --profile dev up` | Development | Debug habilitado, source mounted |
-| `docker compose --profile prod up -d` | Production | 1GB RAM, 2 CPU, restart policy |
+| `docker compose --profile dev up` | Development | Debug habilitado, source mounted, cache TTL 5min |
+| `docker compose --profile prod up -d` | Production | 1GB RAM, 2 CPU, cache TTL 2h, restart policy |
 
 #### Verificar Estado
 
@@ -161,6 +181,8 @@ docker compose down -v
 
 ## Arquitectura
 
+El proyecto sigue una arquitectura **Domain-Driven Design (DDD)**:
+
 ```
 src/
 ├── domain/                    # Logica de negocio pura
@@ -168,11 +190,29 @@ src/
 │   ├── repositories/          # Interfaces (ABC)
 │   └── exceptions.py          # Excepciones del dominio
 ├── application/               # Capa de aplicacion
-│   ├── tools/                 # Herramientas MCP
+│   ├── tools/                 # Herramientas MCP (+200)
+│   │   ├── auth_tools.py
+│   │   ├── cache_tools.py
+│   │   ├── epic_tools.py
+│   │   ├── issue_tools.py
+│   │   ├── membership_tools.py
+│   │   ├── milestone_tools.py
+│   │   ├── project_tools.py
+│   │   ├── settings_tools.py
+│   │   ├── task_tools.py
+│   │   ├── userstory_tools.py
+│   │   ├── webhook_tools.py
+│   │   └── wiki_tools.py
 │   └── use_cases/             # Casos de uso
 ├── infrastructure/            # Implementacion tecnica
+│   ├── cache.py               # Sistema de cache en memoria
+│   ├── cached_client.py       # Cliente con cache
+│   ├── client_factory.py      # Factory para clientes
+│   ├── container.py           # Dependency injection
+│   ├── middleware.py          # Middleware stack
 │   ├── repositories/          # Implementaciones
-│   └── config.py              # Configuracion
+│   └── logging.py             # Logging estructurado
+├── config.py                  # Configuracion
 ├── server.py                  # Servidor MCP principal
 └── taiga_client.py            # Cliente HTTP para Taiga
 ```
@@ -186,6 +226,9 @@ uv run pytest tests/unit/ -v
 # Tests de integracion (requiere credenciales reales)
 uv run pytest tests/integration/ -v
 
+# Tests de rendimiento
+uv run pytest tests/performance/ -v
+
 # Tests con cobertura
 uv run pytest --cov=src --cov-report=html
 
@@ -193,18 +236,20 @@ uv run pytest --cov=src --cov-report=html
 uv run pytest
 ```
 
+**Estado actual**: +3100 tests con 88%+ de cobertura.
+
 ## CI/CD
 
 El proyecto usa GitHub Actions para CI:
 
 | Job | Descripcion |
 |-----|-------------|
-| **lint** | Verificacion de estilo con ruff |
-| **type-check** | Verificacion de tipos con mypy |
-| **test** | Tests unitarios con cobertura |
-| **integration** | Tests de integracion |
-| **performance** | Tests de rendimiento |
-| **security** | Escaneo con bandit |
+| **Linting** | Verificacion de estilo con ruff |
+| **Type Checking** | Verificacion de tipos con mypy |
+| **Unit Tests** | Tests unitarios con cobertura |
+| **Integration Tests** | Tests de integracion |
+| **Performance Tests** | Tests de rendimiento |
+| **Security Scan** | Escaneo de seguridad con bandit |
 
 ## Licencia
 
@@ -212,4 +257,4 @@ Este proyecto esta licenciado bajo la GNU General Public License v3.0 - ver [LIC
 
 ## Autor
 
-**Javier León** - [javier@leonvillamayor.org](mailto:javier@leonvillamayor.org)
+**Javier Leon** - [javier@leonvillamayor.org](mailto:javier@leonvillamayor.org)
