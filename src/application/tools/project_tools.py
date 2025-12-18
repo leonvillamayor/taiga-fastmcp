@@ -1695,7 +1695,7 @@ class ProjectTools:
                     # Extract tags from project's tags_colors field
                     tags_colors = project.get("tags_colors", {})
                     if isinstance(tags_colors, dict):
-                        result = [[tag, color] for tag, color in tags_colors.items()]
+                        result = [[tag, color or ""] for tag, color in tags_colors.items()]
                     elif isinstance(tags_colors, list):
                         result = tags_colors
                     else:

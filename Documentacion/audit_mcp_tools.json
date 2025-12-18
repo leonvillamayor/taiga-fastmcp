@@ -5157,7 +5157,7 @@
           "type": "int"
         }
       ],
-      "return_type": "dict[str, Any]",
+      "return_type": "list[dict[str, Any]]",
       "issues": []
     },
     {

@@ -628,7 +628,7 @@ class TestIssueCustomAttributesRegisteredTools:
     @pytest.mark.asyncio
     async def test_get_issue_custom_attributes_registered(self, issue_tools_instance):
         """Verifica get_issue_custom_attributes registrada."""
-        issue_tools_instance._mock_client.get_issue_custom_attributes = AsyncMock(
+        issue_tools_instance._mock_client.list_issue_custom_attributes = AsyncMock(
             return_value=[{"id": 1, "name": "Custom Field"}]
         )
 

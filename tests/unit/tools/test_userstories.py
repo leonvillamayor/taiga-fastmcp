@@ -646,7 +646,7 @@ class TestBulkOperations:
 
             expected_data = {
                 "project_id": 1,
-                "bulk_userstories": "Story 1\nStory 2",
+                "bulk_stories": "Story 1\nStory 2",
                 "status_id": 1,
                 "milestone_id": 1,
             }

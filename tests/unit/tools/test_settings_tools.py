@@ -161,6 +161,33 @@ class TestPointsTools:
 
         mock_client.delete.assert_called_once()
 
+    @pytest.mark.asyncio
+    async def test_bulk_update_points_order_success(self, settings_tools, mock_client):
+        """Test bulk updating points order.
+
+        The Taiga API returns an empty dict {} on success for this endpoint.
+        The _make_request correctly handles the POST and returns {}.
+        """
+        settings_tools.set_client(mock_client)
+        # Taiga API returns empty dict on success
+        mock_client.post = AsyncMock(return_value={})
+
+        # Test the underlying API call pattern
+        result = await settings_tools._make_request(
+            "POST",
+            "/points/bulk_update_order",
+            auth_token="test-token",
+            json={
+                "project": 123,
+                "bulk_points": [[1, 0], [2, 1], [3, 2]],
+            },
+        )
+
+        # Verify API was called correctly
+        mock_client.post.assert_called_once()
+        # API returns empty dict on success
+        assert result == {}
+
 
 class TestUserStoryStatusTools:
     """Tests for user story status tools."""

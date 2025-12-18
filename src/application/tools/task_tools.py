@@ -1359,7 +1359,7 @@ class TaskTools:
         )
         async def list_task_custom_attributes_tool(
             auth_token: str, project_id: int
-        ) -> dict[str, Any]:
+        ) -> list[dict[str, Any]]:
             """
             List custom attributes for tasks in a project.
 

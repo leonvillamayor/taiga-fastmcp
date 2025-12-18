@@ -338,7 +338,7 @@ class SettingsTools:
             auth_token: str,
             project_id: int,
             bulk_points: list[list[int]],
-        ) -> list[dict[str, Any]]:
+        ) -> dict[str, Any]:
             """
             Update the order of multiple points.
 
@@ -348,11 +348,11 @@ class SettingsTools:
                 bulk_points: List of [point_id, order] pairs
 
             Returns:
-                Updated points list
+                Dict with success confirmation and count of updated points
             """
             self._logger.debug(f"[bulk_update_points_order] project={project_id}")
             try:
-                result = await self._make_request(
+                await self._make_request(
                     "POST",
                     "/points/bulk_update_order",
                     auth_token=auth_token,
@@ -362,7 +362,11 @@ class SettingsTools:
                     },
                 )
                 self._logger.info(f"[bulk_update_points_order] Updated {len(bulk_points)} points")
-                return result
+                return {
+                    "success": True,
+                    "updated_count": len(bulk_points),
+                    "project_id": project_id,
+                }
             except TaigaAPIError as e:
                 raise MCPError(f"API error updating points order: {e}") from e
 
