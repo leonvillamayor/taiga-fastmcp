@@ -1,6 +1,6 @@
 [project]
 name = "taiga-fastmcp"
-version = "0.3.1"
+version = "0.3.2"
 description = "MCP Server for Taiga Project Management Platform"
 readme = "README.md"
 requires-python = ">=3.13"

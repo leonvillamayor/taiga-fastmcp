@@ -63,8 +63,15 @@ class SettingsTools:
         auth_token: str | None = None,
         **kwargs: Any,
     ) -> Any:
-        """Make an authenticated request to Taiga API."""
+        """Make an authenticated request to Taiga API.
+
+        Note: Converts 'json' kwarg to 'data' for compatibility with TaigaAPIClient.
+        """
         token = auth_token or self._get_auth_token()
+
+        # Convert 'json' to 'data' for TaigaAPIClient compatibility
+        if "json" in kwargs:
+            kwargs["data"] = kwargs.pop("json")
 
         if self.client:
             # Testing path
