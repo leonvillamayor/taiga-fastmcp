@@ -35,6 +35,7 @@ from tests.integration.mocks.taiga_mock_server import (
     TaigaMockServer,
 )
 
+
 # =============================================================================
 # Test 4.7.1: Autenticación exitosa
 # =============================================================================

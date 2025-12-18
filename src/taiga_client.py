@@ -7,6 +7,7 @@ All methods have explicit type hints for parameters and return values.
 
 import asyncio
 import time
+
 # Import TYPE_CHECKING to avoid circular imports
 from typing import TYPE_CHECKING, Any, cast
 
@@ -14,11 +15,16 @@ import httpx
 from httpx import AsyncClient, Response
 
 from src.config import TaigaConfig
-from src.domain.exceptions import (AuthenticationError, PermissionDeniedError,
-                                   RateLimitError, ResourceNotFoundError,
-                                   TaigaAPIError)
+from src.domain.exceptions import (
+    AuthenticationError,
+    PermissionDeniedError,
+    RateLimitError,
+    ResourceNotFoundError,
+    TaigaAPIError,
+)
 from src.infrastructure.logging import get_logger
 from src.infrastructure.retry import RetryConfig, calculate_delay
+
 
 if TYPE_CHECKING:
     from src.infrastructure.http_session_pool import HTTPSessionPool

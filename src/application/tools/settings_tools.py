@@ -16,8 +16,12 @@ from fastmcp import FastMCP
 from fastmcp.exceptions import ToolError as MCPError
 
 from src.config import TaigaConfig
-from src.domain.exceptions import (AuthenticationError, ResourceNotFoundError,
-                                   TaigaAPIError, ValidationError)
+from src.domain.exceptions import (
+    AuthenticationError,
+    ResourceNotFoundError,
+    TaigaAPIError,
+    ValidationError,
+)
 from src.infrastructure.logging import get_logger
 from src.taiga_client import TaigaAPIClient
 
@@ -217,14 +221,13 @@ class SettingsTools:
             """
             self._logger.debug(f"[get_point] id={point_id}")
             try:
-                result = await self._make_request(
+                return await self._make_request(
                     "GET",
                     f"/points/{point_id}",
                     auth_token=auth_token,
                 )
-                return result
-            except ResourceNotFoundError:
-                raise MCPError(f"Point {point_id} not found")
+            except ResourceNotFoundError as e:
+                raise MCPError(f"Point {point_id} not found") from e
             except TaigaAPIError as e:
                 raise MCPError(f"API error getting point: {e}") from e
 
@@ -272,8 +275,8 @@ class SettingsTools:
                 )
                 self._logger.info(f"[update_point] Updated point id={point_id}")
                 return result
-            except ResourceNotFoundError:
-                raise MCPError(f"Point {point_id} not found")
+            except ResourceNotFoundError as e:
+                raise MCPError(f"Point {point_id} not found") from e
             except TaigaAPIError as e:
                 raise MCPError(f"API error updating point: {e}") from e
 
@@ -313,8 +316,8 @@ class SettingsTools:
                 )
                 self._logger.info(f"[delete_point] Deleted point id={point_id}")
                 return {"deleted": True, "point_id": point_id}
-            except ResourceNotFoundError:
-                raise MCPError(f"Point {point_id} not found")
+            except ResourceNotFoundError as e:
+                raise MCPError(f"Point {point_id} not found") from e
             except TaigaAPIError as e:
                 raise MCPError(f"API error deleting point: {e}") from e
 
@@ -385,13 +388,12 @@ class SettingsTools:
             """
             self._logger.debug(f"[list_userstory_statuses] project={project_id}")
             try:
-                result = await self._make_request(
+                return await self._make_request(
                     "GET",
                     "/userstory-statuses",
                     auth_token=auth_token,
                     params={"project": project_id},
                 )
-                return result
             except TaigaAPIError as e:
                 raise MCPError(f"API error listing user story statuses: {e}") from e
 
@@ -468,8 +470,8 @@ class SettingsTools:
                     f"/userstory-statuses/{status_id}",
                     auth_token=auth_token,
                 )
-            except ResourceNotFoundError:
-                raise MCPError(f"User story status {status_id} not found")
+            except ResourceNotFoundError as e:
+                raise MCPError(f"User story status {status_id} not found") from e
 
         @self.mcp.tool(
             name="taiga_update_userstory_status",
@@ -509,8 +511,8 @@ class SettingsTools:
                     auth_token=auth_token,
                     json=data,
                 )
-            except ResourceNotFoundError:
-                raise MCPError(f"User story status {status_id} not found")
+            except ResourceNotFoundError as e:
+                raise MCPError(f"User story status {status_id} not found") from e
 
         @self.mcp.tool(
             name="taiga_delete_userstory_status",
@@ -533,8 +535,8 @@ class SettingsTools:
                     params=params,
                 )
                 return {"deleted": True, "status_id": status_id}
-            except ResourceNotFoundError:
-                raise MCPError(f"User story status {status_id} not found")
+            except ResourceNotFoundError as e:
+                raise MCPError(f"User story status {status_id} not found") from e
 
     # =========================================================================
     # TASK STATUS TOOLS
@@ -612,8 +614,8 @@ class SettingsTools:
                     f"/task-statuses/{status_id}",
                     auth_token=auth_token,
                 )
-            except ResourceNotFoundError:
-                raise MCPError(f"Task status {status_id} not found")
+            except ResourceNotFoundError as e:
+                raise MCPError(f"Task status {status_id} not found") from e
 
         @self.mcp.tool(
             name="taiga_update_task_status",
@@ -647,8 +649,8 @@ class SettingsTools:
                     auth_token=auth_token,
                     json=data,
                 )
-            except ResourceNotFoundError:
-                raise MCPError(f"Task status {status_id} not found")
+            except ResourceNotFoundError as e:
+                raise MCPError(f"Task status {status_id} not found") from e
 
         @self.mcp.tool(
             name="taiga_delete_task_status",
@@ -671,8 +673,8 @@ class SettingsTools:
                     params=params,
                 )
                 return {"deleted": True, "status_id": status_id}
-            except ResourceNotFoundError:
-                raise MCPError(f"Task status {status_id} not found")
+            except ResourceNotFoundError as e:
+                raise MCPError(f"Task status {status_id} not found") from e
 
     # =========================================================================
     # ISSUE STATUS TOOLS
@@ -750,8 +752,8 @@ class SettingsTools:
                     f"/issue-statuses/{status_id}",
                     auth_token=auth_token,
                 )
-            except ResourceNotFoundError:
-                raise MCPError(f"Issue status {status_id} not found")
+            except ResourceNotFoundError as e:
+                raise MCPError(f"Issue status {status_id} not found") from e
 
         @self.mcp.tool(
             name="taiga_update_issue_status",
@@ -785,8 +787,8 @@ class SettingsTools:
                     auth_token=auth_token,
                     json=data,
                 )
-            except ResourceNotFoundError:
-                raise MCPError(f"Issue status {status_id} not found")
+            except ResourceNotFoundError as e:
+                raise MCPError(f"Issue status {status_id} not found") from e
 
         @self.mcp.tool(
             name="taiga_delete_issue_status",
@@ -809,8 +811,8 @@ class SettingsTools:
                     params=params,
                 )
                 return {"deleted": True, "status_id": status_id}
-            except ResourceNotFoundError:
-                raise MCPError(f"Issue status {status_id} not found")
+            except ResourceNotFoundError as e:
+                raise MCPError(f"Issue status {status_id} not found") from e
 
     # =========================================================================
     # EPIC STATUS TOOLS
@@ -888,8 +890,8 @@ class SettingsTools:
                     f"/epic-statuses/{status_id}",
                     auth_token=auth_token,
                 )
-            except ResourceNotFoundError:
-                raise MCPError(f"Epic status {status_id} not found")
+            except ResourceNotFoundError as e:
+                raise MCPError(f"Epic status {status_id} not found") from e
 
         @self.mcp.tool(
             name="taiga_update_epic_status",
@@ -923,8 +925,8 @@ class SettingsTools:
                     auth_token=auth_token,
                     json=data,
                 )
-            except ResourceNotFoundError:
-                raise MCPError(f"Epic status {status_id} not found")
+            except ResourceNotFoundError as e:
+                raise MCPError(f"Epic status {status_id} not found") from e
 
         @self.mcp.tool(
             name="taiga_delete_epic_status",
@@ -947,8 +949,8 @@ class SettingsTools:
                     params=params,
                 )
                 return {"deleted": True, "status_id": status_id}
-            except ResourceNotFoundError:
-                raise MCPError(f"Epic status {status_id} not found")
+            except ResourceNotFoundError as e:
+                raise MCPError(f"Epic status {status_id} not found") from e
 
     # =========================================================================
     # PRIORITY TOOLS
@@ -1024,8 +1026,8 @@ class SettingsTools:
                     f"/priorities/{priority_id}",
                     auth_token=auth_token,
                 )
-            except ResourceNotFoundError:
-                raise MCPError(f"Priority {priority_id} not found")
+            except ResourceNotFoundError as e:
+                raise MCPError(f"Priority {priority_id} not found") from e
 
         @self.mcp.tool(
             name="taiga_update_priority",
@@ -1056,8 +1058,8 @@ class SettingsTools:
                     auth_token=auth_token,
                     json=data,
                 )
-            except ResourceNotFoundError:
-                raise MCPError(f"Priority {priority_id} not found")
+            except ResourceNotFoundError as e:
+                raise MCPError(f"Priority {priority_id} not found") from e
 
         @self.mcp.tool(
             name="taiga_delete_priority",
@@ -1080,8 +1082,8 @@ class SettingsTools:
                     params=params,
                 )
                 return {"deleted": True, "priority_id": priority_id}
-            except ResourceNotFoundError:
-                raise MCPError(f"Priority {priority_id} not found")
+            except ResourceNotFoundError as e:
+                raise MCPError(f"Priority {priority_id} not found") from e
 
     # =========================================================================
     # SEVERITY TOOLS
@@ -1157,8 +1159,8 @@ class SettingsTools:
                     f"/severities/{severity_id}",
                     auth_token=auth_token,
                 )
-            except ResourceNotFoundError:
-                raise MCPError(f"Severity {severity_id} not found")
+            except ResourceNotFoundError as e:
+                raise MCPError(f"Severity {severity_id} not found") from e
 
         @self.mcp.tool(
             name="taiga_update_severity",
@@ -1189,8 +1191,8 @@ class SettingsTools:
                     auth_token=auth_token,
                     json=data,
                 )
-            except ResourceNotFoundError:
-                raise MCPError(f"Severity {severity_id} not found")
+            except ResourceNotFoundError as e:
+                raise MCPError(f"Severity {severity_id} not found") from e
 
         @self.mcp.tool(
             name="taiga_delete_severity",
@@ -1213,8 +1215,8 @@ class SettingsTools:
                     params=params,
                 )
                 return {"deleted": True, "severity_id": severity_id}
-            except ResourceNotFoundError:
-                raise MCPError(f"Severity {severity_id} not found")
+            except ResourceNotFoundError as e:
+                raise MCPError(f"Severity {severity_id} not found") from e
 
     # =========================================================================
     # ISSUE TYPE TOOLS
@@ -1290,8 +1292,8 @@ class SettingsTools:
                     f"/issue-types/{type_id}",
                     auth_token=auth_token,
                 )
-            except ResourceNotFoundError:
-                raise MCPError(f"Issue type {type_id} not found")
+            except ResourceNotFoundError as e:
+                raise MCPError(f"Issue type {type_id} not found") from e
 
         @self.mcp.tool(
             name="taiga_update_issue_type",
@@ -1322,8 +1324,8 @@ class SettingsTools:
                     auth_token=auth_token,
                     json=data,
                 )
-            except ResourceNotFoundError:
-                raise MCPError(f"Issue type {type_id} not found")
+            except ResourceNotFoundError as e:
+                raise MCPError(f"Issue type {type_id} not found") from e
 
         @self.mcp.tool(
             name="taiga_delete_issue_type",
@@ -1346,8 +1348,8 @@ class SettingsTools:
                     params=params,
                 )
                 return {"deleted": True, "type_id": type_id}
-            except ResourceNotFoundError:
-                raise MCPError(f"Issue type {type_id} not found")
+            except ResourceNotFoundError as e:
+                raise MCPError(f"Issue type {type_id} not found") from e
 
     # =========================================================================
     # ROLE TOOLS
@@ -1441,8 +1443,8 @@ class SettingsTools:
                     f"/roles/{role_id}",
                     auth_token=auth_token,
                 )
-            except ResourceNotFoundError:
-                raise MCPError(f"Role {role_id} not found")
+            except ResourceNotFoundError as e:
+                raise MCPError(f"Role {role_id} not found") from e
 
         @self.mcp.tool(
             name="taiga_update_role",
@@ -1476,8 +1478,8 @@ class SettingsTools:
                     auth_token=auth_token,
                     json=data,
                 )
-            except ResourceNotFoundError:
-                raise MCPError(f"Role {role_id} not found")
+            except ResourceNotFoundError as e:
+                raise MCPError(f"Role {role_id} not found") from e
 
         @self.mcp.tool(
             name="taiga_delete_role",
@@ -1500,5 +1502,5 @@ class SettingsTools:
                     params=params,
                 )
                 return {"deleted": True, "role_id": role_id}
-            except ResourceNotFoundError:
-                raise MCPError(f"Role {role_id} not found")
+            except ResourceNotFoundError as e:
+                raise MCPError(f"Role {role_id} not found") from e

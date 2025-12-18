@@ -10,14 +10,19 @@ from fastmcp.exceptions import ToolError
 
 from src.application.responses.base import SuccessResponse
 from src.application.responses.epic_responses import (
-    EpicAttachmentResponse, EpicCustomAttributeResponse,
-    EpicCustomAttributeValuesResponse, EpicFiltersResponse, EpicListResponse,
-    EpicRelatedUserstoryResponse, EpicResponse, EpicVoterResponse,
-    EpicWatcherResponse)
+    EpicAttachmentResponse,
+    EpicCustomAttributeResponse,
+    EpicCustomAttributeValuesResponse,
+    EpicFiltersResponse,
+    EpicListResponse,
+    EpicRelatedUserstoryResponse,
+    EpicResponse,
+    EpicVoterResponse,
+    EpicWatcherResponse,
+)
 from src.config import TaigaConfig
 from src.domain.exceptions import ValidationError
-from src.domain.validators import (EpicCreateValidator, EpicUpdateValidator,
-                                   validate_input)
+from src.domain.validators import EpicCreateValidator, EpicUpdateValidator, validate_input
 from src.infrastructure.logging import get_logger
 from src.infrastructure.pagination import AutoPaginator, PaginationConfig
 from src.taiga_client import TaigaAPIClient
@@ -1505,9 +1510,11 @@ class EpicTools:
         """List epics in a project."""
         self._logger.debug(f"[list_epics] Starting | params={kwargs}")
         try:
-            from src.domain.exceptions import (AuthenticationError,
-                                               PermissionDeniedError,
-                                               ResourceNotFoundError)
+            from src.domain.exceptions import (
+                AuthenticationError,
+                PermissionDeniedError,
+                ResourceNotFoundError,
+            )
 
             kwargs.pop("auth_token", None)
             async with TaigaAPIClient(self.config) as client:
@@ -1610,10 +1617,12 @@ class EpicTools:
         """Get an epic by ID."""
         self._logger.debug(f"[get_epic] Starting | epic_id={epic_id}")
         try:
-            from src.domain.exceptions import (AuthenticationError,
-                                               ConcurrencyError,
-                                               PermissionDeniedError,
-                                               ResourceNotFoundError)
+            from src.domain.exceptions import (
+                AuthenticationError,
+                ConcurrencyError,
+                PermissionDeniedError,
+                ResourceNotFoundError,
+            )
 
             async with TaigaAPIClient(self.config) as client:
                 client.auth_token = auth_token
@@ -1650,9 +1659,11 @@ class EpicTools:
         """Get an epic by its reference number within a project."""
         self._logger.debug(f"[get_epic_by_ref] Starting | project_id={project_id}, ref={ref}")
         try:
-            from src.domain.exceptions import (AuthenticationError,
-                                               PermissionDeniedError,
-                                               ResourceNotFoundError)
+            from src.domain.exceptions import (
+                AuthenticationError,
+                PermissionDeniedError,
+                ResourceNotFoundError,
+            )
 
             async with TaigaAPIClient(self.config) as client:
                 client.auth_token = auth_token
@@ -1706,10 +1717,12 @@ class EpicTools:
             raise ValueError("project is required for full update")
 
         try:
-            from src.domain.exceptions import (AuthenticationError,
-                                               ConcurrencyError,
-                                               PermissionDeniedError,
-                                               ResourceNotFoundError)
+            from src.domain.exceptions import (
+                AuthenticationError,
+                ConcurrencyError,
+                PermissionDeniedError,
+                ResourceNotFoundError,
+            )
 
             # Validar datos de entrada ANTES de llamar a la API
             update_data = {
@@ -1783,10 +1796,12 @@ class EpicTools:
         update_type = "full" if is_full_update else "partial"
         self._logger.debug(f"[update_epic] Starting | epic_id={epic_id}, type={update_type}")
         try:
-            from src.domain.exceptions import (AuthenticationError,
-                                               ConcurrencyError,
-                                               PermissionDeniedError,
-                                               ResourceNotFoundError)
+            from src.domain.exceptions import (
+                AuthenticationError,
+                ConcurrencyError,
+                PermissionDeniedError,
+                ResourceNotFoundError,
+            )
 
             # Validar datos de entrada ANTES de llamar a la API
             update_data = {
@@ -1920,9 +1935,11 @@ class EpicTools:
         """Delete an epic."""
         self._logger.debug(f"[delete_epic] Starting | epic_id={epic_id}")
         try:
-            from src.domain.exceptions import (AuthenticationError,
-                                               PermissionDeniedError,
-                                               ResourceNotFoundError)
+            from src.domain.exceptions import (
+                AuthenticationError,
+                PermissionDeniedError,
+                ResourceNotFoundError,
+            )
 
             async with TaigaAPIClient(self.config) as client:
                 client.auth_token = auth_token
@@ -1968,9 +1985,11 @@ class EpicTools:
     async def list_related_userstories(self, auth_token: str, epic_id: int) -> list[dict[str, Any]]:
         """List user stories related to an epic."""
         try:
-            from src.domain.exceptions import (AuthenticationError,
-                                               PermissionDeniedError,
-                                               ResourceNotFoundError)
+            from src.domain.exceptions import (
+                AuthenticationError,
+                PermissionDeniedError,
+                ResourceNotFoundError,
+            )
 
             return await self.list_epic_related_userstories(auth_token=auth_token, epic_id=epic_id)
         except AuthenticationError as e:
@@ -2036,9 +2055,11 @@ class EpicTools:
             Dict with the created relationship
         """
         try:
-            from src.domain.exceptions import (AuthenticationError,
-                                               PermissionDeniedError,
-                                               ResourceNotFoundError)
+            from src.domain.exceptions import (
+                AuthenticationError,
+                PermissionDeniedError,
+                ResourceNotFoundError,
+            )
 
             return await self.create_epic_related_userstory(
                 auth_token=auth_token, epic_id=epic_id, user_story=user_story, order=order
@@ -2140,8 +2161,7 @@ class EpicTools:
         """Bulk create multiple epics."""
         self._logger.debug(f"[bulk_create_epics] Starting | project_id={project_id}")
         try:
-            from src.domain.exceptions import (AuthenticationError,
-                                               PermissionDeniedError)
+            from src.domain.exceptions import AuthenticationError, PermissionDeniedError
 
             async with TaigaAPIClient(self.config) as client:
                 client.auth_token = auth_token
@@ -2186,9 +2206,11 @@ class EpicTools:
         """Bulk create user stories related to an epic."""
         self._logger.debug(f"[bulk_create_related_userstories] Starting | epic_id={epic_id}")
         try:
-            from src.domain.exceptions import (AuthenticationError,
-                                               PermissionDeniedError,
-                                               ResourceNotFoundError)
+            from src.domain.exceptions import (
+                AuthenticationError,
+                PermissionDeniedError,
+                ResourceNotFoundError,
+            )
 
             async with TaigaAPIClient(self.config) as client:
                 client.auth_token = auth_token
@@ -2254,9 +2276,11 @@ class EpicTools:
         """Get available filters for epics in a project."""
         self._logger.debug(f"[get_epic_filters] Starting | project_id={project_id}")
         try:
-            from src.domain.exceptions import (AuthenticationError,
-                                               PermissionDeniedError,
-                                               ResourceNotFoundError)
+            from src.domain.exceptions import (
+                AuthenticationError,
+                PermissionDeniedError,
+                ResourceNotFoundError,
+            )
 
             async with TaigaAPIClient(self.config) as client:
                 client.auth_token = auth_token
@@ -2285,9 +2309,11 @@ class EpicTools:
         """Upvote an epic."""
         self._logger.debug(f"[upvote_epic] Starting | epic_id={epic_id}")
         try:
-            from src.domain.exceptions import (AuthenticationError,
-                                               PermissionDeniedError,
-                                               ResourceNotFoundError)
+            from src.domain.exceptions import (
+                AuthenticationError,
+                PermissionDeniedError,
+                ResourceNotFoundError,
+            )
 
             async with TaigaAPIClient(self.config) as client:
                 client.auth_token = auth_token
@@ -2315,9 +2341,11 @@ class EpicTools:
         """Downvote an epic."""
         self._logger.debug(f"[downvote_epic] Starting | epic_id={epic_id}")
         try:
-            from src.domain.exceptions import (AuthenticationError,
-                                               PermissionDeniedError,
-                                               ResourceNotFoundError)
+            from src.domain.exceptions import (
+                AuthenticationError,
+                PermissionDeniedError,
+                ResourceNotFoundError,
+            )
 
             async with TaigaAPIClient(self.config) as client:
                 client.auth_token = auth_token
@@ -2345,9 +2373,11 @@ class EpicTools:
         """Get voters of an epic."""
         self._logger.debug(f"[get_epic_voters] Starting | epic_id={epic_id}")
         try:
-            from src.domain.exceptions import (AuthenticationError,
-                                               PermissionDeniedError,
-                                               ResourceNotFoundError)
+            from src.domain.exceptions import (
+                AuthenticationError,
+                PermissionDeniedError,
+                ResourceNotFoundError,
+            )
 
             async with TaigaAPIClient(self.config) as client:
                 client.auth_token = auth_token
@@ -2379,9 +2409,11 @@ class EpicTools:
         """Watch an epic for updates."""
         self._logger.debug(f"[watch_epic] Starting | epic_id={epic_id}")
         try:
-            from src.domain.exceptions import (AuthenticationError,
-                                               PermissionDeniedError,
-                                               ResourceNotFoundError)
+            from src.domain.exceptions import (
+                AuthenticationError,
+                PermissionDeniedError,
+                ResourceNotFoundError,
+            )
 
             async with TaigaAPIClient(self.config) as client:
                 client.auth_token = auth_token
@@ -2409,9 +2441,11 @@ class EpicTools:
         """Stop watching an epic."""
         self._logger.debug(f"[unwatch_epic] Starting | epic_id={epic_id}")
         try:
-            from src.domain.exceptions import (AuthenticationError,
-                                               PermissionDeniedError,
-                                               ResourceNotFoundError)
+            from src.domain.exceptions import (
+                AuthenticationError,
+                PermissionDeniedError,
+                ResourceNotFoundError,
+            )
 
             async with TaigaAPIClient(self.config) as client:
                 client.auth_token = auth_token
@@ -2439,9 +2473,11 @@ class EpicTools:
         """Get watchers of an epic."""
         self._logger.debug(f"[get_epic_watchers] Starting | epic_id={epic_id}")
         try:
-            from src.domain.exceptions import (AuthenticationError,
-                                               PermissionDeniedError,
-                                               ResourceNotFoundError)
+            from src.domain.exceptions import (
+                AuthenticationError,
+                PermissionDeniedError,
+                ResourceNotFoundError,
+            )
 
             async with TaigaAPIClient(self.config) as client:
                 client.auth_token = auth_token
@@ -2474,9 +2510,11 @@ class EpicTools:
         epic_id = kwargs.get("epic_id") or kwargs.get("object_id")
         self._logger.debug(f"[list_epic_attachments] Starting | epic_id={epic_id}")
         try:
-            from src.domain.exceptions import (AuthenticationError,
-                                               PermissionDeniedError,
-                                               ResourceNotFoundError)
+            from src.domain.exceptions import (
+                AuthenticationError,
+                PermissionDeniedError,
+                ResourceNotFoundError,
+            )
 
             kwargs.pop("auth_token", None)
             # Handle alias: epic_id -> object_id
@@ -2513,9 +2551,11 @@ class EpicTools:
         epic_id = kwargs.get("epic_id") or kwargs.get("object_id")
         self._logger.debug(f"[create_epic_attachment] Starting | epic_id={epic_id}")
         try:
-            from src.domain.exceptions import (AuthenticationError,
-                                               PermissionDeniedError,
-                                               ResourceNotFoundError)
+            from src.domain.exceptions import (
+                AuthenticationError,
+                PermissionDeniedError,
+                ResourceNotFoundError,
+            )
 
             kwargs.pop("auth_token", None)
             # Handle alias: epic_id -> object_id

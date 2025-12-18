@@ -8,6 +8,7 @@ from src.domain.entities.issue import Issue
 from src.domain.exceptions import ResourceNotFoundError
 from src.domain.repositories.issue_repository import IssueRepository
 
+
 # DTOs (Data Transfer Objects)
 
 

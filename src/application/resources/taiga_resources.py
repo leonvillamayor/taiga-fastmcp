@@ -90,7 +90,7 @@ class TaigaResources:
                     result = await client.get(f"/projects/{project_id}/stats")
 
             self._logger.info(f"[resource:project_stats] Retrieved stats for project {project_id}")
-            return cast(dict[str, Any], result)
+            return cast("dict[str, Any]", result)
 
         # Store reference for testing
         self.get_project_stats = get_project_stats
@@ -129,7 +129,7 @@ class TaigaResources:
                 async with TaigaAPIClient(self.config) as client:
                     raw_result = await client.get(f"/projects/{project_id}")
 
-            result = cast(dict[str, Any], raw_result)
+            result = cast("dict[str, Any]", raw_result)
             # Extract module configuration
             modules = {
                 "is_backlog_activated": result.get("is_backlog_activated", False),
@@ -292,7 +292,7 @@ class TaigaResources:
                 async with TaigaAPIClient(self.config) as client:
                     raw_result = await client.get("/users/me")
 
-            result = cast(dict[str, Any], raw_result)
+            result = cast("dict[str, Any]", raw_result)
             user_info = {
                 "id": result.get("id"),
                 "username": result.get("username"),
@@ -347,7 +347,7 @@ class TaigaResources:
                     result = await client.get(f"/users/{user_id}/stats")
 
             self._logger.info(f"[resource:user_stats] Retrieved stats for user {user_id}")
-            return cast(dict[str, Any], result)
+            return cast("dict[str, Any]", result)
 
         # Store reference for testing
         self.get_user_stats = get_user_stats

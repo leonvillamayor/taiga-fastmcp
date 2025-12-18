@@ -13,6 +13,7 @@ from typing import Any, ParamSpec, TypeVar
 from src.infrastructure.logging.correlation import CorrelationIdManager
 from src.infrastructure.logging.logger import get_logger
 
+
 P = ParamSpec("P")
 R = TypeVar("R")
 

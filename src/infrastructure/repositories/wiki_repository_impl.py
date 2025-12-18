@@ -8,8 +8,7 @@ from typing import Any
 
 from src.domain.entities.wiki_page import WikiPage
 from src.domain.repositories.wiki_repository import WikiRepository
-from src.infrastructure.repositories.base_repository_impl import \
-    BaseRepositoryImpl
+from src.infrastructure.repositories.base_repository_impl import BaseRepositoryImpl
 from src.taiga_client import TaigaAPIClient
 
 

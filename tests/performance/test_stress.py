@@ -16,6 +16,7 @@ from unittest.mock import AsyncMock, Mock
 
 import pytest
 
+
 # Stress test configuration
 HIGH_VOLUME_COUNT = 100  # Number of items for high volume tests
 MEMORY_GROWTH_THRESHOLD_MB = 50  # Maximum memory growth in MB

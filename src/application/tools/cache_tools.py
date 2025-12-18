@@ -8,10 +8,12 @@ from typing import Any
 
 from fastmcp import FastMCP
 
-from src.infrastructure.client_factory import (clear_all_cache,
-                                               get_global_cache,
-                                               invalidate_cache_by_pattern,
-                                               invalidate_project_cache)
+from src.infrastructure.client_factory import (
+    clear_all_cache,
+    get_global_cache,
+    invalidate_cache_by_pattern,
+    invalidate_project_cache,
+)
 from src.infrastructure.logging import get_logger
 
 

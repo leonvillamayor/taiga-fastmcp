@@ -26,8 +26,7 @@ def mock_mcp():
 @pytest.fixture
 def search_tools(mock_mcp):
     """Create SearchTools instance with mock MCP."""
-    tools = SearchTools(mock_mcp)
-    return tools
+    return SearchTools(mock_mcp)
 
 
 @pytest.fixture
