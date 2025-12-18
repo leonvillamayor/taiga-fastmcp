@@ -1,6 +1,12 @@
 # Docker Compose for Taiga MCP Server
-# Version: 0.1.1
+# Version: 0.2.0
 # Supports HTTP transport for MCP protocol with integrated caching
+#
+# New in v0.2.0:
+#   - 53 new tools (Settings, Bulk Operations, Search)
+#   - 6 MCP Resources (project stats, modules, timeline, members, user info)
+#   - 6 MCP Prompts (sprint planning, retrospective, health analysis, etc.)
+#   - 3034+ tests with 88%+ coverage
 #
 # Usage:
 #   Development:  docker compose --profile dev up
@@ -9,7 +15,7 @@
 #
 # Configuration: Copy .env.example to .env and configure your credentials
 #
-# Cache Configuration (v0.1.1):
+# Cache Configuration:
 #   TAIGA_CACHE_ENABLED: Enable/disable caching (default: true)
 #   TAIGA_CACHE_TTL: Cache time-to-live in seconds (default: 3600)
 #   TAIGA_CACHE_MAX_SIZE: Maximum cache entries (default: 1000)
@@ -39,7 +45,7 @@ services:
       - MCP_PORT=8000
       - PYTHONUNBUFFERED=1
       - PYTHONDONTWRITEBYTECODE=1
-      # Cache configuration (v0.1.1)
+      # Cache configuration
       - TAIGA_CACHE_ENABLED=${TAIGA_CACHE_ENABLED:-true}
       - TAIGA_CACHE_TTL=${TAIGA_CACHE_TTL:-3600}
       - TAIGA_CACHE_MAX_SIZE=${TAIGA_CACHE_MAX_SIZE:-1000}
@@ -78,8 +84,8 @@ services:
 
     # Labels
     labels:
-      - "com.taiga.mcp.description=Taiga MCP Server with cache integration"
-      - "com.taiga.mcp.version=0.1.1"
+      - "com.taiga.mcp.description=Taiga MCP Server with complete API coverage"
+      - "com.taiga.mcp.version=0.2.0"
       - "com.taiga.mcp.transport=http"
       - "com.taiga.mcp.cache=enabled"
 
@@ -119,7 +125,7 @@ services:
       - TAIGA_MAX_RETRIES=5
       - PYTHONUNBUFFERED=1
       - PYTHONDONTWRITEBYTECODE=1
-      # Production cache settings (v0.1.1) - optimized for performance
+      # Production cache settings - optimized for performance
       - TAIGA_CACHE_ENABLED=true
       - TAIGA_CACHE_TTL=7200
       - TAIGA_CACHE_MAX_SIZE=5000
@@ -163,7 +169,7 @@ services:
       - MCP_PORT=8000
       - MCP_DEBUG=true
       - PYTHONUNBUFFERED=1
-      # Development cache settings (v0.1.1) - shorter TTL for faster iteration
+      # Development cache settings - shorter TTL for faster iteration
       - TAIGA_CACHE_ENABLED=true
       - TAIGA_CACHE_TTL=300
       - TAIGA_CACHE_MAX_SIZE=100

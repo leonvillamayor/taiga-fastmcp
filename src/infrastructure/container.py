@@ -9,6 +9,8 @@ from typing import Any
 from dependency_injector import containers, providers
 from fastmcp import FastMCP
 
+from src.application.prompts.taiga_prompts import TaigaPrompts
+from src.application.resources.taiga_resources import TaigaResources
 from src.application.tools.auth_tools import AuthTools
 from src.application.tools.cache_tools import CacheTools
 from src.application.tools.epic_tools import EpicTools
@@ -16,6 +18,8 @@ from src.application.tools.issue_tools import IssueTools
 from src.application.tools.membership_tools import MembershipTools
 from src.application.tools.milestone_tools import MilestoneTools
 from src.application.tools.project_tools import ProjectTools
+from src.application.tools.search_tools import SearchTools
+from src.application.tools.settings_tools import SettingsTools
 from src.application.tools.task_tools import TaskTools
 from src.application.tools.userstory_tools import UserStoryTools
 from src.application.tools.webhook_tools import WebhookTools
@@ -39,16 +43,10 @@ from src.infrastructure.metrics import MetricsCollector
 from src.infrastructure.repositories.epic_repository_impl import EpicRepositoryImpl
 from src.infrastructure.repositories.issue_repository_impl import IssueRepositoryImpl
 from src.infrastructure.repositories.member_repository_impl import MemberRepositoryImpl
-from src.infrastructure.repositories.milestone_repository_impl import (
-    MilestoneRepositoryImpl,
-)
-from src.infrastructure.repositories.project_repository_impl import (
-    ProjectRepositoryImpl,
-)
+from src.infrastructure.repositories.milestone_repository_impl import MilestoneRepositoryImpl
+from src.infrastructure.repositories.project_repository_impl import ProjectRepositoryImpl
 from src.infrastructure.repositories.task_repository_impl import TaskRepositoryImpl
-from src.infrastructure.repositories.user_story_repository_impl import (
-    UserStoryRepositoryImpl,
-)
+from src.infrastructure.repositories.user_story_repository_impl import UserStoryRepositoryImpl
 from src.infrastructure.repositories.wiki_repository_impl import WikiRepositoryImpl
 from src.taiga_client import TaigaAPIClient
 
@@ -147,6 +145,16 @@ class _Container(containers.DeclarativeContainer):
 
     wiki_tools = providers.Singleton(WikiTools, mcp=mcp)
 
+    settings_tools = providers.Singleton(SettingsTools, mcp=mcp)
+
+    search_tools = providers.Singleton(SearchTools, mcp=mcp)
+
+    # MCP Resources (Singleton)
+    taiga_resources = providers.Singleton(TaigaResources, mcp=mcp)
+
+    # MCP Prompts (Singleton)
+    taiga_prompts = providers.Singleton(TaigaPrompts, mcp=mcp)
+
 
 class ApplicationContainer:
     """Container principal de la aplicación.
@@ -203,7 +211,8 @@ class ApplicationContainer:
         return getattr(self._container, name)
 
     def register_all_tools(self) -> None:
-        """Registra todas las herramientas en el servidor MCP."""
+        """Registra todas las herramientas, recursos y prompts en el servidor MCP."""
+        # Register tools
         self._container.auth_tools().register_tools()
         self._container.cache_tools().register_tools()
         self._container.epic_tools().register_tools()
@@ -216,6 +225,14 @@ class ApplicationContainer:
         self._container.membership_tools().register_tools()
         self._container.webhook_tools().register_tools()
         self._container.wiki_tools().register_tools()
+        self._container.settings_tools().register_tools()
+        self._container.search_tools().register_tools()
+
+        # Register MCP resources
+        self._container.taiga_resources().register_resources()
+
+        # Register MCP prompts
+        self._container.taiga_prompts().register_prompts()
 
     async def start_session_pool(self) -> None:
         """Inicia el pool de sesiones HTTP.

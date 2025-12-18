@@ -1,6 +1,6 @@
 [project]
 name = "taiga-fastmcp"
-version = "0.1.1"
+version = "0.2.0"
 description = "MCP Server for Taiga Project Management Platform"
 readme = "README.md"
 requires-python = ">=3.13"
@@ -286,6 +286,7 @@ skips = [
     "B110",  # try_except_pass - intentional graceful error handling in shutdown
     "B113",  # request_without_timeout - requests used only in sync fallback
     "B311",  # random - used for jitter in retry mechanism, not for security
+    "B608",  # hardcoded_sql_expressions - false positive on prompt template f-strings
 ]
 
 [dependency-groups]

@@ -15,11 +15,7 @@ from src.domain.exceptions import (
     TaigaAPIError,
     ValidationError,
 )
-from src.domain.validators import (
-    UserStoryCreateValidator,
-    UserStoryUpdateValidator,
-    validate_input,
-)
+from src.domain.validators import UserStoryCreateValidator, UserStoryUpdateValidator, validate_input
 from src.infrastructure.client_factory import get_taiga_client
 from src.infrastructure.logging import get_logger
 from src.infrastructure.pagination import AutoPaginator, PaginationConfig
@@ -1835,6 +1831,338 @@ class UserStoryTools:
             get_userstory_filters.fn
             if hasattr(get_userstory_filters, "fn")
             else get_userstory_filters
+        )
+
+        # Bulk update backlog order
+        @self.mcp.tool(
+            name="taiga_bulk_update_backlog_order",
+            description="Update the order of multiple user stories in the backlog",
+            tags={"userstories", "write", "bulk", "backlog"},
+            annotations={"readOnlyHint": False, "openWorldHint": True},
+        )
+        async def bulk_update_backlog_order_tool(
+            auth_token: str,
+            project_id: int,
+            bulk_stories: list[list[int]],
+        ) -> dict[str, Any]:
+            """
+            Update the order of user stories in the backlog.
+
+            Esta herramienta permite reordenar múltiples historias de usuario
+            en el backlog del proyecto. Útil para priorizar historias.
+
+            Args:
+                auth_token: Token de autenticación obtenido de taiga_authenticate
+                project_id: ID del proyecto
+                bulk_stories: Lista de pares [story_id, order] indicando
+                    el nuevo orden de cada historia. Ejemplo: [[123, 0], [124, 1], [125, 2]]
+
+            Returns:
+                Dict con confirmación y número de historias actualizadas
+
+            Raises:
+                MCPError: Si la autenticación falla o hay error en la API
+
+            Example:
+                >>> result = await taiga_bulk_update_backlog_order(
+                ...     auth_token="eyJ0eXAiOi...",
+                ...     project_id=309804,
+                ...     bulk_stories=[[123, 0], [124, 1], [125, 2]]
+                ... )
+                >>> print(result)
+                {"success": True, "updated_count": 3}
+            """
+            try:
+                self._logger.debug(
+                    f"[bulk_update_backlog_order] Starting | project={project_id}, count={len(bulk_stories)}"
+                )
+
+                if self.client:
+                    result = await self.client.post(
+                        "/userstories/bulk_update_backlog_order",
+                        data={"project_id": project_id, "bulk_stories": bulk_stories},
+                    )
+                else:
+                    async with TaigaAPIClient(self.config) as client:
+                        client.auth_token = auth_token
+                        result = await client.post(
+                            "/userstories/bulk_update_backlog_order",
+                            data={"project_id": project_id, "bulk_stories": bulk_stories},
+                        )
+
+                self._logger.info(
+                    f"[bulk_update_backlog_order] Success | project={project_id}, count={len(bulk_stories)}"
+                )
+                return {"success": True, "updated_count": len(bulk_stories), "result": result}
+
+            except AuthenticationError:
+                self._logger.warning("[bulk_update_backlog_order] Auth failed")
+                raise MCPError("Authentication failed") from None
+            except TaigaAPIError as e:
+                self._logger.error(f"[bulk_update_backlog_order] API error | error={e!s}")
+                raise MCPError(f"Failed to update backlog order: {e!s}") from e
+            except Exception as e:
+                self._logger.error(f"[bulk_update_backlog_order] Unexpected error | error={e!s}")
+                raise MCPError(f"Unexpected error: {e!s}") from e
+
+        # Store reference for direct test access
+        self.bulk_update_backlog_order_tool = (
+            bulk_update_backlog_order_tool.fn
+            if hasattr(bulk_update_backlog_order_tool, "fn")
+            else bulk_update_backlog_order_tool
+        )
+
+        # Bulk update kanban order
+        @self.mcp.tool(
+            name="taiga_bulk_update_kanban_order",
+            description="Update the order of user stories in a kanban column",
+            tags={"userstories", "write", "bulk", "kanban"},
+            annotations={"readOnlyHint": False, "openWorldHint": True},
+        )
+        async def bulk_update_kanban_order_tool(
+            auth_token: str,
+            project_id: int,
+            bulk_stories: list[list[int]],
+            status_id: int,
+        ) -> dict[str, Any]:
+            """
+            Update the order of user stories in a kanban column.
+
+            Esta herramienta permite reordenar múltiples historias de usuario
+            dentro de una columna específica del kanban.
+
+            Args:
+                auth_token: Token de autenticación obtenido de taiga_authenticate
+                project_id: ID del proyecto
+                bulk_stories: Lista de pares [story_id, order] indicando
+                    el nuevo orden de cada historia
+                status_id: ID del estado/columna del kanban
+
+            Returns:
+                Dict con confirmación y número de historias actualizadas
+
+            Raises:
+                MCPError: Si la autenticación falla o hay error en la API
+
+            Example:
+                >>> result = await taiga_bulk_update_kanban_order(
+                ...     auth_token="eyJ0eXAiOi...",
+                ...     project_id=309804,
+                ...     bulk_stories=[[123, 0], [124, 1]],
+                ...     status_id=1
+                ... )
+                >>> print(result)
+                {"success": True, "updated_count": 2}
+            """
+            try:
+                self._logger.debug(
+                    f"[bulk_update_kanban_order] Starting | project={project_id}, status={status_id}"
+                )
+
+                data = {
+                    "project_id": project_id,
+                    "bulk_stories": bulk_stories,
+                    "status": status_id,
+                }
+
+                if self.client:
+                    result = await self.client.post(
+                        "/userstories/bulk_update_kanban_order", data=data
+                    )
+                else:
+                    async with TaigaAPIClient(self.config) as client:
+                        client.auth_token = auth_token
+                        result = await client.post(
+                            "/userstories/bulk_update_kanban_order", data=data
+                        )
+
+                self._logger.info(
+                    f"[bulk_update_kanban_order] Success | project={project_id}, count={len(bulk_stories)}"
+                )
+                return {"success": True, "updated_count": len(bulk_stories), "result": result}
+
+            except AuthenticationError:
+                self._logger.warning("[bulk_update_kanban_order] Auth failed")
+                raise MCPError("Authentication failed") from None
+            except TaigaAPIError as e:
+                self._logger.error(f"[bulk_update_kanban_order] API error | error={e!s}")
+                raise MCPError(f"Failed to update kanban order: {e!s}") from e
+            except Exception as e:
+                self._logger.error(f"[bulk_update_kanban_order] Unexpected error | error={e!s}")
+                raise MCPError(f"Unexpected error: {e!s}") from e
+
+        # Store reference for direct test access
+        self.bulk_update_kanban_order_tool = (
+            bulk_update_kanban_order_tool.fn
+            if hasattr(bulk_update_kanban_order_tool, "fn")
+            else bulk_update_kanban_order_tool
+        )
+
+        # Bulk update sprint order
+        @self.mcp.tool(
+            name="taiga_bulk_update_sprint_order",
+            description="Update the order of user stories within a sprint/milestone",
+            tags={"userstories", "write", "bulk", "sprint", "milestones"},
+            annotations={"readOnlyHint": False, "openWorldHint": True},
+        )
+        async def bulk_update_sprint_order_tool(
+            auth_token: str,
+            project_id: int,
+            milestone_id: int,
+            bulk_stories: list[list[int]],
+        ) -> dict[str, Any]:
+            """
+            Update the order of user stories within a sprint.
+
+            Esta herramienta permite reordenar múltiples historias de usuario
+            dentro de un sprint específico.
+
+            Args:
+                auth_token: Token de autenticación obtenido de taiga_authenticate
+                project_id: ID del proyecto
+                milestone_id: ID del sprint/milestone
+                bulk_stories: Lista de pares [story_id, order] indicando
+                    el nuevo orden de cada historia
+
+            Returns:
+                Dict con confirmación y número de historias actualizadas
+
+            Raises:
+                MCPError: Si la autenticación falla o hay error en la API
+
+            Example:
+                >>> result = await taiga_bulk_update_sprint_order(
+                ...     auth_token="eyJ0eXAiOi...",
+                ...     project_id=309804,
+                ...     milestone_id=5678,
+                ...     bulk_stories=[[123, 0], [124, 1]]
+                ... )
+                >>> print(result)
+                {"success": True, "updated_count": 2}
+            """
+            try:
+                self._logger.debug(
+                    f"[bulk_update_sprint_order] Starting | project={project_id}, milestone={milestone_id}"
+                )
+
+                data = {
+                    "project_id": project_id,
+                    "milestone_id": milestone_id,
+                    "bulk_stories": bulk_stories,
+                }
+
+                if self.client:
+                    result = await self.client.post(
+                        "/milestones/userstories/bulk_update_order", data=data
+                    )
+                else:
+                    async with TaigaAPIClient(self.config) as client:
+                        client.auth_token = auth_token
+                        result = await client.post(
+                            "/milestones/userstories/bulk_update_order", data=data
+                        )
+
+                self._logger.info(
+                    f"[bulk_update_sprint_order] Success | project={project_id}, count={len(bulk_stories)}"
+                )
+                return {"success": True, "updated_count": len(bulk_stories), "result": result}
+
+            except AuthenticationError:
+                self._logger.warning("[bulk_update_sprint_order] Auth failed")
+                raise MCPError("Authentication failed") from None
+            except TaigaAPIError as e:
+                self._logger.error(f"[bulk_update_sprint_order] API error | error={e!s}")
+                raise MCPError(f"Failed to update sprint order: {e!s}") from e
+            except Exception as e:
+                self._logger.error(f"[bulk_update_sprint_order] Unexpected error | error={e!s}")
+                raise MCPError(f"Unexpected error: {e!s}") from e
+
+        # Store reference for direct test access
+        self.bulk_update_sprint_order_tool = (
+            bulk_update_sprint_order_tool.fn
+            if hasattr(bulk_update_sprint_order_tool, "fn")
+            else bulk_update_sprint_order_tool
+        )
+
+        # Bulk update milestone (move stories to sprint)
+        @self.mcp.tool(
+            name="taiga_bulk_update_milestone",
+            description="Move multiple user stories to a specific sprint/milestone",
+            tags={"userstories", "write", "bulk", "sprint", "milestones"},
+            annotations={"readOnlyHint": False, "openWorldHint": True},
+        )
+        async def bulk_update_milestone_tool(
+            auth_token: str,
+            project_id: int,
+            milestone_id: int,
+            bulk_stories: list[int],
+        ) -> dict[str, Any]:
+            """
+            Move multiple user stories to a sprint/milestone.
+
+            Esta herramienta permite mover múltiples historias de usuario
+            a un sprint específico. Útil para planificación de sprints.
+
+            Args:
+                auth_token: Token de autenticación obtenido de taiga_authenticate
+                project_id: ID del proyecto
+                milestone_id: ID del sprint/milestone de destino
+                bulk_stories: Lista de IDs de historias a mover
+
+            Returns:
+                Dict con confirmación y número de historias movidas
+
+            Raises:
+                MCPError: Si la autenticación falla o hay error en la API
+
+            Example:
+                >>> result = await taiga_bulk_update_milestone(
+                ...     auth_token="eyJ0eXAiOi...",
+                ...     project_id=309804,
+                ...     milestone_id=5678,
+                ...     bulk_stories=[123, 124, 125]
+                ... )
+                >>> print(result)
+                {"success": True, "moved_count": 3}
+            """
+            try:
+                self._logger.debug(
+                    f"[bulk_update_milestone] Starting | project={project_id}, milestone={milestone_id}"
+                )
+
+                data = {
+                    "project_id": project_id,
+                    "milestone_id": milestone_id,
+                    "bulk_stories": bulk_stories,
+                }
+
+                if self.client:
+                    result = await self.client.post("/userstories/bulk_update_milestone", data=data)
+                else:
+                    async with TaigaAPIClient(self.config) as client:
+                        client.auth_token = auth_token
+                        result = await client.post("/userstories/bulk_update_milestone", data=data)
+
+                self._logger.info(
+                    f"[bulk_update_milestone] Success | project={project_id}, count={len(bulk_stories)}"
+                )
+                return {"success": True, "moved_count": len(bulk_stories), "result": result}
+
+            except AuthenticationError:
+                self._logger.warning("[bulk_update_milestone] Auth failed")
+                raise MCPError("Authentication failed") from None
+            except TaigaAPIError as e:
+                self._logger.error(f"[bulk_update_milestone] API error | error={e!s}")
+                raise MCPError(f"Failed to update milestone: {e!s}") from e
+            except Exception as e:
+                self._logger.error(f"[bulk_update_milestone] Unexpected error | error={e!s}")
+                raise MCPError(f"Unexpected error: {e!s}") from e
+
+        # Store reference for direct test access
+        self.bulk_update_milestone_tool = (
+            bulk_update_milestone_tool.fn
+            if hasattr(bulk_update_milestone_tool, "fn")
+            else bulk_update_milestone_tool
         )
 
     # Métodos adicionales para facilitar testing
