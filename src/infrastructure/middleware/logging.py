@@ -72,9 +72,9 @@ class StructuredLoggingMiddleware(Middleware):
         # Generate correlation ID
         if self.include_correlation_id:
             correlation_id = str(uuid.uuid4())[:8]
-            CorrelationIdManager.set_correlation_id(correlation_id)
+            CorrelationIdManager.set(correlation_id)
         else:
-            correlation_id = CorrelationIdManager.get_correlation_id() or "none"
+            correlation_id = CorrelationIdManager.get() or "none"
 
         # Extract tool info
         tool_name = "unknown"
