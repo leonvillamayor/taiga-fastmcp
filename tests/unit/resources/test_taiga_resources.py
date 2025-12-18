@@ -28,8 +28,7 @@ def mock_mcp():
 @pytest.fixture
 def taiga_resources(mock_mcp):
     """Create TaigaResources instance with mock MCP."""
-    resources = TaigaResources(mock_mcp)
-    return resources
+    return TaigaResources(mock_mcp)
 
 
 @pytest.fixture

@@ -18,6 +18,7 @@ from faker import Faker
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+
 # Cargar variables de entorno para tests
 load_dotenv()
 

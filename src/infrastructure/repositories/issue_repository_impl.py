@@ -8,8 +8,7 @@ from typing import Any
 
 from src.domain.entities.issue import Issue
 from src.domain.repositories.issue_repository import IssueRepository
-from src.infrastructure.repositories.base_repository_impl import \
-    BaseRepositoryImpl
+from src.infrastructure.repositories.base_repository_impl import BaseRepositoryImpl
 from src.taiga_client import TaigaAPIClient
 
 

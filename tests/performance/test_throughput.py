@@ -13,6 +13,7 @@ from unittest.mock import AsyncMock, Mock
 
 import pytest
 
+
 # Performance thresholds
 LATENCY_THRESHOLD_MS = 500  # Maximum acceptable latency in milliseconds
 CONCURRENT_REQUESTS = 10  # Number of concurrent requests to test

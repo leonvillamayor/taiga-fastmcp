@@ -10,7 +10,7 @@ Tests for project configuration tools including:
 - Roles
 """
 
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 from fastmcp import FastMCP
@@ -29,8 +29,7 @@ def mock_mcp():
 @pytest.fixture
 def settings_tools(mock_mcp):
     """Create SettingsTools instance with mock MCP."""
-    tools = SettingsTools(mock_mcp)
-    return tools
+    return SettingsTools(mock_mcp)
 
 
 class TestSettingsToolsInit:
@@ -57,8 +56,7 @@ class TestPointsTools:
     @pytest.fixture
     def mock_client(self):
         """Create mock Taiga client."""
-        client = AsyncMock()
-        return client
+        return AsyncMock()
 
     @pytest.mark.asyncio
     async def test_list_points_success(self, settings_tools, mock_client):
@@ -155,7 +153,7 @@ class TestPointsTools:
         settings_tools.set_client(mock_client)
         mock_client.delete = AsyncMock(return_value=None)
 
-        result = await settings_tools._make_request(
+        await settings_tools._make_request(
             "DELETE",
             "/points/1",
             auth_token="test-token",
@@ -532,7 +530,7 @@ class TestMakeRequest:
         settings_tools.set_client(mock_client)
         mock_client.delete = AsyncMock(return_value=None)
 
-        result = await settings_tools._make_request(
+        await settings_tools._make_request(
             "DELETE",
             "/test-endpoint",
             auth_token="test-token",

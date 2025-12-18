@@ -16,6 +16,7 @@ from src.infrastructure.cache import MemoryCache
 from src.infrastructure.cached_client import CachedTaigaClient
 from src.taiga_client import TaigaAPIClient
 
+
 # Cache global compartido - singleton
 _global_cache: MemoryCache | None = None
 

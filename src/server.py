@@ -17,6 +17,7 @@ from src.domain.exceptions import AuthenticationError
 from src.infrastructure.container import ApplicationContainer
 from src.taiga_client import TaigaAPIClient
 
+
 # Alias for backward compatibility with tests
 TaigaClient = TaigaAPIClient
 

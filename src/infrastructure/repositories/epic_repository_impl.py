@@ -9,8 +9,7 @@ from typing import Any
 from src.domain.entities.epic import Epic
 from src.domain.exceptions import ResourceNotFoundError
 from src.domain.repositories.epic_repository import EpicRepository
-from src.infrastructure.repositories.base_repository_impl import \
-    BaseRepositoryImpl
+from src.infrastructure.repositories.base_repository_impl import BaseRepositoryImpl
 from src.taiga_client import TaigaAPIClient
 
 

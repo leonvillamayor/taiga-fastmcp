@@ -8,16 +8,26 @@ from fastmcp import FastMCP
 from fastmcp.exceptions import ToolError as MCPError
 
 from src.application.responses.project_responses import (
-    ProjectIssuesStatsResponse, ProjectResponse, ProjectStatsResponse)
+    ProjectIssuesStatsResponse,
+    ProjectResponse,
+    ProjectStatsResponse,
+)
 from src.config import TaigaConfig
-from src.domain.exceptions import (AuthenticationError, PermissionDeniedError,
-                                   ResourceNotFoundError, TaigaAPIError,
-                                   ValidationError)
-from src.domain.validators import (ProjectCreateValidator,
-                                   ProjectDuplicateValidator,
-                                   ProjectTagEditValidator,
-                                   ProjectTagValidator, ProjectUpdateValidator,
-                                   validate_input)
+from src.domain.exceptions import (
+    AuthenticationError,
+    PermissionDeniedError,
+    ResourceNotFoundError,
+    TaigaAPIError,
+    ValidationError,
+)
+from src.domain.validators import (
+    ProjectCreateValidator,
+    ProjectDuplicateValidator,
+    ProjectTagEditValidator,
+    ProjectTagValidator,
+    ProjectUpdateValidator,
+    validate_input,
+)
 from src.infrastructure.client_factory import get_taiga_client
 from src.infrastructure.logging import get_logger
 from src.infrastructure.pagination import AutoPaginator, PaginationConfig

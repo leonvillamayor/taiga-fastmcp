@@ -30,8 +30,7 @@ def mock_mcp():
 @pytest.fixture
 def taiga_prompts(mock_mcp):
     """Create TaigaPrompts instance with mock MCP."""
-    prompts = TaigaPrompts(mock_mcp)
-    return prompts
+    return TaigaPrompts(mock_mcp)
 
 
 class TestTaigaPromptsInit:

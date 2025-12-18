@@ -31,6 +31,7 @@ from typing import ParamSpec, TypeVar
 
 import httpx
 
+
 # Type variables para preservar tipos de funciones decoradas
 P = ParamSpec("P")
 T = TypeVar("T")

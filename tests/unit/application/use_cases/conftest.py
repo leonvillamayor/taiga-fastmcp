@@ -27,6 +27,7 @@ from src.domain.repositories.task_repository import TaskRepository
 from src.domain.repositories.user_story_repository import UserStoryRepository
 from src.domain.repositories.wiki_repository import WikiRepository
 
+
 # =============================================================================
 # SAMPLE ENTITIES FOR TESTING
 # =============================================================================
