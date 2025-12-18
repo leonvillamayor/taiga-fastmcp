@@ -53,7 +53,11 @@ class WikiTools:
         """Register wiki tools with the MCP server."""
 
         # List wiki pages
-        @self.mcp.tool(name="taiga_list_wiki_pages", description="List all wiki pages in a project")
+        @self.mcp.tool(
+            name="taiga_list_wiki_pages",
+            annotations={"readOnlyHint": True},
+            description="List all wiki pages in a project",
+        )
         async def list_wiki_pages(
             auth_token: str,
             project_id: int,
@@ -270,7 +274,9 @@ class WikiTools:
 
         # Get wiki page
         @self.mcp.tool(
-            name="taiga_get_wiki_page", description="Get details of a specific wiki page"
+            name="taiga_get_wiki_page",
+            annotations={"readOnlyHint": True},
+            description="Get details of a specific wiki page",
         )
         async def get_wiki_page(auth_token: str, wiki_id: int) -> dict[str, Any]:
             """
@@ -361,7 +367,9 @@ class WikiTools:
 
         # Get wiki page by slug
         @self.mcp.tool(
-            name="taiga_get_wiki_page_by_slug", description="Get wiki page by project and slug"
+            name="taiga_get_wiki_page_by_slug",
+            annotations={"readOnlyHint": True},
+            description="Get wiki page by project and slug",
         )
         async def get_wiki_page_by_slug(
             auth_token: str, slug: str, project_id: int
@@ -461,7 +469,11 @@ class WikiTools:
         )
 
         # Update wiki page
-        @self.mcp.tool(name="taiga_update_wiki_page", description="Update an existing wiki page")
+        @self.mcp.tool(
+            name="taiga_update_wiki_page",
+            annotations={"idempotentHint": True},
+            description="Update an existing wiki page",
+        )
         async def update_wiki_page(
             auth_token: str,
             wiki_id: int,
@@ -575,7 +587,11 @@ class WikiTools:
         )
 
         # Delete wiki page
-        @self.mcp.tool(name="taiga_delete_wiki_page", description="Delete a wiki page")
+        @self.mcp.tool(
+            name="taiga_delete_wiki_page",
+            annotations={"destructiveHint": True},
+            description="Delete a wiki page",
+        )
         async def delete_wiki_page(auth_token: str, wiki_id: int) -> bool:
             """
             Delete wiki page.
@@ -722,7 +738,9 @@ class WikiTools:
 
         # List wiki attachments
         @self.mcp.tool(
-            name="taiga_list_wiki_attachments", description="List attachments on a wiki page"
+            name="taiga_list_wiki_attachments",
+            annotations={"readOnlyHint": True},
+            description="List attachments on a wiki page",
         )
         async def list_wiki_attachments(
             auth_token: str,
@@ -837,7 +855,9 @@ class WikiTools:
 
         # Watch wiki page
         @self.mcp.tool(
-            name="taiga_watch_wiki_page", description="Watch a wiki page for notifications"
+            name="taiga_watch_wiki_page",
+            annotations={"idempotentHint": True},
+            description="Watch a wiki page for notifications",
         )
         async def watch_wiki_page(auth_token: str, page_id: int) -> dict[str, Any]:
             """
@@ -901,7 +921,11 @@ class WikiTools:
         )
 
         # Unwatch wiki page
-        @self.mcp.tool(name="taiga_unwatch_wiki_page", description="Stop watching a wiki page")
+        @self.mcp.tool(
+            name="taiga_unwatch_wiki_page",
+            annotations={"idempotentHint": True},
+            description="Stop watching a wiki page",
+        )
         async def unwatch_wiki_page(auth_token: str, page_id: int) -> dict[str, Any]:
             """
             Unwatch wiki page.
@@ -1159,7 +1183,9 @@ class WikiTools:
 
         # Update wiki attachment
         @self.mcp.tool(
-            name="taiga_update_wiki_attachment", description="Update an attachment on a wiki page"
+            name="taiga_update_wiki_attachment",
+            annotations={"idempotentHint": True},
+            description="Update an attachment on a wiki page",
         )
         async def update_wiki_attachment(
             auth_token: str,
@@ -1267,7 +1293,9 @@ class WikiTools:
 
         # Delete wiki attachment
         @self.mcp.tool(
-            name="taiga_delete_wiki_attachment", description="Delete an attachment from a wiki page"
+            name="taiga_delete_wiki_attachment",
+            annotations={"destructiveHint": True},
+            description="Delete an attachment from a wiki page",
         )
         async def delete_wiki_attachment(auth_token: str, attachment_id: int) -> bool:
             """

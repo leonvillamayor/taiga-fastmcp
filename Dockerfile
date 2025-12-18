@@ -1,5 +1,5 @@
 # Dockerfile for Taiga MCP Server
-# Version: 0.2.0
+# Version: 0.3.0
 FROM python:3.13-slim
 
 # Set working directory
@@ -38,10 +38,14 @@ EXPOSE 8000
 ENV MCP_TRANSPORT=http \
     MCP_HOST=0.0.0.0 \
     MCP_PORT=8000 \
-    # Cache configuration (v0.2.0)
+    # Cache configuration
     TAIGA_CACHE_ENABLED=true \
     TAIGA_CACHE_TTL=3600 \
-    TAIGA_CACHE_MAX_SIZE=1000
+    TAIGA_CACHE_MAX_SIZE=1000 \
+    # Middleware configuration (v0.3.0)
+    TAIGA_ENABLE_MIDDLEWARE=true \
+    TAIGA_RATE_LIMIT_RPS=50 \
+    TAIGA_ENV=production
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
@@ -49,9 +53,9 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 
 # Labels
 LABEL maintainer="Taiga MCP Team" \
-      version="0.2.0" \
-      description="Taiga MCP Server with complete API coverage, resources, and prompts" \
-      org.opencontainers.image.source="https://github.com/user/taiga-fastmcp"
+      version="0.3.0" \
+      description="Taiga MCP Server with complete API coverage, middleware, resources, and prompts" \
+      org.opencontainers.image.source="https://github.com/leonvillamayor/taiga-fastmcp"
 
 # Run the MCP server using the virtual environment created by uv
 CMD [".venv/bin/python", "-m", "src.server"]
