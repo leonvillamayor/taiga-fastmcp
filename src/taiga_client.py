@@ -1685,9 +1685,7 @@ class TaigaAPIClient:
         """Delete task."""
         return await self.delete(f"/tasks/{task_id}")
 
-    async def bulk_create_tasks(
-        self, project_id: int, bulk_tasks: str
-    ) -> list[dict[str, Any]]:
+    async def bulk_create_tasks(self, project_id: int, bulk_tasks: str) -> list[dict[str, Any]]:
         """Bulk create tasks from a text block.
 
         Args:

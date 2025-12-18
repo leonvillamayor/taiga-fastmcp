@@ -1226,9 +1226,7 @@ class IssueTools:
             """
             async with TaigaAPIClient(self.config) as client:
                 client.auth_token = auth_token
-                return await client.list_issue_custom_attributes(
-                    project=project_id
-                )
+                return await client.list_issue_custom_attributes(project=project_id)
 
         @self.mcp.tool(name="taiga_create_issue_custom_attribute")
         async def create_issue_custom_attribute(
