@@ -299,29 +299,33 @@ class EpicTools:
         async def update_epic_full_tool(
             auth_token: str,
             epic_id: int,
+            project_id: int,
             subject: str,
             description: str | None = None,
             color: str | None = None,
             assigned_to: int | None = None,
             status: int | None = None,
             tags: list[str] | None = None,
+            version: int | None = None,
         ) -> dict[str, Any]:
             """
             Full update of an epic (PUT).
 
             Esta herramienta realiza una actualización completa de una épica
-            usando el método PUT. Requiere el subject como campo obligatorio
-            y reemplaza todos los valores de la épica.
+            usando el método PUT. Requiere el subject y project_id como campos
+            obligatorios y reemplaza todos los valores de la épica.
 
             Args:
                 auth_token: Token de autenticación obtenido de taiga_authenticate
                 epic_id: ID de la épica a actualizar
+                project_id: ID del proyecto al que pertenece la épica (requerido para PUT)
                 subject: Título de la épica (requerido para PUT)
                 description: Nueva descripción (opcional)
                 color: Nuevo color en formato #RRGGBB (opcional)
                 assigned_to: Nuevo ID de usuario asignado (opcional)
                 status: Nuevo ID de estado (opcional)
                 tags: Nueva lista de tags (opcional)
+                version: Versión actual para control de concurrencia optimista (opcional)
 
             Returns:
                 Dict con la épica actualizada conteniendo:
@@ -355,7 +359,7 @@ class EpicTools:
                     "version": 2
                 }
             """
-            kwargs = {"subject": subject}
+            kwargs = {"subject": subject, "project": project_id}
             if description is not None:
                 kwargs["description"] = description
             if color is not None:
@@ -366,6 +370,8 @@ class EpicTools:
                 kwargs["status"] = status
             if tags is not None:
                 kwargs["tags"] = tags
+            if version is not None:
+                kwargs["version"] = version
             return await self.update_epic_full(auth_token=auth_token, epic_id=epic_id, **kwargs)
 
         # EPIC-006: Update epic (partial)
@@ -379,6 +385,7 @@ class EpicTools:
             assigned_to: int | None = None,
             status: int | None = None,
             tags: list[str] | None = None,
+            version: int | None = None,
         ) -> dict[str, Any]:
             """
             Partial update of an epic (PATCH).
@@ -396,6 +403,7 @@ class EpicTools:
                 assigned_to: Nuevo ID de usuario asignado (opcional)
                 status: Nuevo ID de estado (opcional)
                 tags: Nueva lista de tags (opcional)
+                version: Versión actual para control de concurrencia optimista (opcional)
 
             Returns:
                 Dict con la épica actualizada conteniendo:
@@ -441,6 +449,8 @@ class EpicTools:
                 kwargs["status"] = status
             if tags is not None:
                 kwargs["tags"] = tags
+            if version is not None:
+                kwargs["version"] = version
             return await self.update_epic_partial(auth_token=auth_token, epic_id=epic_id, **kwargs)
 
         # EPIC-007: Delete epic

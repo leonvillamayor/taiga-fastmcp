@@ -1,5 +1,5 @@
 # Docker Compose for Taiga MCP Server
-# Version: 0.3.0
+# Version: 0.3.1
 # Supports HTTP transport for MCP protocol with integrated caching and middleware
 #
 # New in v0.3.0:
@@ -94,7 +94,7 @@ services:
     # Labels
     labels:
       - "com.taiga.mcp.description=Taiga MCP Server with complete API coverage, middleware, resources, and prompts"
-      - "com.taiga.mcp.version=0.3.0"
+      - "com.taiga.mcp.version=0.3.1"
       - "com.taiga.mcp.transport=http"
       - "com.taiga.mcp.cache=enabled"
       - "com.taiga.mcp.middleware=enabled"
