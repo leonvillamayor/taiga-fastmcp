@@ -34,7 +34,7 @@ class IssueTools:
         """Registra todas las herramientas de Issues en el servidor MCP."""
 
         # CRUD Básico (ISSUE-001 a ISSUE-007)
-        @self.mcp.tool(name="taiga_list_issues")
+        @self.mcp.tool(name="taiga_list_issues", annotations={"readOnlyHint": True})
         async def list_issues(
             auth_token: str,
             project_id: int | None = None,
@@ -237,7 +237,7 @@ class IssueTools:
                 self._logger.warning(f"[create_issue] Validation error | error={e!s}")
                 raise MCPError(str(e)) from e
 
-        @self.mcp.tool(name="taiga_get_issue")
+        @self.mcp.tool(name="taiga_get_issue", annotations={"readOnlyHint": True})
         async def get_issue(auth_token: str, issue_id: int) -> dict[str, Any]:
             """
             ISSUE-003: Obtiene un issue por ID.
@@ -280,7 +280,7 @@ class IssueTools:
                 client.auth_token = auth_token
                 return await client.get_issue(issue_id)
 
-        @self.mcp.tool(name="taiga_get_issue_by_ref")
+        @self.mcp.tool(name="taiga_get_issue_by_ref", annotations={"readOnlyHint": True})
         async def get_issue_by_ref(auth_token: str, project_id: int, ref: int) -> dict[str, Any]:
             """
             ISSUE-004: Obtiene un issue por referencia dentro del proyecto.
@@ -324,7 +324,7 @@ class IssueTools:
                     project=project_id, ref=ref
                 )  # API expects 'project'
 
-        @self.mcp.tool(name="taiga_update_issue")
+        @self.mcp.tool(name="taiga_update_issue", annotations={"idempotentHint": True})
         async def update_issue(
             auth_token: str,
             issue_id: int,
@@ -422,7 +422,7 @@ class IssueTools:
                 self._logger.warning(f"[update_issue] Validation error | error={e!s}")
                 raise MCPError(str(e)) from e
 
-        @self.mcp.tool(name="taiga_delete_issue")
+        @self.mcp.tool(name="taiga_delete_issue", annotations={"destructiveHint": True})
         async def delete_issue(auth_token: str, issue_id: int) -> bool:
             """
             ISSUE-007: Elimina un issue.
@@ -533,7 +533,7 @@ class IssueTools:
                 raise MCPError(str(e)) from e
 
         # Filtros (ISSUE-013)
-        @self.mcp.tool(name="taiga_get_issue_filters")
+        @self.mcp.tool(name="taiga_get_issue_filters", annotations={"readOnlyHint": True})
         async def get_issue_filters(auth_token: str, project_id: int) -> dict[str, Any]:
             """
             ISSUE-013: Obtiene los filtros disponibles para issues.
@@ -573,7 +573,7 @@ class IssueTools:
                 return await client.get_issue_filters(project=project_id)  # API expects 'project'
 
         # Votación (ISSUE-014 a ISSUE-016)
-        @self.mcp.tool(name="taiga_upvote_issue")
+        @self.mcp.tool(name="taiga_upvote_issue", annotations={"idempotentHint": True})
         async def upvote_issue(auth_token: str, issue_id: int) -> dict[str, Any]:
             """
             ISSUE-014: Vota positivamente por un issue.
@@ -607,7 +607,7 @@ class IssueTools:
                 client.auth_token = auth_token
                 return await client.upvote_issue(issue_id)
 
-        @self.mcp.tool(name="taiga_downvote_issue")
+        @self.mcp.tool(name="taiga_downvote_issue", annotations={"idempotentHint": True})
         async def downvote_issue(auth_token: str, issue_id: int) -> dict[str, Any]:
             """
             ISSUE-015: Retira el voto de un issue.
@@ -640,7 +640,7 @@ class IssueTools:
                 client.auth_token = auth_token
                 return await client.downvote_issue(issue_id)
 
-        @self.mcp.tool(name="taiga_get_issue_voters")
+        @self.mcp.tool(name="taiga_get_issue_voters", annotations={"readOnlyHint": True})
         async def get_issue_voters(auth_token: str, issue_id: int) -> list[dict[str, Any]]:
             """
             ISSUE-016: Obtiene la lista de votantes de un issue.
@@ -676,7 +676,7 @@ class IssueTools:
                 return await client.get_issue_voters(issue_id)
 
         # Watchers (ISSUE-017 a ISSUE-019)
-        @self.mcp.tool(name="taiga_watch_issue")
+        @self.mcp.tool(name="taiga_watch_issue", annotations={"idempotentHint": True})
         async def watch_issue(auth_token: str, issue_id: int) -> dict[str, Any]:
             """
             ISSUE-017: Suscribe al usuario actual como watcher del issue.
@@ -710,7 +710,7 @@ class IssueTools:
                 client.auth_token = auth_token
                 return await client.watch_issue(issue_id)
 
-        @self.mcp.tool(name="taiga_unwatch_issue")
+        @self.mcp.tool(name="taiga_unwatch_issue", annotations={"idempotentHint": True})
         async def unwatch_issue(auth_token: str, issue_id: int) -> dict[str, Any]:
             """
             ISSUE-018: Desuscribe al usuario actual como watcher.
@@ -743,7 +743,7 @@ class IssueTools:
                 client.auth_token = auth_token
                 return await client.unwatch_issue(issue_id)
 
-        @self.mcp.tool(name="taiga_get_issue_watchers")
+        @self.mcp.tool(name="taiga_get_issue_watchers", annotations={"readOnlyHint": True})
         async def get_issue_watchers(auth_token: str, issue_id: int) -> list[dict[str, Any]]:
             """
             ISSUE-019: Obtiene la lista de watchers de un issue.
@@ -780,7 +780,7 @@ class IssueTools:
                 return await client.get_issue_watchers(issue_id)
 
         # Adjuntos (ISSUE-020 a ISSUE-024)
-        @self.mcp.tool(name="taiga_get_issue_attachments")
+        @self.mcp.tool(name="taiga_get_issue_attachments", annotations={"readOnlyHint": True})
         async def get_issue_attachments(auth_token: str, issue_id: int) -> list[dict[str, Any]]:
             """
             ISSUE-020: Lista los adjuntos de un issue.
@@ -871,7 +871,7 @@ class IssueTools:
                     issue_id=issue_id, file=file, filename=filename, description=description
                 )
 
-        @self.mcp.tool(name="taiga_get_issue_attachment")
+        @self.mcp.tool(name="taiga_get_issue_attachment", annotations={"readOnlyHint": True})
         async def get_issue_attachment(auth_token: str, attachment_id: int) -> dict[str, Any]:
             """
             ISSUE-022: Obtiene un adjunto específico.
@@ -910,7 +910,7 @@ class IssueTools:
                 client.auth_token = auth_token
                 return await client.get_issue_attachment(attachment_id)
 
-        @self.mcp.tool(name="taiga_update_issue_attachment")
+        @self.mcp.tool(name="taiga_update_issue_attachment", annotations={"idempotentHint": True})
         async def update_issue_attachment(
             auth_token: str,
             attachment_id: int,
@@ -962,7 +962,7 @@ class IssueTools:
                 client.auth_token = auth_token
                 return await client.update_issue_attachment(attachment_id, **data)
 
-        @self.mcp.tool(name="taiga_delete_issue_attachment")
+        @self.mcp.tool(name="taiga_delete_issue_attachment", annotations={"destructiveHint": True})
         async def delete_issue_attachment(auth_token: str, attachment_id: int) -> bool:
             """
             ISSUE-024: Elimina un adjunto.
@@ -994,7 +994,7 @@ class IssueTools:
                 return await client.delete_issue_attachment(attachment_id)
 
         # Historial (ISSUE-025 a ISSUE-029)
-        @self.mcp.tool(name="taiga_get_issue_history")
+        @self.mcp.tool(name="taiga_get_issue_history", annotations={"readOnlyHint": True})
         async def get_issue_history(auth_token: str, issue_id: int) -> list[dict[str, Any]]:
             """
             ISSUE-025: Obtiene el historial de cambios de un issue.
@@ -1032,7 +1032,7 @@ class IssueTools:
                 client.auth_token = auth_token
                 return await client.get_issue_history(issue_id)
 
-        @self.mcp.tool(name="taiga_get_issue_comment_versions")
+        @self.mcp.tool(name="taiga_get_issue_comment_versions", annotations={"readOnlyHint": True})
         async def get_issue_comment_versions(
             auth_token: str, issue_id: int, comment_id: str
         ) -> list[dict[str, Any]]:
@@ -1114,7 +1114,7 @@ class IssueTools:
                     issue_id=issue_id, comment_id=comment_id, comment=comment
                 )
 
-        @self.mcp.tool(name="taiga_delete_issue_comment")
+        @self.mcp.tool(name="taiga_delete_issue_comment", annotations={"destructiveHint": True})
         async def delete_issue_comment(auth_token: str, issue_id: int, comment_id: str) -> bool:
             """
             ISSUE-028: Elimina un comentario del historial.
@@ -1187,7 +1187,7 @@ class IssueTools:
                 return await client.undelete_issue_comment(issue_id, comment_id)
 
         # Atributos Personalizados (ISSUE-030)
-        @self.mcp.tool(name="taiga_get_issue_custom_attributes")
+        @self.mcp.tool(name="taiga_get_issue_custom_attributes", annotations={"readOnlyHint": True})
         async def get_issue_custom_attributes(
             auth_token: str, project_id: int
         ) -> list[dict[str, Any]]:
@@ -1294,7 +1294,9 @@ class IssueTools:
                     type=type,  # API expects 'project'
                 )
 
-        @self.mcp.tool(name="taiga_update_issue_custom_attribute")
+        @self.mcp.tool(
+            name="taiga_update_issue_custom_attribute", annotations={"idempotentHint": True}
+        )
         async def update_issue_custom_attribute(
             auth_token: str,
             attribute_id: int,
@@ -1349,7 +1351,9 @@ class IssueTools:
                 client.auth_token = auth_token
                 return await client.update_issue_custom_attribute(attribute_id, **data)
 
-        @self.mcp.tool(name="taiga_delete_issue_custom_attribute")
+        @self.mcp.tool(
+            name="taiga_delete_issue_custom_attribute", annotations={"destructiveHint": True}
+        )
         async def delete_issue_custom_attribute(auth_token: str, attribute_id: int) -> bool:
             """
             ISSUE-030: Elimina un atributo personalizado.

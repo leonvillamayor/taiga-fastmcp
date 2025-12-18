@@ -15,6 +15,12 @@ from fastmcp import FastMCP
 
 from src.domain.exceptions import AuthenticationError
 from src.infrastructure.container import ApplicationContainer
+from src.infrastructure.middleware import (
+    ErrorHandlingMiddleware,
+    RateLimitingMiddleware,
+    StructuredLoggingMiddleware,
+    TimingMiddleware,
+)
 from src.taiga_client import TaigaAPIClient
 
 
@@ -82,6 +88,9 @@ class TaigaMCPServer:
         self.server_config = self.container.server_config()
         self.mcp = self.container.mcp()
 
+        # Configure middleware stack (order matters: first added runs first on request)
+        self._configure_middleware()
+
         # Initialize client and tools
         self.taiga_client: TaigaClient | None = None
         self.auth_token: str | None = None
@@ -114,6 +123,60 @@ class TaigaMCPServer:
     def register_all_tools(self) -> None:
         """Register all available tools with the MCP server."""
         self.container.register_all_tools()
+
+    def _configure_middleware(self) -> None:
+        """Configure the middleware stack for the MCP server.
+
+        The middleware is added in order of execution (first added runs first
+        on the way in, last on the way out):
+        1. StructuredLoggingMiddleware - Logs all requests with correlation IDs
+        2. ErrorHandlingMiddleware - Catches and handles errors with retries
+        3. RateLimitingMiddleware - Prevents overwhelming the Taiga API
+        4. TimingMiddleware - Tracks request timing for performance monitoring
+        """
+        # Get rate limit settings from environment or use defaults
+        max_requests_per_second = float(os.getenv("TAIGA_RATE_LIMIT_RPS", "50"))
+        enable_middleware = os.getenv("TAIGA_ENABLE_MIDDLEWARE", "true").lower() == "true"
+
+        if not enable_middleware:
+            return
+
+        # 1. Structured logging - captures all requests
+        self.mcp.add_middleware(
+            StructuredLoggingMiddleware(
+                log_request_body=True,
+                log_response_body=False,  # Don't log potentially large responses
+                include_correlation_id=True,
+            )
+        )
+
+        # 2. Error handling with retry logic
+        self.mcp.add_middleware(
+            ErrorHandlingMiddleware(
+                max_retries=3,
+                retry_delay=1.0,
+                mask_details=os.getenv("TAIGA_ENV", "production") == "production",
+            )
+        )
+
+        # 3. Rate limiting to protect Taiga API
+        self.mcp.add_middleware(
+            RateLimitingMiddleware(
+                max_requests_per_second=max_requests_per_second,
+                burst_size=max_requests_per_second * 2,
+                algorithm="token_bucket",
+                wait_for_token=True,
+                wait_timeout=30.0,
+            )
+        )
+
+        # 4. Timing for performance monitoring
+        self.mcp.add_middleware(
+            TimingMiddleware(
+                slow_threshold_ms=1000.0,  # Log warnings for requests > 1s
+                track_by_tool=True,
+            )
+        )
 
     def get_registered_tools(self) -> list[Any]:
         """

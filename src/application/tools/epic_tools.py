@@ -46,7 +46,7 @@ class EpicTools:
         """Registra todas las herramientas de epics en el servidor MCP."""
 
         # EPIC-001: List epics
-        @self.mcp.tool(name="taiga_list_epics")
+        @self.mcp.tool(name="taiga_list_epics", annotations={"readOnlyHint": True})
         async def list_epics_tool(
             auth_token: str,
             project_id: int | None = None,
@@ -191,7 +191,7 @@ class EpicTools:
             return await self.create_epic(auth_token=auth_token, **kwargs)
 
         # EPIC-003: Get epic by ID
-        @self.mcp.tool(name="taiga_get_epic")
+        @self.mcp.tool(name="taiga_get_epic", annotations={"readOnlyHint": True})
         async def get_epic_tool(auth_token: str, epic_id: int) -> dict[str, Any]:
             """
             Get an epic by ID.
@@ -245,7 +245,7 @@ class EpicTools:
             return await self.get_epic(auth_token=auth_token, epic_id=epic_id)
 
         # EPIC-004: Get epic by ref
-        @self.mcp.tool(name="taiga_get_epic_by_ref")
+        @self.mcp.tool(name="taiga_get_epic_by_ref", annotations={"readOnlyHint": True})
         async def get_epic_by_ref_tool(
             auth_token: str, project_id: int, ref: int
         ) -> dict[str, Any]:
@@ -295,7 +295,7 @@ class EpicTools:
             return await self.get_epic_by_ref(auth_token=auth_token, project_id=project_id, ref=ref)
 
         # EPIC-005: Update epic (full)
-        @self.mcp.tool(name="taiga_update_epic_full")
+        @self.mcp.tool(name="taiga_update_epic_full", annotations={"idempotentHint": True})
         async def update_epic_full_tool(
             auth_token: str,
             epic_id: int,
@@ -369,7 +369,7 @@ class EpicTools:
             return await self.update_epic_full(auth_token=auth_token, epic_id=epic_id, **kwargs)
 
         # EPIC-006: Update epic (partial)
-        @self.mcp.tool(name="taiga_update_epic_partial")
+        @self.mcp.tool(name="taiga_update_epic_partial", annotations={"idempotentHint": True})
         async def update_epic_partial_tool(
             auth_token: str,
             epic_id: int,
@@ -444,8 +444,8 @@ class EpicTools:
             return await self.update_epic_partial(auth_token=auth_token, epic_id=epic_id, **kwargs)
 
         # EPIC-007: Delete epic
-        @self.mcp.tool(name="taiga_delete_epic")
-        async def delete_epic_tool(auth_token: str, epic_id: int) -> dict[str, str]:
+        @self.mcp.tool(name="taiga_delete_epic", annotations={"destructiveHint": True})
+        async def delete_epic_tool(auth_token: str, epic_id: int) -> dict[str, Any]:
             """
             Delete an epic.
 
@@ -480,7 +480,9 @@ class EpicTools:
             return await self.delete_epic(auth_token=auth_token, epic_id=epic_id)
 
         # EPIC-008: List epic related user stories
-        @self.mcp.tool(name="taiga_list_epic_related_userstories")
+        @self.mcp.tool(
+            name="taiga_list_epic_related_userstories", annotations={"readOnlyHint": True}
+        )
         async def list_epic_related_userstories_tool(
             auth_token: str, epic_id: int
         ) -> list[dict[str, Any]]:
@@ -582,7 +584,7 @@ class EpicTools:
             )
 
         # EPIC-010: Get epic related user story
-        @self.mcp.tool(name="taiga_get_epic_related_userstory")
+        @self.mcp.tool(name="taiga_get_epic_related_userstory", annotations={"readOnlyHint": True})
         async def get_epic_related_userstory_tool(
             auth_token: str, epic_id: int, userstory_id: int
         ) -> dict[str, Any]:
@@ -628,7 +630,9 @@ class EpicTools:
             )
 
         # EPIC-011: Update epic related user story
-        @self.mcp.tool(name="taiga_update_epic_related_userstory")
+        @self.mcp.tool(
+            name="taiga_update_epic_related_userstory", annotations={"idempotentHint": True}
+        )
         async def update_epic_related_userstory_tool(
             auth_token: str,
             epic_id: int,
@@ -695,10 +699,12 @@ class EpicTools:
             )
 
         # EPIC-012: Delete epic related user story
-        @self.mcp.tool(name="taiga_delete_epic_related_userstory")
+        @self.mcp.tool(
+            name="taiga_delete_epic_related_userstory", annotations={"destructiveHint": True}
+        )
         async def delete_epic_related_userstory_tool(
             auth_token: str, epic_id: int, userstory_id: int
-        ) -> dict[str, str]:
+        ) -> dict[str, Any]:
             """
             Delete a user story related to an epic.
 
@@ -785,7 +791,7 @@ class EpicTools:
             )
 
         # EPIC-014: Get epic filters
-        @self.mcp.tool(name="taiga_get_epic_filters")
+        @self.mcp.tool(name="taiga_get_epic_filters", annotations={"readOnlyHint": True})
         async def get_epic_filters_tool(auth_token: str, project_id: int) -> dict[str, Any]:
             """
             Get available filters for epics in a project.
@@ -828,7 +834,7 @@ class EpicTools:
             return await self.get_epic_filters(auth_token=auth_token, project_id=project_id)
 
         # EPIC-015: Upvote epic
-        @self.mcp.tool(name="taiga_upvote_epic")
+        @self.mcp.tool(name="taiga_upvote_epic", annotations={"idempotentHint": True})
         async def upvote_epic_tool(auth_token: str, epic_id: int) -> dict[str, Any]:
             """
             Upvote an epic.
@@ -863,7 +869,7 @@ class EpicTools:
             return await self.upvote_epic(auth_token=auth_token, epic_id=epic_id)
 
         # EPIC-016: Downvote epic
-        @self.mcp.tool(name="taiga_downvote_epic")
+        @self.mcp.tool(name="taiga_downvote_epic", annotations={"idempotentHint": True})
         async def downvote_epic_tool(auth_token: str, epic_id: int) -> dict[str, Any]:
             """
             Downvote an epic.
@@ -898,7 +904,7 @@ class EpicTools:
             return await self.downvote_epic(auth_token=auth_token, epic_id=epic_id)
 
         # EPIC-017: Get epic voters
-        @self.mcp.tool(name="taiga_get_epic_voters")
+        @self.mcp.tool(name="taiga_get_epic_voters", annotations={"readOnlyHint": True})
         async def get_epic_voters_tool(auth_token: str, epic_id: int) -> list[dict[str, Any]]:
             """
             Get voters of an epic.
@@ -939,7 +945,7 @@ class EpicTools:
             return await self.get_epic_voters(auth_token=auth_token, epic_id=epic_id)
 
         # EPIC-018: Watch epic
-        @self.mcp.tool(name="taiga_watch_epic")
+        @self.mcp.tool(name="taiga_watch_epic", annotations={"idempotentHint": True})
         async def watch_epic_tool(auth_token: str, epic_id: int) -> dict[str, Any]:
             """
             Watch an epic for updates.
@@ -974,7 +980,7 @@ class EpicTools:
             return await self.watch_epic(auth_token=auth_token, epic_id=epic_id)
 
         # EPIC-019: Unwatch epic
-        @self.mcp.tool(name="taiga_unwatch_epic")
+        @self.mcp.tool(name="taiga_unwatch_epic", annotations={"idempotentHint": True})
         async def unwatch_epic_tool(auth_token: str, epic_id: int) -> dict[str, Any]:
             """
             Stop watching an epic.
@@ -1009,7 +1015,7 @@ class EpicTools:
             return await self.unwatch_epic(auth_token=auth_token, epic_id=epic_id)
 
         # EPIC-020: Get epic watchers
-        @self.mcp.tool(name="taiga_get_epic_watchers")
+        @self.mcp.tool(name="taiga_get_epic_watchers", annotations={"readOnlyHint": True})
         async def get_epic_watchers_tool(auth_token: str, epic_id: int) -> list[dict[str, Any]]:
             """
             Get watchers of an epic.
@@ -1055,7 +1061,7 @@ class EpicTools:
             return await self.get_epic_watchers(auth_token=auth_token, epic_id=epic_id)
 
         # EPIC-021: List epic attachments
-        @self.mcp.tool(name="taiga_list_epic_attachments")
+        @self.mcp.tool(name="taiga_list_epic_attachments", annotations={"readOnlyHint": True})
         async def list_epic_attachments_tool(auth_token: str, epic_id: int) -> list[dict[str, Any]]:
             """
             List attachments of an epic.
@@ -1151,7 +1157,7 @@ class EpicTools:
             return await self.create_epic_attachment(auth_token=auth_token, **kwargs)
 
         # EPIC-023: Get epic attachment
-        @self.mcp.tool(name="taiga_get_epic_attachment")
+        @self.mcp.tool(name="taiga_get_epic_attachment", annotations={"readOnlyHint": True})
         async def get_epic_attachment_tool(auth_token: str, attachment_id: int) -> dict[str, Any]:
             """
             Get a specific attachment of an epic.
@@ -1199,7 +1205,7 @@ class EpicTools:
             )
 
         # EPIC-024: Update epic attachment
-        @self.mcp.tool(name="taiga_update_epic_attachment")
+        @self.mcp.tool(name="taiga_update_epic_attachment", annotations={"idempotentHint": True})
         async def update_epic_attachment_tool(
             auth_token: str, attachment_id: int, description: str | None = None
         ) -> dict[str, Any]:
@@ -1251,10 +1257,10 @@ class EpicTools:
             )
 
         # EPIC-025: Delete epic attachment
-        @self.mcp.tool(name="taiga_delete_epic_attachment")
+        @self.mcp.tool(name="taiga_delete_epic_attachment", annotations={"destructiveHint": True})
         async def delete_epic_attachment_tool(
             auth_token: str, attachment_id: int
-        ) -> dict[str, str]:
+        ) -> dict[str, Any]:
             """
             Delete an attachment of an epic.
 
@@ -1291,7 +1297,7 @@ class EpicTools:
             )
 
         # EPIC-026: List epic custom attributes
-        @self.mcp.tool(name="taiga_list_epic_custom_attributes")
+        @self.mcp.tool(name="taiga_list_epic_custom_attributes", annotations={"readOnlyHint": True})
         async def list_epic_custom_attributes_tool(
             auth_token: str, project_id: int
         ) -> list[dict[str, Any]]:
@@ -1412,7 +1418,9 @@ class EpicTools:
             )
 
         # EPIC-028: Get/Update/Delete epic custom attribute values
-        @self.mcp.tool(name="taiga_get_epic_custom_attribute_values")
+        @self.mcp.tool(
+            name="taiga_get_epic_custom_attribute_values", annotations={"readOnlyHint": True}
+        )
         async def get_epic_custom_attribute_values_tool(
             auth_token: str, epic_id: int
         ) -> dict[str, Any]:
@@ -1931,7 +1939,7 @@ class EpicTools:
         )
 
     # EPIC-007: Delete epic
-    async def delete_epic(self, auth_token: str, epic_id: int) -> dict[str, str]:
+    async def delete_epic(self, auth_token: str, epic_id: int) -> dict[str, Any]:
         """Delete an epic."""
         self._logger.debug(f"[delete_epic] Starting | epic_id={epic_id}")
         try:

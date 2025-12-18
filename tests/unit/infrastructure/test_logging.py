@@ -551,3 +551,100 @@ class TestSetupLogging:
         # Obtener logger y verificar que funciona
         logger = get_logger("test")
         logger.info("Test message")
+
+    def test_setup_logging_with_file(self, tmp_path: pytest.TempPathFactory) -> None:
+        """Test setup con logging a archivo."""
+        from pathlib import Path
+
+        log_file = Path(tmp_path) / "test.log"  # type: ignore[operator]
+        config = LoggingConfig(log_file=log_file)
+        setup_logging(config)
+
+        logger = get_logger("file_test")
+        logger.info("Test file logging message")
+
+        # Verificar que el archivo existe
+        assert log_file.exists()
+
+
+class TestTaigaLogFormatterAdvanced:
+    """Tests avanzados para TaigaLogFormatter."""
+
+    def test_json_format_with_exception(self) -> None:
+        """Test formato JSON con excepción."""
+        import sys
+
+        formatter = TaigaLogFormatter(json_format=True)
+
+        # Crear exc_info simulada
+        try:
+            raise ValueError("Test exception")
+        except ValueError:
+            exc_info = sys.exc_info()
+
+        record = logging.LogRecord(
+            name="test_logger",
+            level=logging.ERROR,
+            pathname="test.py",
+            lineno=42,
+            msg="Error occurred",
+            args=(),
+            exc_info=exc_info,
+        )
+
+        result = formatter.format(record)
+        parsed = json.loads(result)
+
+        assert "exception" in parsed
+        assert "ValueError" in parsed["exception"]
+        assert "Test exception" in parsed["exception"]
+
+    def test_mask_sensitive_with_nested_list(self) -> None:
+        """Test enmascaramiento con listas anidadas."""
+        formatter = TaigaLogFormatter(json_format=True)
+
+        record = logging.LogRecord(
+            name="test_logger",
+            level=logging.INFO,
+            pathname="test.py",
+            lineno=42,
+            msg="List test",
+            args=(),
+            exc_info=None,
+        )
+        record.extra_data = {
+            "users": [
+                {"name": "john", "password": "secret1"},
+                {"name": "jane", "password": "secret2"},
+            ]
+        }
+
+        result = formatter.format(record)
+        parsed = json.loads(result)
+
+        assert "extra" in parsed
+        users = parsed["extra"]["users"]
+        assert users[0]["name"] == "john"
+        assert users[0]["password"] == "***MASKED***"
+        assert users[1]["name"] == "jane"
+        assert users[1]["password"] == "***MASKED***"
+
+    def test_mask_sensitive_with_simple_list(self) -> None:
+        """Test enmascaramiento con lista simple (no dict)."""
+        formatter = TaigaLogFormatter(json_format=True)
+
+        record = logging.LogRecord(
+            name="test_logger",
+            level=logging.INFO,
+            pathname="test.py",
+            lineno=42,
+            msg="Simple list test",
+            args=(),
+            exc_info=None,
+        )
+        record.extra_data = {"items": [1, 2, 3, "string", None]}
+
+        result = formatter.format(record)
+        parsed = json.loads(result)
+
+        assert parsed["extra"]["items"] == [1, 2, 3, "string", None]

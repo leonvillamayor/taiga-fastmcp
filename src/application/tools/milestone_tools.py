@@ -57,6 +57,7 @@ class MilestoneTools:
         # MILE-001: Listar milestones
         @self.mcp.tool(
             name="taiga_list_milestones",
+            annotations={"readOnlyHint": True},
             description="List all milestones/sprints in a Taiga project with optional filters",
         )
         async def list_milestones_tool(
@@ -216,7 +217,11 @@ class MilestoneTools:
                 raise MCPError(str(e)) from e
 
         # MILE-003: Obtener milestone por ID
-        @self.mcp.tool(name="taiga_get_milestone", description="Get a specific milestone by its ID")
+        @self.mcp.tool(
+            name="taiga_get_milestone",
+            annotations={"readOnlyHint": True},
+            description="Get a specific milestone by its ID",
+        )
         async def get_milestone_tool(auth_token: str, milestone_id: int) -> dict[str, Any]:
             """
             Get a specific milestone by its ID.
@@ -269,7 +274,9 @@ class MilestoneTools:
 
         # MILE-004: Actualizar milestone (completo)
         @self.mcp.tool(
-            name="taiga_update_milestone_full", description="Update a milestone (full replacement)"
+            name="taiga_update_milestone_full",
+            annotations={"idempotentHint": True},
+            description="Update a milestone (full replacement)",
         )
         async def update_milestone_full_tool(
             auth_token: str,
@@ -365,6 +372,7 @@ class MilestoneTools:
         # MILE-005: Actualizar milestone (parcial)
         @self.mcp.tool(
             name="taiga_update_milestone",
+            annotations={"idempotentHint": True},
             description="Update specific fields of a milestone (partial update)",
         )
         async def update_milestone_partial_tool(
@@ -451,8 +459,12 @@ class MilestoneTools:
                 raise MCPError(str(e)) from e
 
         # MILE-006: Eliminar milestone
-        @self.mcp.tool(name="taiga_delete_milestone", description="Delete a milestone")
-        async def delete_milestone_tool(auth_token: str, milestone_id: int) -> dict[str, str]:
+        @self.mcp.tool(
+            name="taiga_delete_milestone",
+            annotations={"destructiveHint": True},
+            description="Delete a milestone",
+        )
+        async def delete_milestone_tool(auth_token: str, milestone_id: int) -> dict[str, Any]:
             """
             Delete a milestone.
 
@@ -488,7 +500,9 @@ class MilestoneTools:
 
         # MILE-007: Obtener estadísticas
         @self.mcp.tool(
-            name="taiga_get_milestone_stats", description="Get statistics for a specific milestone"
+            name="taiga_get_milestone_stats",
+            annotations={"readOnlyHint": True},
+            description="Get statistics for a specific milestone",
         )
         async def get_milestone_stats_tool(auth_token: str, milestone_id: int) -> dict[str, Any]:
             """
@@ -539,7 +553,9 @@ class MilestoneTools:
 
         # MILE-008: Seguir milestone
         @self.mcp.tool(
-            name="taiga_watch_milestone", description="Start watching a milestone for updates"
+            name="taiga_watch_milestone",
+            annotations={"idempotentHint": True},
+            description="Start watching a milestone for updates",
         )
         async def watch_milestone_tool(auth_token: str, milestone_id: int) -> dict[str, Any]:
             """
@@ -579,7 +595,11 @@ class MilestoneTools:
             return await self.watch_milestone(auth_token=auth_token, milestone_id=milestone_id)
 
         # MILE-009: Dejar de seguir milestone
-        @self.mcp.tool(name="taiga_unwatch_milestone", description="Stop watching a milestone")
+        @self.mcp.tool(
+            name="taiga_unwatch_milestone",
+            annotations={"idempotentHint": True},
+            description="Stop watching a milestone",
+        )
         async def unwatch_milestone_tool(auth_token: str, milestone_id: int) -> dict[str, Any]:
             """
             Stop watching a milestone.
@@ -619,6 +639,7 @@ class MilestoneTools:
         # MILE-010: Obtener observadores
         @self.mcp.tool(
             name="taiga_get_milestone_watchers",
+            annotations={"readOnlyHint": True},
             description="Get list of users watching a milestone",
         )
         async def get_milestone_watchers_tool(
@@ -767,7 +788,7 @@ class MilestoneTools:
         self._logger.debug(f"[update_milestone] Starting (alias) | milestone_id={milestone_id}")
         return await self.update_milestone_partial(auth_token, milestone_id, **kwargs)
 
-    async def delete_milestone(self, auth_token: str, milestone_id: int) -> dict[str, str]:
+    async def delete_milestone(self, auth_token: str, milestone_id: int) -> dict[str, Any]:
         """Elimina un milestone."""
         self._logger.debug(f"[delete_milestone] Starting | milestone_id={milestone_id}")
         async with TaigaAPIClient(self.config) as client:

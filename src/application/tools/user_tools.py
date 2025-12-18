@@ -45,7 +45,9 @@ class UserTools:
 
         # Get user stats
         @self.mcp.tool(
-            name="taiga_get_user_stats", description="Get statistics for a specific user"
+            name="taiga_get_user_stats",
+            annotations={"readOnlyHint": True},
+            description="Get statistics for a specific user",
         )
         async def get_user_stats(auth_token: str, user_id: int) -> dict[str, Any]:
             """
@@ -125,7 +127,11 @@ class UserTools:
         self.get_user_stats = get_user_stats.fn if hasattr(get_user_stats, "fn") else get_user_stats
 
         # List users (if needed, based on old implementation)
-        @self.mcp.tool(name="taiga_list_users", description="List users in a project")
+        @self.mcp.tool(
+            name="taiga_list_users",
+            annotations={"readOnlyHint": True},
+            description="List users in a project",
+        )
         async def list_users(
             auth_token: str,
             project_id: int | None = None,
@@ -211,7 +217,11 @@ class UserTools:
         self.list_users = list_users.fn if hasattr(list_users, "fn") else list_users
 
         # Get user by ID
-        @self.mcp.tool(name="taiga_get_user", description="Get a user by their ID")
+        @self.mcp.tool(
+            name="taiga_get_user",
+            annotations={"readOnlyHint": True},
+            description="Get a user by their ID",
+        )
         async def get_user(auth_token: str, user_id: int) -> dict[str, Any]:
             """
             Get a user by their ID.
