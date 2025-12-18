@@ -11,11 +11,11 @@ from src.infrastructure.logging.correlation import CorrelationIdManager, correla
 from src.infrastructure.logging.decorators import log_api_call, log_operation
 from src.infrastructure.logging.logger import TaigaLogFormatter, get_logger, setup_logging
 from src.infrastructure.logging.performance import (
-                                                    APIMetrics,
-                                                    EndpointMetricsStore,
-                                                    PerformanceLogger,
-                                                    get_performance_logger,
-                                                    reset_performance_logger,
+    APIMetrics,
+    EndpointMetricsStore,
+    PerformanceLogger,
+    get_performance_logger,
+    reset_performance_logger,
 )
 
 
