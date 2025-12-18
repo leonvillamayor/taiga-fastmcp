@@ -167,9 +167,9 @@ class TestMassCreation:
             f"Mass creation success rate {success_rate:.2%} below 95%. "
             f"Errors: {errors[:5]}"  # Show first 5 errors
         )
-        assert (
-            len(created_ids) >= HIGH_VOLUME_COUNT * 0.95
-        ), f"Only {len(created_ids)} issues created out of {HIGH_VOLUME_COUNT}"
+        assert len(created_ids) >= HIGH_VOLUME_COUNT * 0.95, (
+            f"Only {len(created_ids)} issues created out of {HIGH_VOLUME_COUNT}"
+        )
 
     async def test_mass_concurrent_creation(
         self,
@@ -199,9 +199,9 @@ class TestMassCreation:
         successes = [r[1] for r in results]
         success_rate = sum(successes) / len(successes)
 
-        assert (
-            success_rate >= 0.90
-        ), f"Concurrent creation success rate {success_rate:.2%} below 90%"
+        assert success_rate >= 0.90, (
+            f"Concurrent creation success rate {success_rate:.2%} below 90%"
+        )
 
     async def test_burst_creation(
         self,
@@ -336,9 +336,9 @@ class TestMemoryLeaks:
         object_growth = final_objects - initial_objects
         max_allowed_growth = 1000  # Reasonable threshold for 100 requests
 
-        assert (
-            object_growth < max_allowed_growth
-        ), f"Object count grew by {object_growth}, exceeds threshold {max_allowed_growth}"
+        assert object_growth < max_allowed_growth, (
+            f"Object count grew by {object_growth}, exceeds threshold {max_allowed_growth}"
+        )
 
 
 @pytest.mark.stress
@@ -421,12 +421,12 @@ class TestConnectionPool:
         # Second batch should have higher success rate (recovery)
         second_success_rate = sum(second_batch_results) / len(second_batch_results)
 
-        assert (
-            second_success_rate >= 0.90
-        ), f"Recovery success rate {second_success_rate:.2%} too low"
-        assert (
-            second_success_rate >= first_success_rate * 0.8
-        ), "Connection pool didn't recover properly after errors"
+        assert second_success_rate >= 0.90, (
+            f"Recovery success rate {second_success_rate:.2%} too low"
+        )
+        assert second_success_rate >= first_success_rate * 0.8, (
+            "Connection pool didn't recover properly after errors"
+        )
 
     async def test_sustained_high_connection_load(
         self,
