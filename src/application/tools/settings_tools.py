@@ -16,13 +16,8 @@ from fastmcp import FastMCP
 from fastmcp.exceptions import ToolError as MCPError
 
 from src.config import TaigaConfig
-from src.domain.exceptions import (
-    AuthenticationError,
-    PermissionDeniedError,
-    ResourceNotFoundError,
-    TaigaAPIError,
-    ValidationError,
-)
+from src.domain.exceptions import (AuthenticationError, ResourceNotFoundError,
+                                   TaigaAPIError, ValidationError)
 from src.infrastructure.logging import get_logger
 from src.taiga_client import TaigaAPIClient
 
@@ -71,13 +66,13 @@ class SettingsTools:
             # Testing path
             if method == "GET":
                 return await self.client.get(endpoint, **kwargs)
-            elif method == "POST":
+            if method == "POST":
                 return await self.client.post(endpoint, **kwargs)
-            elif method == "PUT":
+            if method == "PUT":
                 return await self.client.put(endpoint, **kwargs)
-            elif method == "PATCH":
+            if method == "PATCH":
                 return await self.client.patch(endpoint, **kwargs)
-            elif method == "DELETE":
+            if method == "DELETE":
                 return await self.client.delete(endpoint, **kwargs)
 
         # Production path
@@ -85,14 +80,15 @@ class SettingsTools:
             client.auth_token = token
             if method == "GET":
                 return await client.get(endpoint, **kwargs)
-            elif method == "POST":
+            if method == "POST":
                 return await client.post(endpoint, **kwargs)
-            elif method == "PUT":
+            if method == "PUT":
                 return await client.put(endpoint, **kwargs)
-            elif method == "PATCH":
+            if method == "PATCH":
                 return await client.patch(endpoint, **kwargs)
-            elif method == "DELETE":
+            if method == "DELETE":
                 return await client.delete(endpoint, **kwargs)
+        return None  # Explicit return for unsupported methods
 
     def register_tools(self) -> None:
         """Register all settings tools with the MCP server."""
@@ -146,9 +142,9 @@ class SettingsTools:
                 self._logger.info(f"[list_points] Found {len(result)} points")
                 return result
             except AuthenticationError as e:
-                raise MCPError(f"Authentication failed: {e}")
+                raise MCPError(f"Authentication failed: {e}") from e
             except TaigaAPIError as e:
-                raise MCPError(f"API error listing points: {e}")
+                raise MCPError(f"API error listing points: {e}") from e
 
         @self.mcp.tool(
             name="taiga_create_point",
@@ -195,9 +191,9 @@ class SettingsTools:
                 self._logger.info(f"[create_point] Created point id={result.get('id')}")
                 return result
             except ValidationError as e:
-                raise MCPError(f"Validation error: {e}")
+                raise MCPError(f"Validation error: {e}") from e
             except TaigaAPIError as e:
-                raise MCPError(f"API error creating point: {e}")
+                raise MCPError(f"API error creating point: {e}") from e
 
         @self.mcp.tool(
             name="taiga_get_point",
@@ -230,7 +226,7 @@ class SettingsTools:
             except ResourceNotFoundError:
                 raise MCPError(f"Point {point_id} not found")
             except TaigaAPIError as e:
-                raise MCPError(f"API error getting point: {e}")
+                raise MCPError(f"API error getting point: {e}") from e
 
         @self.mcp.tool(
             name="taiga_update_point",
@@ -279,7 +275,7 @@ class SettingsTools:
             except ResourceNotFoundError:
                 raise MCPError(f"Point {point_id} not found")
             except TaigaAPIError as e:
-                raise MCPError(f"API error updating point: {e}")
+                raise MCPError(f"API error updating point: {e}") from e
 
         @self.mcp.tool(
             name="taiga_delete_point",
@@ -320,7 +316,7 @@ class SettingsTools:
             except ResourceNotFoundError:
                 raise MCPError(f"Point {point_id} not found")
             except TaigaAPIError as e:
-                raise MCPError(f"API error deleting point: {e}")
+                raise MCPError(f"API error deleting point: {e}") from e
 
         @self.mcp.tool(
             name="taiga_bulk_update_points_order",
@@ -358,7 +354,7 @@ class SettingsTools:
                 self._logger.info(f"[bulk_update_points_order] Updated {len(bulk_points)} points")
                 return result
             except TaigaAPIError as e:
-                raise MCPError(f"API error updating points order: {e}")
+                raise MCPError(f"API error updating points order: {e}") from e
 
     # =========================================================================
     # USER STORY STATUS TOOLS
@@ -397,7 +393,7 @@ class SettingsTools:
                 )
                 return result
             except TaigaAPIError as e:
-                raise MCPError(f"API error listing user story statuses: {e}")
+                raise MCPError(f"API error listing user story statuses: {e}") from e
 
         @self.mcp.tool(
             name="taiga_create_userstory_status",
@@ -453,7 +449,7 @@ class SettingsTools:
                 self._logger.info(f"[create_userstory_status] Created status id={result.get('id')}")
                 return result
             except TaigaAPIError as e:
-                raise MCPError(f"API error creating user story status: {e}")
+                raise MCPError(f"API error creating user story status: {e}") from e
 
         @self.mcp.tool(
             name="taiga_get_userstory_status",
@@ -566,7 +562,7 @@ class SettingsTools:
                     params={"project": project_id},
                 )
             except TaigaAPIError as e:
-                raise MCPError(f"API error listing task statuses: {e}")
+                raise MCPError(f"API error listing task statuses: {e}") from e
 
         @self.mcp.tool(
             name="taiga_create_task_status",
@@ -597,7 +593,7 @@ class SettingsTools:
                     },
                 )
             except TaigaAPIError as e:
-                raise MCPError(f"API error creating task status: {e}")
+                raise MCPError(f"API error creating task status: {e}") from e
 
         @self.mcp.tool(
             name="taiga_get_task_status",
@@ -704,7 +700,7 @@ class SettingsTools:
                     params={"project": project_id},
                 )
             except TaigaAPIError as e:
-                raise MCPError(f"API error listing issue statuses: {e}")
+                raise MCPError(f"API error listing issue statuses: {e}") from e
 
         @self.mcp.tool(
             name="taiga_create_issue_status",
@@ -735,7 +731,7 @@ class SettingsTools:
                     },
                 )
             except TaigaAPIError as e:
-                raise MCPError(f"API error creating issue status: {e}")
+                raise MCPError(f"API error creating issue status: {e}") from e
 
         @self.mcp.tool(
             name="taiga_get_issue_status",
@@ -842,7 +838,7 @@ class SettingsTools:
                     params={"project": project_id},
                 )
             except TaigaAPIError as e:
-                raise MCPError(f"API error listing epic statuses: {e}")
+                raise MCPError(f"API error listing epic statuses: {e}") from e
 
         @self.mcp.tool(
             name="taiga_create_epic_status",
@@ -873,7 +869,7 @@ class SettingsTools:
                     },
                 )
             except TaigaAPIError as e:
-                raise MCPError(f"API error creating epic status: {e}")
+                raise MCPError(f"API error creating epic status: {e}") from e
 
         @self.mcp.tool(
             name="taiga_get_epic_status",
@@ -980,7 +976,7 @@ class SettingsTools:
                     params={"project": project_id},
                 )
             except TaigaAPIError as e:
-                raise MCPError(f"API error listing priorities: {e}")
+                raise MCPError(f"API error listing priorities: {e}") from e
 
         @self.mcp.tool(
             name="taiga_create_priority",
@@ -1009,7 +1005,7 @@ class SettingsTools:
                     },
                 )
             except TaigaAPIError as e:
-                raise MCPError(f"API error creating priority: {e}")
+                raise MCPError(f"API error creating priority: {e}") from e
 
         @self.mcp.tool(
             name="taiga_get_priority",
@@ -1113,7 +1109,7 @@ class SettingsTools:
                     params={"project": project_id},
                 )
             except TaigaAPIError as e:
-                raise MCPError(f"API error listing severities: {e}")
+                raise MCPError(f"API error listing severities: {e}") from e
 
         @self.mcp.tool(
             name="taiga_create_severity",
@@ -1142,7 +1138,7 @@ class SettingsTools:
                     },
                 )
             except TaigaAPIError as e:
-                raise MCPError(f"API error creating severity: {e}")
+                raise MCPError(f"API error creating severity: {e}") from e
 
         @self.mcp.tool(
             name="taiga_get_severity",
@@ -1246,7 +1242,7 @@ class SettingsTools:
                     params={"project": project_id},
                 )
             except TaigaAPIError as e:
-                raise MCPError(f"API error listing issue types: {e}")
+                raise MCPError(f"API error listing issue types: {e}") from e
 
         @self.mcp.tool(
             name="taiga_create_issue_type",
@@ -1275,7 +1271,7 @@ class SettingsTools:
                     },
                 )
             except TaigaAPIError as e:
-                raise MCPError(f"API error creating issue type: {e}")
+                raise MCPError(f"API error creating issue type: {e}") from e
 
         @self.mcp.tool(
             name="taiga_get_issue_type",
@@ -1379,7 +1375,7 @@ class SettingsTools:
                     params={"project": project_id},
                 )
             except TaigaAPIError as e:
-                raise MCPError(f"API error listing roles: {e}")
+                raise MCPError(f"API error listing roles: {e}") from e
 
         @self.mcp.tool(
             name="taiga_create_role",
@@ -1426,7 +1422,7 @@ class SettingsTools:
                     json=data,
                 )
             except TaigaAPIError as e:
-                raise MCPError(f"API error creating role: {e}")
+                raise MCPError(f"API error creating role: {e}") from e
 
         @self.mcp.tool(
             name="taiga_get_role",

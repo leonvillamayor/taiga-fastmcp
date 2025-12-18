@@ -11,11 +11,8 @@ from fastmcp import FastMCP
 from fastmcp.exceptions import ToolError as MCPError
 
 from src.config import TaigaConfig
-from src.domain.exceptions import (
-    AuthenticationError,
-    ResourceNotFoundError,
-    TaigaAPIError,
-)
+from src.domain.exceptions import (AuthenticationError, ResourceNotFoundError,
+                                   TaigaAPIError)
 from src.infrastructure.logging import get_logger
 from src.taiga_client import TaigaAPIClient
 

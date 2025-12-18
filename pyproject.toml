@@ -286,6 +286,7 @@ skips = [
     "B110",  # try_except_pass - intentional graceful error handling in shutdown
     "B113",  # request_without_timeout - requests used only in sync fallback
     "B311",  # random - used for jitter in retry mechanism, not for security
+    "B608",  # hardcoded_sql_expressions - false positive on prompt template f-strings
 ]
 
 [dependency-groups]

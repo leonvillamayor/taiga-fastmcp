@@ -9,7 +9,8 @@ from typing import Any, cast
 from src.domain.entities.user_story import UserStory
 from src.domain.exceptions import ResourceNotFoundError
 from src.domain.repositories.user_story_repository import UserStoryRepository
-from src.infrastructure.repositories.base_repository_impl import BaseRepositoryImpl
+from src.infrastructure.repositories.base_repository_impl import \
+    BaseRepositoryImpl
 from src.taiga_client import TaigaAPIClient
 
 

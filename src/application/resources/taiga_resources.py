@@ -8,7 +8,7 @@ Los recursos MCP son endpoints de solo lectura que proporcionan
 acceso a datos sin efectos secundarios.
 """
 
-from typing import Any
+from typing import Any, cast
 
 from fastmcp import FastMCP
 
@@ -46,7 +46,7 @@ class TaigaResources:
         self.mcp = mcp
         self.config = TaigaConfig()
         self._logger = get_logger("taiga_resources")
-        self.client = None
+        self.client: Any = None  # Injectable client for testing
 
     def set_client(self, client: Any) -> None:
         """Inyecta un cliente para testing."""
@@ -90,7 +90,7 @@ class TaigaResources:
                     result = await client.get(f"/projects/{project_id}/stats")
 
             self._logger.info(f"[resource:project_stats] Retrieved stats for project {project_id}")
-            return result
+            return cast(dict[str, Any], result)
 
         # Store reference for testing
         self.get_project_stats = get_project_stats
@@ -124,11 +124,12 @@ class TaigaResources:
             )
 
             if self.client:
-                result = await self.client.get(f"/projects/{project_id}")
+                raw_result = await self.client.get(f"/projects/{project_id}")
             else:
                 async with TaigaAPIClient(self.config) as client:
-                    result = await client.get(f"/projects/{project_id}")
+                    raw_result = await client.get(f"/projects/{project_id}")
 
+            result = cast(dict[str, Any], raw_result)
             # Extract module configuration
             modules = {
                 "is_backlog_activated": result.get("is_backlog_activated", False),
@@ -286,11 +287,12 @@ class TaigaResources:
             self._logger.debug("[resource:current_user] Fetching current user info")
 
             if self.client:
-                result = await self.client.get("/users/me")
+                raw_result = await self.client.get("/users/me")
             else:
                 async with TaigaAPIClient(self.config) as client:
-                    result = await client.get("/users/me")
+                    raw_result = await client.get("/users/me")
 
+            result = cast(dict[str, Any], raw_result)
             user_info = {
                 "id": result.get("id"),
                 "username": result.get("username"),
@@ -345,7 +347,7 @@ class TaigaResources:
                     result = await client.get(f"/users/{user_id}/stats")
 
             self._logger.info(f"[resource:user_stats] Retrieved stats for user {user_id}")
-            return result
+            return cast(dict[str, Any], result)
 
         # Store reference for testing
         self.get_user_stats = get_user_stats
