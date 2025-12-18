@@ -957,7 +957,6 @@ git commit -m "Release v0.1.1
 - Improve FastMCP tool metadata
 - Update documentation
 
-🤖 Generated with Claude Code
 "
 
 git tag -a v0.1.1 -m "Release v0.1.1"
@@ -1072,4 +1071,3 @@ uv run python -m src.server
 
 **Fecha de creación:** 2025-12-17
 **Versión del plan:** 1.0
-**Autor:** Claude Code Analysis

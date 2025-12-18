@@ -22,11 +22,7 @@ from src.application.responses.epic_responses import (
 )
 from src.config import TaigaConfig
 from src.domain.exceptions import ValidationError
-from src.domain.validators import (
-    EpicCreateValidator,
-    EpicUpdateValidator,
-    validate_input,
-)
+from src.domain.validators import EpicCreateValidator, EpicUpdateValidator, validate_input
 from src.infrastructure.logging import get_logger
 from src.infrastructure.pagination import AutoPaginator, PaginationConfig
 from src.taiga_client import TaigaAPIClient
@@ -2165,10 +2161,7 @@ class EpicTools:
         """Bulk create multiple epics."""
         self._logger.debug(f"[bulk_create_epics] Starting | project_id={project_id}")
         try:
-            from src.domain.exceptions import (
-                AuthenticationError,
-                PermissionDeniedError,
-            )
+            from src.domain.exceptions import AuthenticationError, PermissionDeniedError
 
             async with TaigaAPIClient(self.config) as client:
                 client.auth_token = auth_token
