@@ -1,5 +1,5 @@
 # Dockerfile for Taiga MCP Server
-# Version: 0.3.2
+# Version: 0.3.3
 FROM python:3.13-slim
 
 # Set working directory
@@ -53,8 +53,8 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 
 # Labels
 LABEL maintainer="Taiga MCP Team" \
-      version="0.3.2" \
-      description="Taiga MCP Server with complete API coverage, middleware, resources, and prompts" \
+      version="0.3.3" \
+      description="Taiga MCP Server with complete API coverage, middleware, resources, prompts, and epic custom attributes" \
       org.opencontainers.image.source="https://github.com/leonvillamayor/taiga-fastmcp"
 
 # Run the MCP server using the virtual environment created by uv

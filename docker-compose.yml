@@ -1,6 +1,10 @@
 # Docker Compose for Taiga MCP Server
-# Version: 0.3.2
+# Version: 0.3.3
 # Supports HTTP transport for MCP protocol with integrated caching and middleware
+#
+# New in v0.3.3:
+#   - Added taiga_update_epic_custom_attribute_values tool for setting epic custom fields
+#   - Complete epic custom attributes CRUD operations
 #
 # New in v0.3.0:
 #   - Middleware stack (rate limiting, error handling, timing, structured logging)
@@ -93,8 +97,8 @@ services:
 
     # Labels
     labels:
-      - "com.taiga.mcp.description=Taiga MCP Server with complete API coverage, middleware, resources, and prompts"
-      - "com.taiga.mcp.version=0.3.2"
+      - "com.taiga.mcp.description=Taiga MCP Server with complete API coverage, middleware, resources, prompts, and epic custom attributes"
+      - "com.taiga.mcp.version=0.3.3"
       - "com.taiga.mcp.transport=http"
       - "com.taiga.mcp.cache=enabled"
       - "com.taiga.mcp.middleware=enabled"

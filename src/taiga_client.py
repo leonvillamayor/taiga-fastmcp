@@ -510,6 +510,95 @@ class TaigaAPIClient:
             return {}
         return cast("dict[str, Any] | list[Any]", response.json())
 
+    async def post_multipart(
+        self,
+        endpoint: str,
+        data: dict[str, Any],
+        file_path: str,
+        file_field: str = "attached_file",
+    ) -> dict[str, Any]:
+        """
+        Make POST request with multipart/form-data for file upload.
+
+        Args:
+            endpoint: API endpoint
+            data: Form data fields
+            file_path: Path to file to upload
+            file_field: Name of the file field (default: attached_file)
+
+        Returns:
+            JSON response data
+        """
+        import mimetypes
+        from pathlib import Path
+
+        await self.connect()
+        assert self._client is not None, "Client not initialized after connect()"
+
+        file_path_obj = Path(file_path)
+        if not file_path_obj.exists():
+            raise TaigaAPIError(f"File not found: {file_path}")
+
+        # For multipart, we need to use a fresh client without Content-Type header
+        # The default client has Content-Type: application/json which breaks multipart
+        headers = {
+            "Authorization": f"Bearer {self.auth_token}",
+            "Accept": "application/json",
+        }
+
+        # Read file content
+        file_content = file_path_obj.read_bytes()
+        file_name = file_path_obj.name
+
+        # Determine content type
+        content_type, _ = mimetypes.guess_type(file_name)
+        if content_type is None:
+            content_type = "application/octet-stream"
+
+        # Prepare files dict for httpx with content-type
+        files = {file_field: (file_name, file_content, content_type)}
+
+        start_time = time.perf_counter()
+
+        try:
+            # Use a fresh client for multipart to avoid Content-Type: application/json
+            async with httpx.AsyncClient(
+                base_url=self.base_url,
+                timeout=httpx.Timeout(self.config.timeout),
+            ) as multipart_client:
+                response = await multipart_client.post(
+                    endpoint,
+                    data=data,
+                    files=files,
+                    headers=headers,
+                )
+            duration = time.perf_counter() - start_time
+
+            if response.status_code == 401:
+                raise AuthenticationError("Authentication failed")
+            if response.status_code == 403:
+                raise PermissionDeniedError(f"Permission denied: {endpoint}")
+            if response.status_code == 404:
+                raise ResourceNotFoundError(f"Resource not found: {endpoint}")
+
+            response.raise_for_status()
+
+            self._logger.info(
+                f"[API] POST {endpoint} (multipart) | status={response.status_code} | duration={duration:.3f}s"
+            )
+
+            if response.status_code == 204 or not response.content:
+                return {}
+            return cast("dict[str, Any]", response.json())
+
+        except httpx.HTTPStatusError as e:
+            duration = time.perf_counter() - start_time
+            self._logger.error(
+                f"[API] POST {endpoint} (multipart) | status={e.response.status_code} | "
+                f"error={e!s} | duration={duration:.3f}s"
+            )
+            raise TaigaAPIError(f"HTTP error: {e!s}") from e
+
     async def put(
         self,
         endpoint: str,
@@ -909,6 +998,122 @@ class TaigaAPIClient:
             "list[dict[str, Any]]",
             await self.get(f"/userstory-custom-attributes?project={project}"),
         )
+
+    # User Story Attachment endpoints
+    async def list_userstory_attachments(
+        self,
+        userstory_id: int | None = None,
+        project: int | None = None,
+        object_id: int | None = None,
+    ) -> list[dict[str, Any]]:
+        """List user story attachments.
+
+        Args:
+            userstory_id: ID of the user story (alias for object_id)
+            project: ID of the project to filter attachments
+            object_id: ID of the user story (alternative to userstory_id)
+
+        Returns:
+            List of user story attachments
+        """
+        effective_object_id = object_id or userstory_id
+        params = []
+        if effective_object_id:
+            params.append(f"object_id={effective_object_id}")
+        if project:
+            params.append(f"project={project}")
+        query_string = "&".join(params) if params else ""
+        url = (
+            f"/userstories/attachments?{query_string}"
+            if query_string
+            else "/userstories/attachments"
+        )
+        return cast("list[dict[str, Any]]", await self.get(url))
+
+    async def create_userstory_attachment(
+        self,
+        userstory_id: int,
+        project: int,
+        attached_file: str,
+        description: str | None = None,
+        is_deprecated: bool = False,
+    ) -> dict[str, Any]:
+        """Create user story attachment.
+
+        Args:
+            userstory_id: ID of the user story
+            project: ID of the project
+            attached_file: Path to the file to attach
+            description: Optional description for the attachment
+            is_deprecated: Whether to mark as deprecated (default: False)
+
+        Returns:
+            Created attachment data
+        """
+        # Prepare form data
+        form_data: dict[str, Any] = {
+            "object_id": userstory_id,
+            "project": project,
+        }
+        if is_deprecated:
+            form_data["is_deprecated"] = is_deprecated
+        if description:
+            form_data["description"] = description
+        return await self.post_multipart(
+            "/userstories/attachments",
+            data=form_data,
+            file_path=attached_file,
+        )
+
+    async def get_userstory_attachment(self, attachment_id: int) -> dict[str, Any]:
+        """Get user story attachment.
+
+        Args:
+            attachment_id: ID of the attachment
+
+        Returns:
+            Attachment data
+        """
+        return cast(
+            "dict[str, Any]", await self.get(f"/userstories/attachments/{attachment_id}")
+        )
+
+    async def update_userstory_attachment(
+        self,
+        attachment_id: int,
+        description: str | None = None,
+        is_deprecated: bool | None = None,
+    ) -> dict[str, Any]:
+        """Update a user story attachment.
+
+        Args:
+            attachment_id: Attachment ID
+            description: New description
+            is_deprecated: Whether deprecated
+
+        Returns:
+            Updated attachment data
+        """
+        data: dict[str, Any] = {}
+        if description is not None:
+            data["description"] = description
+        if is_deprecated is not None:
+            data["is_deprecated"] = is_deprecated
+        return cast(
+            "dict[str, Any]",
+            await self.patch(f"/userstories/attachments/{attachment_id}", data=data),
+        )
+
+    async def delete_userstory_attachment(self, attachment_id: int) -> bool:
+        """Delete user story attachment.
+
+        Args:
+            attachment_id: ID of the attachment to delete
+
+        Returns:
+            True if deleted successfully
+        """
+        return await self.delete(f"/userstories/attachments/{attachment_id}")
 
     # Milestone endpoints
     async def list_milestones(

@@ -2165,6 +2165,325 @@ class UserStoryTools:
             else bulk_update_milestone_tool
         )
 
+        # US-ATT-01: List user story attachments
+        @self.mcp.tool(
+            name="taiga_list_userstory_attachments",
+            annotations={"readOnlyHint": True},
+            description="List all attachments of a user story",
+        )
+        async def list_userstory_attachments_tool(
+            auth_token: str, project_id: int, userstory_id: int
+        ) -> list[dict[str, Any]]:
+            """
+            List all attachments of a user story.
+
+            Esta herramienta obtiene la lista de todos los archivos adjuntos
+            asociados a una historia de usuario específica.
+
+            Args:
+                auth_token: Token de autenticación obtenido de taiga_authenticate
+                project_id: ID del proyecto al que pertenece la historia
+                userstory_id: ID de la historia de usuario
+
+            Returns:
+                Lista de diccionarios con información de adjuntos conteniendo:
+                - id: ID del adjunto
+                - name: Nombre del archivo
+                - size: Tamaño en bytes
+                - url: URL para descargar el archivo
+                - description: Descripción del adjunto
+                - is_deprecated: Si está marcado como obsoleto
+                - created_date: Fecha de creación
+
+            Raises:
+                MCPError: Si la historia no existe, no hay permisos,
+                    o la autenticación falla
+
+            Example:
+                >>> attachments = await taiga_list_userstory_attachments(
+                ...     auth_token="eyJ0eXAiOi...",
+                ...     project_id=123,
+                ...     userstory_id=789
+                ... )
+                >>> for att in attachments:
+                ...     print(att["name"])
+            """
+            try:
+                self._logger.debug(
+                    f"[list_userstory_attachments] Starting | userstory_id={userstory_id}"
+                )
+                async with TaigaAPIClient(self.config) as client:
+                    client.auth_token = auth_token
+                    result = await client.list_userstory_attachments(
+                        userstory_id=userstory_id, project=project_id
+                    )
+                count = len(result) if isinstance(result, list) else 0
+                self._logger.info(
+                    f"[list_userstory_attachments] Success | userstory_id={userstory_id}, count={count}"
+                )
+                return result
+            except AuthenticationError:
+                self._logger.warning("[list_userstory_attachments] Auth failed")
+                raise MCPError("Authentication failed") from None
+            except TaigaAPIError as e:
+                self._logger.error(f"[list_userstory_attachments] API error | error={e!s}")
+                raise MCPError(f"Failed to list attachments: {e!s}") from e
+
+        # US-ATT-02: Create user story attachment
+        @self.mcp.tool(
+            name="taiga_create_userstory_attachment",
+            description="Create a new attachment for a user story",
+        )
+        async def create_userstory_attachment_tool(
+            auth_token: str,
+            project_id: int,
+            userstory_id: int,
+            attached_file: str,
+            description: str | None = None,
+            is_deprecated: bool | None = False,
+        ) -> dict[str, Any]:
+            """
+            Create a new attachment for a user story.
+
+            Esta herramienta permite adjuntar un archivo a una historia de usuario.
+            Los adjuntos ayudan a documentar la historia con archivos relevantes
+            como especificaciones, mockups, documentos funcionales, etc.
+
+            Args:
+                auth_token: Token de autenticación obtenido de taiga_authenticate
+                project_id: ID del proyecto al que pertenece la historia
+                userstory_id: ID de la historia de usuario
+                attached_file: Ruta al archivo a adjuntar
+                description: Descripción opcional del adjunto
+                is_deprecated: Marcar como obsoleto desde el inicio (default: False)
+
+            Returns:
+                Dict con información del adjunto creado conteniendo:
+                - id: ID del adjunto creado
+                - name: Nombre del archivo
+                - size: Tamaño en bytes
+                - url: URL para descargar el archivo
+                - description: Descripción del adjunto
+                - created_date: Fecha de creación
+                - object_id: ID de la historia asociada
+
+            Raises:
+                MCPError: Si la historia no existe, no hay permisos,
+                    el archivo es inválido, o falla la API
+
+            Example:
+                >>> attachment = await taiga_create_userstory_attachment(
+                ...     auth_token="eyJ0eXAiOi...",
+                ...     project_id=123,
+                ...     userstory_id=789,
+                ...     attached_file="/path/to/spec.pdf",
+                ...     description="Especificación funcional"
+                ... )
+                >>> print(attachment["id"])
+            """
+            try:
+                self._logger.debug(
+                    f"[create_userstory_attachment] Starting | userstory_id={userstory_id}"
+                )
+                async with TaigaAPIClient(self.config) as client:
+                    client.auth_token = auth_token
+                    result = await client.create_userstory_attachment(
+                        userstory_id=userstory_id,
+                        project=project_id,
+                        attached_file=attached_file,
+                        description=description,
+                        is_deprecated=is_deprecated or False,
+                    )
+                attachment_id = result.get("id") if isinstance(result, dict) else None
+                self._logger.info(
+                    f"[create_userstory_attachment] Success | userstory_id={userstory_id}, "
+                    f"attachment_id={attachment_id}"
+                )
+                return result
+            except AuthenticationError:
+                self._logger.warning("[create_userstory_attachment] Auth failed")
+                raise MCPError("Authentication failed") from None
+            except TaigaAPIError as e:
+                self._logger.error(f"[create_userstory_attachment] API error | error={e!s}")
+                raise MCPError(f"Failed to create attachment: {e!s}") from e
+
+        # US-ATT-03: Get user story attachment
+        @self.mcp.tool(
+            name="taiga_get_userstory_attachment",
+            annotations={"readOnlyHint": True},
+            description="Get a specific user story attachment",
+        )
+        async def get_userstory_attachment_tool(
+            auth_token: str, attachment_id: int
+        ) -> dict[str, Any]:
+            """
+            Get a specific user story attachment by ID.
+
+            Esta herramienta obtiene los detalles de un adjunto específico
+            de una historia de usuario usando su ID único.
+
+            Args:
+                auth_token: Token de autenticación obtenido de taiga_authenticate
+                attachment_id: ID del adjunto a obtener
+
+            Returns:
+                Dict con información del adjunto conteniendo:
+                - id: ID del adjunto
+                - name: Nombre del archivo
+                - size: Tamaño en bytes
+                - url: URL para descargar el archivo
+                - description: Descripción del adjunto
+                - is_deprecated: Si está marcado como obsoleto
+                - created_date: Fecha de creación
+                - object_id: ID de la historia asociada
+
+            Raises:
+                MCPError: Si el adjunto no existe, no hay permisos,
+                    o la autenticación falla
+
+            Example:
+                >>> attachment = await taiga_get_userstory_attachment(
+                ...     auth_token="eyJ0eXAiOi...",
+                ...     attachment_id=456
+                ... )
+                >>> print(attachment["name"])
+            """
+            try:
+                self._logger.debug(
+                    f"[get_userstory_attachment] Starting | attachment_id={attachment_id}"
+                )
+                async with TaigaAPIClient(self.config) as client:
+                    client.auth_token = auth_token
+                    result = await client.get_userstory_attachment(attachment_id=attachment_id)
+                self._logger.info(
+                    f"[get_userstory_attachment] Success | attachment_id={attachment_id}"
+                )
+                return result
+            except AuthenticationError:
+                self._logger.warning("[get_userstory_attachment] Auth failed")
+                raise MCPError("Authentication failed") from None
+            except TaigaAPIError as e:
+                self._logger.error(f"[get_userstory_attachment] API error | error={e!s}")
+                raise MCPError(f"Failed to get attachment: {e!s}") from e
+
+        # US-ATT-04: Update user story attachment
+        @self.mcp.tool(
+            name="taiga_update_userstory_attachment",
+            annotations={"idempotentHint": True},
+            description="Update a user story attachment",
+        )
+        async def update_userstory_attachment_tool(
+            auth_token: str,
+            attachment_id: int,
+            description: str | None = None,
+            is_deprecated: bool | None = None,
+        ) -> dict[str, Any]:
+            """
+            Update a user story attachment.
+
+            Esta herramienta actualiza los metadatos de un adjunto existente.
+            Se puede modificar la descripción o marcar el adjunto como obsoleto.
+
+            Args:
+                auth_token: Token de autenticación obtenido de taiga_authenticate
+                attachment_id: ID del adjunto a actualizar
+                description: Nueva descripción del adjunto (opcional)
+                is_deprecated: Marcar como obsoleto (opcional)
+
+            Returns:
+                Dict con información del adjunto actualizado conteniendo:
+                - id: ID del adjunto
+                - name: Nombre del archivo
+                - description: Descripción actualizada
+                - is_deprecated: Estado de obsolescencia
+                - modified_date: Nueva fecha de modificación
+
+            Raises:
+                MCPError: Si el adjunto no existe, no hay permisos,
+                    o la autenticación falla
+
+            Example:
+                >>> attachment = await taiga_update_userstory_attachment(
+                ...     auth_token="eyJ0eXAiOi...",
+                ...     attachment_id=456,
+                ...     description="Especificación funcional v2"
+                ... )
+            """
+            try:
+                self._logger.debug(
+                    f"[update_userstory_attachment] Starting | attachment_id={attachment_id}"
+                )
+                async with TaigaAPIClient(self.config) as client:
+                    client.auth_token = auth_token
+                    result = await client.update_userstory_attachment(
+                        attachment_id=attachment_id,
+                        description=description,
+                        is_deprecated=is_deprecated,
+                    )
+                self._logger.info(
+                    f"[update_userstory_attachment] Success | attachment_id={attachment_id}"
+                )
+                return result
+            except AuthenticationError:
+                self._logger.warning("[update_userstory_attachment] Auth failed")
+                raise MCPError("Authentication failed") from None
+            except TaigaAPIError as e:
+                self._logger.error(f"[update_userstory_attachment] API error | error={e!s}")
+                raise MCPError(f"Failed to update attachment: {e!s}") from e
+
+        # US-ATT-05: Delete user story attachment
+        @self.mcp.tool(
+            name="taiga_delete_userstory_attachment",
+            description="Delete a user story attachment",
+        )
+        async def delete_userstory_attachment_tool(
+            auth_token: str, attachment_id: int
+        ) -> dict[str, Any]:
+            """
+            Delete a user story attachment.
+
+            Esta herramienta elimina permanentemente un adjunto de una
+            historia de usuario. Esta acción no se puede deshacer.
+
+            Args:
+                auth_token: Token de autenticación obtenido de taiga_authenticate
+                attachment_id: ID del adjunto a eliminar
+
+            Returns:
+                Dict con confirmación de eliminación:
+                - success: True si se eliminó correctamente
+                - message: Mensaje de confirmación
+
+            Raises:
+                MCPError: Si el adjunto no existe, no hay permisos,
+                    o la autenticación falla
+
+            Example:
+                >>> result = await taiga_delete_userstory_attachment(
+                ...     auth_token="eyJ0eXAiOi...",
+                ...     attachment_id=456
+                ... )
+                >>> print(result["success"])
+                True
+            """
+            try:
+                self._logger.debug(
+                    f"[delete_userstory_attachment] Starting | attachment_id={attachment_id}"
+                )
+                async with TaigaAPIClient(self.config) as client:
+                    client.auth_token = auth_token
+                    await client.delete_userstory_attachment(attachment_id=attachment_id)
+                self._logger.info(
+                    f"[delete_userstory_attachment] Success | attachment_id={attachment_id}"
+                )
+                return {"success": True, "message": f"Attachment {attachment_id} deleted successfully"}
+            except AuthenticationError:
+                self._logger.warning("[delete_userstory_attachment] Auth failed")
+                raise MCPError("Authentication failed") from None
+            except TaigaAPIError as e:
+                self._logger.error(f"[delete_userstory_attachment] API error | error={e!s}")
+                raise MCPError(f"Failed to delete attachment: {e!s}") from e
+
     # Métodos adicionales para facilitar testing
     async def list_userstory_attachments(
         self, auth_token: str | None = None, userstory_id: int | None = None

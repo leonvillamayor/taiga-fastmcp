@@ -1477,6 +1477,79 @@ class EpicTools:
                 auth_token=auth_token, epic_id=epic_id
             )
 
+        # EPIC-029: Update epic custom attribute values
+        @self.mcp.tool(
+            name="taiga_update_epic_custom_attribute_values",
+            annotations={"idempotentHint": True},
+        )
+        async def update_epic_custom_attribute_values_tool(
+            auth_token: str,
+            epic_id: int,
+            attributes_values: dict[str, Any],
+            version: int | None = None,
+        ) -> dict[str, Any]:
+            """
+            Update custom attribute values for an epic.
+
+            Esta herramienta actualiza los valores de los atributos personalizados
+            de una épica específica. Permite establecer valores para campos
+            personalizados previamente definidos en el proyecto.
+
+            Args:
+                auth_token: Token de autenticación obtenido de taiga_authenticate
+                epic_id: ID de la épica a actualizar
+                attributes_values: Diccionario con pares {attribute_id: valor}.
+                    Las claves deben ser strings con los IDs de los atributos.
+                    Los valores dependen del tipo de atributo (text, number, date, etc.)
+                version: Versión para control de concurrencia optimista (opcional).
+                    Se obtiene de get_epic_custom_attribute_values.
+
+            Returns:
+                Dict con los valores de atributos actualizados conteniendo:
+                - epic: ID de la épica
+                - version: Nueva versión para control de concurrencia
+                - attributes_values: Dict con los valores actualizados
+
+            Raises:
+                ToolError: Si la épica no existe, no hay permisos de modificación,
+                    hay conflicto de versión, o la autenticación falla
+
+            Example:
+                >>> # Primero obtener los IDs de atributos del proyecto
+                >>> attrs = await taiga_list_epic_custom_attributes(
+                ...     auth_token="eyJ0eXAiOi...",
+                ...     project_id=123
+                ... )
+                >>> # attrs = [{"id": 17276, "name": "Oportunidad"}, ...]
+                >>>
+                >>> # Luego establecer los valores en la épica
+                >>> result = await taiga_update_epic_custom_attribute_values(
+                ...     auth_token="eyJ0eXAiOi...",
+                ...     epic_id=456,
+                ...     attributes_values={
+                ...         "17276": "O2341480",
+                ...         "17277": "Alvag",
+                ...         "17278": "ProyectoPrueba"
+                ...     }
+                ... )
+                >>> print(result)
+                {
+                    "epic": 456,
+                    "version": 2,
+                    "attributes_values": {
+                        "17276": "O2341480",
+                        "17277": "Alvag",
+                        "17278": "ProyectoPrueba"
+                    }
+                }
+            """
+            return await self.update_epic_custom_attribute_values(
+                auth_token=auth_token,
+                epic_id=epic_id,
+                attributes_values=attributes_values,
+                version=version,
+            )
+
         # EPIC-015: Bulk link user stories to epic
         @self.mcp.tool(
             name="taiga_bulk_link_userstories_to_epic",
@@ -2703,3 +2776,33 @@ class EpicTools:
             )
             self._logger.info(f"[get_epic_custom_attribute_values] Success | epic_id={epic_id}")
             return result
+
+    # EPIC-029: Update epic custom attribute values
+    async def update_epic_custom_attribute_values(
+        self,
+        auth_token: str,
+        epic_id: int,
+        attributes_values: dict[str, Any],
+        version: int | None = None,
+    ) -> dict[str, Any]:
+        """Update custom attribute values for an epic."""
+        self._logger.debug(
+            f"[update_epic_custom_attribute_values] Starting | epic_id={epic_id}, "
+            f"attributes_count={len(attributes_values)}"
+        )
+        async with TaigaAPIClient(self.config) as client:
+            client.auth_token = auth_token
+            result = await client.update_epic_custom_attribute_values(
+                epic_id=epic_id,
+                attributes_values=attributes_values,
+                version=version,
+            )
+            # Validate response with Pydantic
+            validated_result = EpicCustomAttributeValuesResponse.model_validate(
+                result
+            ).model_dump(exclude_none=True)
+            self._logger.info(
+                f"[update_epic_custom_attribute_values] Success | epic_id={epic_id}, "
+                f"new_version={validated_result.get('version')}"
+            )
+            return validated_result
