@@ -7,6 +7,7 @@ It uses FastMCP framework to expose Taiga's functionality through MCP tools.
 
 import asyncio
 import os
+import signal
 import sys
 from typing import Any
 
@@ -487,6 +488,22 @@ def main() -> None:
     # Get transport from environment or default to stdio
     transport = os.getenv("MCP_TRANSPORT", "stdio")
 
+    # Flag to track shutdown state
+    shutdown_requested = False
+
+    def handle_sigterm(signum: int, frame: Any) -> None:
+        """Handle SIGTERM signal for graceful shutdown in Docker."""
+        nonlocal shutdown_requested
+        if not shutdown_requested:
+            shutdown_requested = True
+            print("\nReceived SIGTERM, shutting down gracefully...")
+            server.shutdown_sync()
+            sys.exit(0)
+
+    # Register signal handlers for graceful shutdown
+    signal.signal(signal.SIGTERM, handle_sigterm)
+    signal.signal(signal.SIGINT, handle_sigterm)
+
     try:
         # Initialize server
         asyncio.run(server.initialize())
@@ -495,8 +512,12 @@ def main() -> None:
         print(f"Starting Taiga MCP Server with {transport} transport...")
         server.run(transport=transport)
     except KeyboardInterrupt:
-        print("\nShutting down server...")
-        server.shutdown_sync()
+        if not shutdown_requested:
+            print("\nShutting down server...")
+            server.shutdown_sync()
+    except SystemExit:
+        # Allow graceful exit from signal handler
+        pass
     except Exception as e:
         print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)
